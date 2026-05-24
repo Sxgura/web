@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tres en Raya • Endo IA • Sxgura (Launch)</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --card:#101a2e;
+    --text:#e7efff;
+    --muted:#aab6d6;
+    --line:rgba(255,255,255,.08);
+    --shadow: 0 14px 34px rgba(0,0,0,.38);
+    --radius:18px;
+    --ok:#26d07c;
+    --warn:#ffcc66;
+    --bad:#ff4f6d;
+    --pri:#4f7cff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(900px 550px at 10% 12%, rgba(79,124,255,.23), transparent 60%),
+      radial-gradient(900px 550px at 90% 20%, rgba(38,208,124,.18), transparent 60%),
+      var(--bg);
+    color:var(--text);
+  }
+  .app{max-width:1180px;margin:0 auto;padding:16px}
+  /* Header ESTÁTICO */
+  .top{
+    display:flex;gap:12px;align-items:center;justify-content:space-between;
+    padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);
+    background:rgba(16,26,46,.78);box-shadow:var(--shadow);backdrop-filter: blur(10px);
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+    background:linear-gradient(135deg, rgba(79,124,255,.95), rgba(38,208,124,.85));
+    font-weight:900; box-shadow: 0 10px 22px rgba(0,0,0,.25);
+  }
+  h1{margin:0;font-size:18px}
+  .sub{margin:2px 0 0;color:var(--muted);font-size:12px}
+
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+
+  /* Botones compactos */
+  .select,.btn{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:12px;
+    cursor:pointer; outline:none;
+    font-size:12px;
+    line-height:1;
+    transition:transform .10s ease, background .18s ease, border-color .18s ease, filter .18s ease;
+    user-select:none;
+  }
+  .btn:hover,.select:hover{background:rgba(255,255,255,.085);border-color:rgba(255,255,255,.22);filter:brightness(1.05)}
+  .btn:active{transform:translateY(1px) scale(.99)}
+  .btn.primary{background:rgba(79,124,255,.18);border-color:rgba(79,124,255,.45)}
+  .btn.primary:hover{background:rgba(79,124,255,.28)}
+  .btn.good{background:rgba(38,208,124,.14);border-color:rgba(38,208,124,.40)}
+  .btn.good:hover{background:rgba(38,208,124,.22)}
+  .btn.danger{background:rgba(255,79,109,.14);border-color:rgba(255,79,109,.4)}
+  .btn.danger:hover{background:rgba(255,79,109,.24)}
+  .pill{
+    display:inline-flex;gap:8px;align-items:center;
+    padding:7px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);
+    font-size:12px;color:var(--muted);
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:#888;box-shadow:0 0 0 4px rgba(136,136,136,.15)}
+
+  .grid{margin-top:14px;display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+  .card{
+    border:1px solid var(--line);
+    background:rgba(16,26,46,.78);
+    box-shadow:var(--shadow);
+    backdrop-filter: blur(10px);
+    border-radius:var(--radius);
+    padding:16px;
+  }
+  .card h2{margin:0 0 6px;font-size:16px}
+  .muted{margin:0 0 12px;color:var(--muted);font-size:13px}
+
+  .gameCard{grid-column:span 7}
+  .sideCard{grid-column:span 5}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+  /* Tablero */
+  .boardWrap{position:relative; margin-top:12px}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .winLine{
+    position:absolute; inset:0;
+    pointer-events:none;
+    display:none;
+  }
+  .winLine .line{
+    position:absolute; height:8px; border-radius:999px;
+    background:linear-gradient(90deg, rgba(79,124,255,.0), rgba(79,124,255,.85), rgba(38,208,124,.85), rgba(38,208,124,.0));
+    filter: drop-shadow(0 0 14px rgba(38,208,124,.24));
+    transform-origin:left center;
+    animation: lineDraw .28s ease-out forwards;
+  }
+  @keyframes lineDraw{from{transform:scaleX(.2)}to{transform:scaleX(1)}}
+  .cell{
+    aspect-ratio:1/1; display:grid; place-items:center;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    font-size:44px; font-weight:900;
+    cursor:pointer; user-select:none;
+    transition:transform .12s ease, border-color .18s ease, filter .18s ease;
+    position:relative; overflow:hidden;
+  }
+  .cell:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.24);filter:brightness(1.06)}
+  .cell:active{transform:translateY(0px) scale(.99)}
+  .cell.disabled{cursor:not-allowed;opacity:.82}
+  .cell.pop{animation: pop .18s ease-out}
+  @keyframes pop{0%{transform:scale(.96)}100%{transform:scale(1)}}
+  .badgeX{color:rgba(79,124,255,.95)}
+  .badgeO{color:rgba(38,208,124,.95)}
+
+  .msg{
+    margin-top:12px;padding:10px 12px;border-radius:14px;
+    border:1px dashed rgba(255,255,255,.16);
+    color:var(--muted);font-size:13px;min-height:42px;
+  }
+  .kpiGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+  .kpi{border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.04)}
+  .kpi .label{color:var(--muted);font-size:12px}
+  .kpi .value{margin-top:6px;font-size:20px;font-weight:900}
+  .kpi .hint{margin-top:2px;color:var(--muted);font-size:12px}
+
+  /* Drawer (menú profesional) */
+  .drawerBack{
+    position:fixed; inset:0; background:rgba(0,0,0,.55);
+    display:none; z-index:60;
+  }
+  .drawer{
+    position:fixed; top:0; right:0; height:100%;
+    width:min(420px, 92vw);
+    background:rgba(16,26,46,.96);
+    border-left:1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding:14px;
+    transform:translateX(110%);
+    transition:transform .18s ease-out;
+    z-index:61;
+    overflow:auto;
+  }
+  .drawerBack.show{display:block}
+  .drawer.show{transform:translateX(0)}
+  .drawer h3{margin:0 0 8px}
+  .drawer .sec{margin-top:12px;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;background:rgba(255,255,255,.03)}
+  .drawer .secTitle{font-size:12px;color:var(--muted);margin:0 0 10px}
+  .drawer a{color:var(--text);text-decoration:none}
+  .drawer .itemRow{display:flex;gap:8px;flex-wrap:wrap}
+  .drawer .fullBtn{width:100%;text-align:left}
+
+  /* Logros: pestañas */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:12px;cursor:pointer}
+  .tab.active{border-color:rgba(79,124,255,.45);background:rgba(79,124,255,.14)}
+  .achList{display:grid;grid-template-columns:1fr;gap:8px;max-height:360px;overflow:auto;padding-right:6px}
+  .ach{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+  .medal{width:32px;height:32px;border-radius:12px;display:grid;place-items:center;font-weight:900;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);flex:0 0 32px}
+  .ach .t{font-weight:800;font-size:13px}
+  .ach .d{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.3}
+  .prog{margin-top:6px;height:8px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);overflow:hidden}
+  .prog > div{height:100%;width:0%;background:linear-gradient(90deg, rgba(79,124,255,.75), rgba(38,208,124,.75))}
+  .small{font-size:12px;color:var(--muted)}
+
+  @media (max-width:900px){
+    .gameCard,.sideCard{grid-column:span 12}
+    .controls{justify-content:flex-start}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">3R</div>
+      <div>
+        <h1>Tres en Raya • <span style="color:var(--ok)">Endo IA</span></h1>
+        <p class="sub">Creador: <b>Sxgura</b></p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <span class="pill"><span class="dot" id="turnDot"></span><span id="turnText">Tu turno (X)</span></span>
+
+      <select class="select" id="difficulty">
+        <option value="easy">Fácil</option>
+        <option value="medium" selected>Medio</option>
+        <option value="hard">Difícil</option>
+        <option value="extreme">Extremo (invicto)</option>
+      </select>
+
+      <button class="btn" id="btnSound">Sonido: ON</button>
+      <button class="btn" id="btnMusic">Música: OFF</button>
+
+      <button class="btn good" id="btnAuto">Auto: OFF</button>
+      <button class="btn primary" id="btnNew">Nueva</button>
+
+      <button class="btn" id="btnMenu" aria-label="Menú">⋮</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card gameCard">
+      <h2>Tablero</h2>
+      <p class="muted">Tú eres <b class="badgeX">X</b> y Endo IA es <b class="badgeO">O</b>. En Extremo el reto es empatar.</p>
+
+      <div class="row">
+        <span class="pill">Modo: <b id="modeLabel" style="color:var(--text);margin-left:6px">Medio</b></span>
+        <span class="pill">Racha: <b id="streakLabel" style="color:var(--text);margin-left:6px">0</b></span>
+        <span class="pill">Mejor: <b id="bestStreakLabel" style="color:var(--text);margin-left:6px">0</b></span>
+      </div>
+
+      <div class="boardWrap">
+        <div class="winLine" id="winLine"><div class="line" id="winLineBar"></div></div>
+        <div class="board" id="board"></div>
+      </div>
+
+      <div class="msg" id="msg"></div>
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="btnHint">Sugerencia</button>
+        <button class="btn" id="btnUndo">Deshacer</button>
+      </div>
+    </section>
+
+    <aside class="card sideCard">
+      <h2>Panel</h2>
+      <p class="muted">Stats guardadas en el dispositivo. Usa el menú ⋮ para logros y créditos.</p>
+
+      <div class="kpiGrid">
+        <div class="kpi"><div class="label">Partidas</div><div class="value" id="kpiGames">0</div><div class="hint">Total</div></div>
+        <div class="kpi"><div class="label">Victorias</div><div class="value" id="kpiWins">0</div><div class="hint">vs Endo IA</div></div>
+        <div class="kpi"><div class="label">Derrotas</div><div class="value" id="kpiLosses">0</div><div class="hint">IA gana</div></div>
+        <div class="kpi"><div class="label">Empates</div><div class="value" id="kpiDraws">0</div><div class="hint">Sin ganador</div></div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <span class="pill">Pistas: <b id="hintsUsed" style="color:var(--text);margin-left:6px">0</b></span>
+        <span class="pill">Undo: <b id="undosUsed" style="color:var(--text);margin-left:6px">0</b></span>
+        <span class="pill">Mejor win: <b id="fastestWin" style="color:var(--text);margin-left:6px">—</b></span>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <span class="pill">Último: <b id="lastResult" style="color:var(--text);margin-left:6px">—</b></span>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- Drawer Menú -->
+<div class="drawerBack" id="drawerBack"></div>
+<aside class="drawer" id="drawer">
+  <div class="row" style="justify-content:space-between">
+    <h3 style="margin:0">Menú</h3>
+    <button class="btn" id="btnCloseDrawer">Cerrar</button>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Sxgura Inc • Endo IA</div>
+    <div class="itemRow">
+      <button class="btn fullBtn" id="btnCredits">Créditos</button>
+
+      <!-- ICONOS AÑADIDOS -->
+      <a class="btn fullBtn" href="https://wa.me/254102300454?&text=Hola%20Sxgura%20Inc" target="_blank" rel="noopener">
+        <span style="display:inline-flex;align-items:center;gap:8px">
+          <span aria-hidden="true">🟢</span>
+          <span><b>WhatsApp</b> • Creador</span>
+        </span>
+      </a>
+
+      <a class="btn fullBtn" href="https://t.me/EllSxgura" target="_blank" rel="noopener">
+        <span style="display:inline-flex;align-items:center;gap:8px">
+          <span aria-hidden="true">🔵</span>
+          <span><b>Telegram</b> • Creador</span>
+        </span>
+      </a>
+
+      <a class="btn fullBtn" href="https://atom.bio/sxgurabrrokal" target="_blank" rel="noopener">
+        <span style="display:inline-flex;align-items:center;gap:8px">
+          <span aria-hidden="true">🌐</span>
+          <span><b>Sitio web</b> • Oficial</span>
+        </span>
+      </a>
+
+      <a class="btn fullBtn" href="" target="_blank" rel="noopener">
+        <span style="display:inline-flex;align-items:center;gap:8px">
+          <span aria-hidden="true">🧩</span>
+          <span><b>Información:</b> versión del juego  ( 6.2 ) fecha de lanzamiento 03/01/26 pais de orígen Colombia 🇨🇴 en mi sitio web oficial se iran subiendo actualizaciones y anuncios 🚀</span>
+        
+
+       <a class="btn fullBtn" href="" target="_blank" rel="noopener">
+        <span style="display:inline-flex;align-items:center;gap:8px">
+          <span aria-hidden="true">🖥 </span>
+      </span><b>  Licencias de Código Abierto:</b> Mi juego está disponible bajo licencia de Código Abierto. Puedes explorar, modificar y compartir. Te invitamos a enviar tus modificaciones al creador original para que conozca tus implementaciones y pueda aprender de ellas. ¡Únete a la comunidad y haz que el juego sea aún mejor!</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Configuración</div>
+    <div class="itemRow">
+      <button class="btn" id="mSound">Sonido</button>
+      <button class="btn" id="mMusic">Música</button>
+      <button class="btn good" id="mAuto">Auto-start</button>
+      <button class="btn danger" id="btnReset">Reset stats</button>
+      <button class="btn" id="btnExport">Exportar JSON</button>
+    </div>
+    <div class="small" style="margin-top:10px">Auto-start reinicia solo al terminar una partida (si lo activas).</div>
+    <div class="small" style="margin-top:10px">Reset stats elimina todos los datos de partidas (cuidado).</div>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Logros (clasificados)</div>
+    <div class="tabs" style="margin-bottom:10px">
+      <div class="tab active" data-tab="done">✅ Completados</div>
+      <div class="tab" data-tab="progress">🟡 En progreso</div>
+      <div class="tab" data-tab="locked">⚪ No iniciados</div>
+    </div>
+    <div class="achList" id="achList"></div>
+  </div>
+</aside>
+
+<!-- Modal Créditos -->
+<div id="modalBack" style="position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:80">
+  <div style="width:min(640px,100%);border:1px solid var(--line);border-radius:20px;background:rgba(16,26,46,.95);box-shadow:var(--shadow);padding:16px">
+    <h3 style="margin:0 0 6px">Créditos</h3>
+    <p style="margin:0;color:var(--muted);line-height:1.45">
+      Juego: <b>Tres en Raya • Endo IA</b><br/>
+      Creador: <b>Sxgura</b><br/>
+      Marca: <b>Sxgura Inc</b><br/>
+      Extremo: <b>Endo IA invicto</b> (reto real: Ganar).
+    </p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:12px">
+      <button class="btn primary" id="btnCloseModal">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const rand = (n) => Math.floor(Math.random() * n);
+  const pick = (arr) => arr[rand(arr.length)];
+  const clone = (a) => a.slice();
+
+  if(typeof structuredClone !== "function"){
+    window.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
+  }
+
+  // ---------- Audio (relajante) ----------
+  let audioEnabled = true;
+  let musicEnabled = false;
+  let audioCtx = null;
+  let master = null;
+  let musicNodes = null;
+
+  function ensureAudio(){
+    if(!audioEnabled) return null;
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = AC ? new AC() : null;
+      if(audioCtx){
+        master = audioCtx.createGain();
+        master.gain.setValueAtTime(0.85, audioCtx.currentTime);
+        master.connect(audioCtx.destination);
+      }
+    }
+    return audioCtx;
+  }
+  async function resumeAudio(){
+    const ctx = ensureAudio();
+    if(!ctx) return;
+    if(ctx.state === "suspended"){
+      try{ await ctx.resume(); }catch{}
+    }
+  }
+
+  // “plop” suave
+  function softPlop(freq=440, dur=0.12, vol=0.14){
+    const ctx = ensureAudio(); if(!ctx || !master) return;
+    const t = ctx.currentTime;
+
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(1400, t);
+
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.exponentialRampToValueAtTime(freq*0.82, t + dur);
+
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    o.connect(f); f.connect(g); g.connect(master);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+
+  function playClick(){ softPlop(520, 0.11, 0.12); }
+  function playDraw(){ softPlop(392, 0.18, 0.14); }
+  function playLose(){ softPlop(220, 0.22, 0.16); }
+  function playWin(){
+    const notes = [523.25, 659.25, 783.99];
+    notes.forEach((f,i)=> setTimeout(()=>softPlop(f,0.18,0.16), i*70));
+  }
+
+  // ✅ MUSIC FIX: más audible + arpegio suave + interval correcto
+  function startMusic(){
+    const ctx = ensureAudio(); if(!ctx || !master) return;
+    if(musicNodes) return;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.16, ctx.currentTime);
+    gain.connect(master);
+
+    const drone = ctx.createOscillator();
+    drone.type = "sine";
+    drone.frequency.setValueAtTime(110, ctx.currentTime);
+
+    const pad = ctx.createGain();
+    pad.gain.setValueAtTime(0.001, ctx.currentTime);
+
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.type = "sine";
+    lfo.frequency.setValueAtTime(0.55, ctx.currentTime);
+    lfoGain.gain.setValueAtTime(0.14, ctx.currentTime);
+
+    lfo.connect(lfoGain);
+    lfoGain.connect(pad.gain);
+
+    drone.connect(pad);
+    pad.connect(gain);
+
+    // pulso/arpegio
+    const arp = ctx.createOscillator();
+    const arpGain = ctx.createGain();
+    arp.type = "triangle";
+    arpGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    arp.connect(arpGain).connect(gain);
+
+    const notes = [196, 220, 247, 294]; // G A B D
+    let step = 0;
+
+    const interval = setInterval(() => {
+      if(!musicNodes || !audioCtx) return;
+      const t = audioCtx.currentTime;
+      const f = notes[step % notes.length];
+      arp.frequency.setValueAtTime(f, t);
+
+      arpGain.gain.cancelScheduledValues(t);
+      arpGain.gain.setValueAtTime(0.0001, t);
+      arpGain.gain.exponentialRampToValueAtTime(0.08, t + 0.015);
+      arpGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+
+      step++;
+    }, 320);
+
+    drone.start();
+    lfo.start();
+    arp.start();
+
+    musicNodes = { gain, drone, lfo, lfoGain, pad, arp, arpGain, interval };
+  }
+
+  function stopMusic(){
+    if(!musicNodes || !audioCtx) return;
+    const t = audioCtx.currentTime;
+
+    try{
+      clearInterval(musicNodes.interval);
+      musicNodes.gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+      musicNodes.drone.stop(t + 0.16);
+      musicNodes.lfo.stop(t + 0.16);
+      musicNodes.arp.stop(t + 0.16);
+    }catch{}
+    musicNodes = null;
+  }
+
+  // ---------- UI ----------
+  const boardEl = $("board");
+  const winLineEl = $("winLine");
+  const winLineBar = $("winLineBar");
+  const msgEl = $("msg");
+
+  const diffEl = $("difficulty");
+  const modeLabel = $("modeLabel");
+  const turnDot = $("turnDot");
+  const turnText = $("turnText");
+
+  const btnNew = $("btnNew");
+  const btnHint = $("btnHint");
+  const btnUndo = $("btnUndo");
+
+  const btnSound = $("btnSound");
+  const btnMusic = $("btnMusic");
+  const btnAuto = $("btnAuto");
+  let autoStart = false;
+
+  // Drawer
+  const btnMenu = $("btnMenu");
+  const drawerBack = $("drawerBack");
+  const drawer = $("drawer");
+  const btnCloseDrawer = $("btnCloseDrawer");
+
+  const mSound = $("mSound");
+  const mMusic = $("mMusic");
+  const mAuto = $("mAuto");
+
+  const btnCredits = $("btnCredits");
+  const modalBack = $("modalBack");
+  const btnCloseModal = $("btnCloseModal");
+
+  const btnExport = $("btnExport");
+  const btnReset = $("btnReset");
+
+  const achList = $("achList");
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+
+  // KPIs
+  const kpiGames = $("kpiGames");
+  const kpiWins = $("kpiWins");
+  const kpiLosses = $("kpiLosses");
+  const kpiDraws = $("kpiDraws");
+  const streakLabel = $("streakLabel");
+  const bestStreakLabel = $("bestStreakLabel");
+  const hintsUsedEl = $("hintsUsed");
+  const undosUsedEl = $("undosUsed");
+  const fastestWinEl = $("fastestWin");
+  const lastResultEl = $("lastResult");
+
+  // ---------- State ----------
+  let board = Array(9).fill(null);
+  const player = "X";
+  const ai = "O";
+  let yourTurn = true;
+  let gameOver = false;
+  let lastSnapshot = null;
+  let movesX = 0;
+  let usedHintThisGame = false;
+
+  // ---------- Storage ----------
+  const STORE_KEY = "sxgura_ttt_launch_static_v1";
+  const defaultStats = {
+    games:0,wins:0,losses:0,draws:0,
+    streak:0,bestStreak:0,
+    achievements:{},
+    totals:{hints:0,undos:0},
+    fastestWinMoves:null,
+    last:"—",
+    modeCounts:{
+      easy:{wins:0,draws:0,losses:0},
+      medium:{wins:0,draws:0,losses:0},
+      hard:{wins:0,draws:0,losses:0},
+      extreme:{wins:0,draws:0,losses:0}
+    }
+  };
+  const loadStats = () => {
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return structuredClone(defaultStats);
+      const s = JSON.parse(raw);
+      const base = structuredClone(defaultStats);
+      return {
+        ...base, ...s,
+        achievements: { ...(s.achievements||{}) },
+        totals: { ...base.totals, ...(s.totals||{}) },
+        modeCounts: { ...base.modeCounts, ...(s.modeCounts||{}) }
+      };
+    }catch{
+      return structuredClone(defaultStats);
+    }
+  };
+  const saveStats = (s) => localStorage.setItem(STORE_KEY, JSON.stringify(s));
+  let stats = loadStats();
+
+  // ---------- Achievements ----------
+  const WIN_THRESH = [1,2,3,5,7,10,12,15,20,25,30,40,50,60,75,100,125,150,200,250];
+  const EXT_DRAW_THRESH = [1,2,3,5,7,10,12,15,20,25,30,40,50,60,75,100,125,150,200,250];
+
+  function buildAchievements(){
+    const out = [];
+    out.push({id:"first_game", title:"Primer paso", desc:"Juega tu primera partida.", icon:"🏁",
+      progress: () => ({cur: Math.min(stats.games,1), goal:1})
+    });
+    out.push({id:"games_10", title:"Constante", desc:"Juega 10 partidas.", icon:"📌",
+      progress: () => ({cur: clamp(stats.games,0,10), goal:10})
+    });
+    out.push({id:"games_50", title:"Veterano", desc:"Juega 50 partidas.", icon:"🧩",
+      progress: () => ({cur: clamp(stats.games,0,50), goal:50})
+    });
+    out.push({id:"streak_5", title:"Modo máquina", desc:"Gana 5 seguidas.", icon:"🚀",
+      progress: () => ({cur: clamp(stats.streak,0,5), goal:5})
+    });
+
+    const modes = [
+      {key:"easy", name:"Fácil", icon:"🟦"},
+      {key:"medium", name:"Medio", icon:"🟨"},
+      {key:"hard", name:"Difícil", icon:"🟥"},
+    ];
+    for(const m of modes){
+      for(const n of WIN_THRESH){
+        out.push({
+          id:`win_${m.key}_${n}`,
+          title:`${m.name} • ${n} wins`,
+          desc:`Gana ${n} partidas en ${m.name}.`,
+          icon:m.icon,
+          progress: () => {
+            const cur = stats.modeCounts[m.key].wins;
+            return {cur: clamp(cur,0,n), goal:n};
+          }
+        });
+      }
+    }
+
+    for(const n of EXT_DRAW_THRESH){
+      out.push({
+        id:`draw_extreme_${n}`,
+        title:`Extremo • ${n} empates`,
+        desc:`Empata ${n} veces en Extremo (invicto).`,
+        icon:"🧊",
+        progress: () => {
+          const cur = stats.modeCounts.extreme.draws;
+          return {cur: clamp(cur,0,n), goal:n};
+        }
+      });
+    }
+
+    return out;
+  }
+
+  function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
+
+  let ACH = buildAchievements();
+
+  function unlock(id){
+    if(stats.achievements[id]) return;
+    stats.achievements[id] = true;
+    saveStats(stats);
+  }
+
+  function checkAchievements(){
+    for(const a of ACH){
+      const p = a.progress();
+      if(p.cur >= p.goal) unlock(a.id);
+    }
+  }
+
+  // ---------- Win line ----------
+  const WINS = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  function winnerInfo(b){
+    for(const combo of WINS){
+      const [a,c,d] = combo;
+      if(b[a] && b[a]===b[c] && b[a]===b[d]) return {who:b[a], combo};
+    }
+    return null;
+  }
+  function isDraw(b){
+    return b.every(x => x !== null) && !winnerInfo(b);
+  }
+  function emptyCells(b){
+    const out=[];
+    for(let i=0;i<9;i++) if(!b[i]) out.push(i);
+    return out;
+  }
+  function hideWinLine(){ if(winLineEl) winLineEl.style.display="none"; }
+
+  // ✅ LINE FIX: línea se dibuja EXACTA entre centros de las celdas ganadoras (DOM-based)
+  function showWinLine(combo){
+    if(!winLineEl || !winLineBar || !boardEl) return;
+    const cells = Array.from(boardEl.children);
+    if(cells.length !== 9) return;
+
+    const a = combo[0];
+    const c = combo[2];
+
+    const wrapRect = winLineEl.getBoundingClientRect();
+    const r1 = cells[a].getBoundingClientRect();
+    const r2 = cells[c].getBoundingClientRect();
+
+    const x1 = (r1.left + r1.right) / 2 - wrapRect.left;
+    const y1 = (r1.top  + r1.bottom) / 2 - wrapRect.top;
+    const x2 = (r2.left + r2.right) / 2 - wrapRect.left;
+    const y2 = (r2.top  + r2.bottom) / 2 - wrapRect.top;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+
+    const pad = 18;
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    winLineEl.style.display = "block";
+    winLineBar.style.left = (x1 - pad/2) + "px";
+    winLineBar.style.top  = y1 + "px";
+    winLineBar.style.width = (dist + pad) + "px";
+    winLineBar.style.transformOrigin = "left center";
+    winLineBar.style.transform = `translateY(-50%) rotate(${angle}deg)`;
+
+    winLineBar.style.animation="none";
+    void winLineBar.offsetHeight;
+    winLineBar.style.animation="";
+  }
+
+  // ---------- IA ----------
+  function minimax(b, turn){
+    const w = winnerInfo(b);
+    if(w?.who === ai) return {score:10};
+    if(w?.who === player) return {score:-10};
+    if(isDraw(b)) return {score:0};
+
+    const moves=[];
+    for(const idx of emptyCells(b)){
+      const nb = clone(b);
+      nb[idx] = turn;
+      const r = minimax(nb, turn===ai ? player : ai);
+      moves.push({idx, score:r.score});
+    }
+    if(turn===ai){
+      let best=moves[0]; for(const m of moves) if(m.score>best.score) best=m;
+      return best;
+    }else{
+      let best=moves[0]; for(const m of moves) if(m.score<best.score) best=m;
+      return best;
+    }
+  }
+  function heuristicMove(b){
+    const empties = emptyCells(b);
+    for(const i of empties){ const nb=clone(b); nb[i]=ai; if(winnerInfo(nb)?.who===ai) return i; }
+    for(const i of empties){ const nb=clone(b); nb[i]=player; if(winnerInfo(nb)?.who===player) return i; }
+    if(!b[4]) return 4;
+    const corners=[0,2,6,8].filter(i=>!b[i]); if(corners.length) return pick(corners);
+    const sides=[1,3,5,7].filter(i=>!b[i]); if(sides.length) return pick(sides);
+    return pick(empties);
+  }
+  function aiChooseMove(){
+    const diff = diffEl.value;
+    const empties = emptyCells(board);
+    if(!empties.length) return null;
+    if(diff==="easy") return pick(empties);
+    if(diff==="medium") return (Math.random()<0.70) ? heuristicMove(board) : pick(empties);
+    if(diff==="hard") return (Math.random()<0.90) ? minimax(board, ai).idx : heuristicMove(board);
+    return minimax(board, ai).idx;
+  }
+  function extremeAntiWinIfNeeded(lastMoveIndex){
+    if(diffEl.value !== "extreme") return false;
+    const w = winnerInfo(board);
+    if(w?.who !== player) return false;
+    board[lastMoveIndex]=null;
+    const empties=emptyCells(board);
+    if(!empties.length) return true;
+    board[pick(empties)] = player;
+    return true;
+  }
+
+  // ---------- Render ----------
+  function toast(t){ msgEl.textContent = t; }
+
+  function modeName(v){
+    return v==="easy"?"Fácil":v==="medium"?"Medio":v==="hard"?"Difícil":"Extremo";
+  }
+  function updateModeLabel(){ modeLabel.textContent = modeName(diffEl.value); }
+
+  function setTurnUI(){
+    const xTurn = yourTurn && !gameOver;
+    turnDot.style.background = xTurn ? "var(--pri)" : "var(--ok)";
+    turnDot.style.boxShadow = xTurn ? "0 0 0 4px rgba(79,124,255,.15)" : "0 0 0 4px rgba(38,208,124,.15)";
+    turnText.textContent = gameOver ? "Partida terminada" : (xTurn ? "Tu turno (X)" : "Turno Endo IA (O)");
+  }
+
+  function renderBoard(popIndex=null){
+    boardEl.innerHTML="";
+    board.forEach((v,i)=>{
+      const cell=document.createElement("div");
+      cell.className="cell"+((v||gameOver||!yourTurn)?" disabled":"")+(popIndex===i?" pop":"");
+      cell.textContent=v||"";
+      if(v==="X") cell.classList.add("badgeX");
+      if(v==="O") cell.classList.add("badgeO");
+      cell.addEventListener("click", ()=>handlePlayerMove(i));
+      boardEl.appendChild(cell);
+    });
+    setTurnUI();
+  }
+
+  function renderKPIs(){
+    kpiGames.textContent=String(stats.games);
+    kpiWins.textContent=String(stats.wins);
+    kpiLosses.textContent=String(stats.losses);
+    kpiDraws.textContent=String(stats.draws);
+    streakLabel.textContent=String(stats.streak);
+    bestStreakLabel.textContent=String(stats.bestStreak);
+    hintsUsedEl.textContent=String(stats.totals.hints||0);
+    undosUsedEl.textContent=String(stats.totals.undos||0);
+    fastestWinEl.textContent = stats.fastestWinMoves ? `${stats.fastestWinMoves} mov.` : "—";
+    lastResultEl.textContent = stats.last || "—";
+  }
+
+  // ---------- Achievements UI ----------
+  let achTab = "done";
+
+  function pct(cur, goal){
+    if(goal<=0) return 0;
+    return Math.max(0, Math.min(100, Math.round((cur/goal)*100)));
+  }
+
+  function renderAchievementsPanel(){
+    ACH = buildAchievements();
+    checkAchievements();
+
+    const items = ACH.map(a=>{
+      const p = a.progress();
+      const done = !!stats.achievements[a.id];
+      const percent = pct(p.cur, p.goal);
+      return {a, p, done, percent};
+    });
+
+    const doneItems = items.filter(x=>x.done);
+    const progressItems = items.filter(x=>!x.done && x.p.cur>0);
+    const lockedItems = items.filter(x=>!x.done && x.p.cur===0);
+
+    let show = (achTab==="done") ? doneItems :
+               (achTab==="progress") ? progressItems : lockedItems;
+
+    show.sort((x,y)=> (y.percent - x.percent) || x.a.title.localeCompare(y.a.title));
+
+    achList.innerHTML="";
+    if(show.length===0){
+      const div=document.createElement("div");
+      div.className="small";
+      div.textContent="Nada aquí todavía.";
+      achList.appendChild(div);
+      return;
+    }
+
+    for(const it of show){
+      const div=document.createElement("div");
+      div.className="ach";
+      div.innerHTML=`
+        <div class="medal">${it.a.icon}</div>
+        <div style="flex:1">
+          <div class="t">${it.a.title} ${it.done?"✅":""}</div>
+          <div class="d">${it.a.desc}</div>
+          ${it.done ? "" : `
+            <div class="prog"><div style="width:${it.percent}%"></div></div>
+            <div class="small" style="margin-top:6px">${it.p.cur} / ${it.p.goal} • ${it.percent}%</div>
+          `}
+        </div>
+      `;
+      achList.appendChild(div);
+    }
+  }
+
+  tabs.forEach(t=>{
+    t.addEventListener("click", async ()=>{
+      await resumeAudio(); playClick();
+      tabs.forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      achTab = t.dataset.tab;
+      renderAchievementsPanel();
+    });
+  });
+
+  // ---------- Game ----------
+  function snapshot(){
+    lastSnapshot = {
+      board: clone(board),
+      yourTurn, gameOver,
+      movesX,
+      usedHintThisGame
+    };
+    btnUndo.disabled=false;
+  }
+
+  function restoreSnapshot(){
+    if(!lastSnapshot) return;
+    board = clone(lastSnapshot.board);
+    yourTurn = lastSnapshot.yourTurn;
+    gameOver = lastSnapshot.gameOver;
+    movesX = lastSnapshot.movesX;
+    usedHintThisGame = lastSnapshot.usedHintThisGame;
+    lastSnapshot=null;
+    btnUndo.disabled=true;
+    stats.totals.undos = (stats.totals.undos||0)+1;
+    saveStats(stats);
+    hideWinLine();
+    toast("Deshacer aplicado.");
+    renderBoard();
+    renderKPIs();
+  }
+
+  function endGame(who, combo=null){
+    gameOver=true;
+    stats.games += 1;
+
+    const diff = diffEl.value;
+
+    if(who==="X"){
+      stats.wins += 1;
+      stats.streak += 1;
+      stats.bestStreak = Math.max(stats.bestStreak, stats.streak);
+      stats.last="Victoria ✅";
+      stats.modeCounts[diff].wins += 1;
+
+      if(stats.fastestWinMoves===null || movesX < stats.fastestWinMoves){
+        stats.fastestWinMoves = movesX;
+      }
+      playWin();
+      toast("¡Victoria! ✅");
+      if(combo) showWinLine(combo);
+    } else if(who==="O"){
+      stats.losses += 1;
+      stats.streak = 0;
+      stats.last="Derrota ❌";
+      stats.modeCounts[diff].losses += 1;
+
+      playLose();
+      toast("Derrota 😵");
+      if(combo) showWinLine(combo);
+    } else {
+      stats.draws += 1;
+      stats.last="Empate 🤝";
+      stats.modeCounts[diff].draws += 1;
+
+      playDraw();
+      toast(diff==="extreme" ? "Empate 🤝 (sobreviviste en Extremo)" : "Empate 🤝");
+      hideWinLine();
+    }
+
+    saveStats(stats);
+    renderKPIs();
+    renderAchievementsPanel();
+
+    if(autoStart){
+      setTimeout(()=>newGame(true), 550);
+    }
+  }
+
+  function checkAfterMove(){
+    const w = winnerInfo(board);
+    if(w) return endGame(w.who, w.combo);
+    if(isDraw(board)) return endGame("D", null);
+  }
+
+  async function handlePlayerMove(i){
+    if(gameOver || !yourTurn) return;
+    if(board[i]) return;
+
+    await resumeAudio();
+    snapshot();
+
+    board[i]=player;
+    movesX += 1;
+    playClick();
+    renderBoard(i);
+
+    if(extremeAntiWinIfNeeded(i)) renderBoard();
+
+    checkAfterMove();
+    if(gameOver) return;
+
+    yourTurn=false;
+    setTurnUI();
+
+    setTimeout(async ()=>{
+      await resumeAudio();
+      const move = aiChooseMove();
+      if(move===null || gameOver) return;
+      board[move]=ai;
+      playClick();
+      renderBoard(move);
+      yourTurn=true;
+      checkAfterMove();
+    }, 220);
+  }
+
+  function newGame(silent=false){
+    board = Array(9).fill(null);
+    yourTurn=true;
+    gameOver=false;
+    lastSnapshot=null;
+    movesX=0;
+    usedHintThisGame=false;
+    btnUndo.disabled=true;
+    hideWinLine();
+    if(!silent) toast("Nueva partida.");
+    renderBoard();
+  }
+
+  async function hint(){
+    if(gameOver) return toast("La partida terminó. Inicia otra.");
+    if(!yourTurn) return toast("Espera tu turno.");
+    await resumeAudio();
+
+    usedHintThisGame=true;
+    stats.totals.hints = (stats.totals.hints||0)+1;
+    saveStats(stats);
+    renderKPIs();
+
+    const best = minimax(board, player);
+    if(best?.idx===undefined) return toast("No hay sugerencia.");
+    playClick();
+    toast(`Sugerencia: celda ${best.idx+1}.`);
+    renderAchievementsPanel();
+  }
+
+  // ---------- Drawer / Modal / Export ----------
+  function openDrawer(){
+    drawerBack.classList.add("show");
+    drawer.classList.add("show");
+    renderAchievementsPanel();
+  }
+  function closeDrawer(){
+    drawerBack.classList.remove("show");
+    drawer.classList.remove("show");
+  }
+
+  function openCredits(){
+    modalBack.style.display="flex";
+  }
+  function closeCredits(){
+    modalBack.style.display="none";
+  }
+
+  function exportStats(){
+    const data = {creator:"Sxgura", ai:"Endo IA", stats, exportedAt:new Date().toISOString()};
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url; a.download="sxgura_endoIA_stats.json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 500);
+    toast("Exportado ✅");
+  }
+
+  function resetStats(){
+    stats = structuredClone(defaultStats);
+    saveStats(stats);
+    toast("Reset completo ✅");
+    renderKPIs();
+    renderAchievementsPanel();
+    newGame(true);
+  }
+
+  // ---------- Init ----------
+  function modeInitButtons(){
+    mSound.textContent = `Sonido: ${audioEnabled?"ON":"OFF"}`;
+    mMusic.textContent = `Música: ${musicEnabled?"ON":"OFF"}`;
+    mAuto.textContent  = `Auto-start: ${autoStart?"ON":"OFF"}`;
+    btnAuto.textContent = `Auto: ${autoStart?"ON":"OFF"}`;
+    btnSound.textContent = `Sonido: ${audioEnabled?"ON":"OFF"}`;
+    btnMusic.textContent = `Música: ${musicEnabled?"ON":"OFF"}`;
+  }
+
+  function init(){
+    updateModeLabel();
+    renderKPIs();
+    renderAchievementsPanel();
+    btnUndo.disabled=true;
+
+    diffEl.addEventListener("change", async ()=>{
+      await resumeAudio(); playClick();
+      updateModeLabel();
+      newGame(true);
+      toast(diffEl.value==="extreme" ? "Extremo ON: meta = EMPATAR." : `Modo: ${modeName(diffEl.value)}.`);
+    });
+
+    btnNew.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); newGame(); });
+    btnHint.addEventListener("click", hint);
+    btnUndo.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); restoreSnapshot(); });
+
+    // Auto-start toggle
+    btnAuto.addEventListener("click", async ()=>{
+      await resumeAudio(); playClick();
+      autoStart = !autoStart;
+      modeInitButtons();
+      toast(autoStart ? "Auto-start ACTIVADO ✅" : "Auto-start DESACTIVADO");
+    });
+
+    // Audio toggles
+    btnSound.addEventListener("click", async ()=>{
+      await resumeAudio();
+      audioEnabled = !audioEnabled;
+      if(!audioEnabled){
+        stopMusic(); musicEnabled=false;
+      } else {
+        ensureAudio();
+      }
+      modeInitButtons();
+      playClick();
+      toast(audioEnabled ? "Sonido ON 🔊" : "Sonido OFF 🔇");
+    });
+
+    btnMusic.addEventListener("click", async ()=>{
+      if(!audioEnabled){ toast("Activa el sonido primero."); return; }
+      await resumeAudio();
+      musicEnabled = !musicEnabled;
+      if(musicEnabled) startMusic(); else stopMusic();
+      modeInitButtons();
+      playClick();
+      toast(musicEnabled ? "Música ON 🎵" : "Música OFF");
+    });
+
+    // Drawer open/close
+    btnMenu.addEventListener("click", async ()=>{
+      await resumeAudio(); playClick();
+      openDrawer();
+    });
+    drawerBack.addEventListener("click", closeDrawer);
+    btnCloseDrawer.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); closeDrawer(); });
+
+    // Drawer config buttons
+    mSound.addEventListener("click", async ()=>{ await resumeAudio(); btnSound.click(); });
+    mMusic.addEventListener("click", async ()=>{ await resumeAudio(); btnMusic.click(); });
+    mAuto.addEventListener("click", async ()=>{ await resumeAudio(); btnAuto.click(); });
+
+    btnCredits.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); openCredits(); });
+    btnCloseModal.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); closeCredits(); });
+    modalBack.addEventListener("click", (e)=>{ if(e.target===modalBack) closeCredits(); });
+
+    btnExport.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); exportStats(); });
+    btnReset.addEventListener("click", async ()=>{ await resumeAudio(); playClick(); resetStats(); });
+
+    modeInitButtons();
+    toast("Listo. Tú eres X. ¡A jugar!");
+    newGame(true);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
