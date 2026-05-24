@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sxgura Información</title>
+
+<style>
+
+:root{
+--bg:#050505;
+--panel:#0d0d0d;
+--red:#ff0000;
+--red2:#990000;
+--text:#ffffff;
+--gray:#b8b8b8;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+}
+
+/* FONDO */
+
+body::before{
+content:"";
+position:fixed;
+width:200%;
+height:200%;
+background:
+radial-gradient(circle,#ff000022 1px,transparent 1px);
+background-size:60px 60px;
+animation:fondo 30s linear infinite;
+z-index:-1;
+}
+
+@keyframes fondo{
+from{
+transform:translate(0,0);
+}
+to{
+transform:translate(-60px,-60px);
+}
+}
+
+/* CONTAINER */
+
+.container{
+max-width:950px;
+margin:auto;
+padding:30px;
+animation:fade .8s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* TITLE */
+
+.logo{
+text-align:center;
+font-size:42px;
+font-weight:bold;
+color:var(--red);
+text-shadow:0 0 20px var(--red);
+margin-bottom:10px;
+letter-spacing:2px;
+}
+
+.subtitle{
+text-align:center;
+color:#999;
+margin-bottom:35px;
+font-size:14px;
+}
+
+/* CARDS */
+
+.card{
+background:linear-gradient(180deg,#0d0d0d,#070707);
+border:1px solid #1c1c1c;
+border-radius:18px;
+padding:24px;
+margin-bottom:22px;
+transition:.25s;
+position:relative;
+overflow:hidden;
+}
+
+.card::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:3px;
+background:linear-gradient(90deg,var(--red),transparent);
+}
+
+.card:hover{
+transform:translateY(-5px);
+border-color:var(--red);
+box-shadow:0 0 25px rgba(255,0,0,.25);
+}
+
+.card h2{
+color:var(--red);
+margin-bottom:15px;
+font-size:22px;
+}
+
+.card p{
+color:var(--gray);
+line-height:1.8;
+font-size:15px;
+}
+
+/* REDES */
+
+.redes{
+display:flex;
+flex-direction:column;
+gap:14px;
+margin-top:20px;
+}
+
+.redes a{
+text-decoration:none;
+padding:14px;
+border-radius:14px;
+background:#140000;
+border:1px solid #ff000033;
+color:#ff4d4d;
+font-weight:bold;
+transition:.25s;
+}
+
+.redes a:hover{
+background:var(--red);
+color:white;
+transform:scale(1.03);
+box-shadow:0 0 20px rgba(255,0,0,.4);
+}
+
+/* BADGE */
+
+.badge{
+display:inline-block;
+padding:6px 12px;
+background:#ff000022;
+border:1px solid #ff000044;
+border-radius:10px;
+font-size:12px;
+color:#ff4d4d;
+margin-top:10px;
+}
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+margin-top:40px;
+color:#666;
+font-size:13px;
+line-height:1.8;
+padding-bottom:30px;
+}
+
+/* SCROLL */
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+background:var(--red);
+border-radius:20px;
+}
+
+::-webkit-scrollbar-track{
+background:#0a0a0a;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+LICENCIAS
+</div>
+
+<div class="subtitle">
+Sistema informativo
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Juegos</h2>
+
+<p>
+Descarga nuestros juegos directamente desde el canal oficial de Telegram.  
+Todas las versiones publicadas son verificadas y mantenidas por la comunidad.
+</p>
+
+<div class="badge">
+DESCARGAS
+</div>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Comunidad</h2>
+
+<p>
+Todos los juegos se distribuyen unicamente desde el canal oficial para garantizar archivos seguros, actualizados y libres de modificaciones externas o contenido engañoso.
+</p>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Codigo Libre</h2>
+
+<p>
+Los proyectos son open source y pueden ser estudiados, modificados y adaptados libremente con fines educativos, creativos o de desarrollo personal.
+<br><br>
+Sin embargo, no esta permitido utilizar el codigo para actividades maliciosas, suplantaciones, fraudes, extorsiones, distribucion engañosa o cualquier accion que afecte la seguridad de otras personas o de la comunidad.
+</p>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Evolucion</h2>
+
+<p>
+Puedes crear nuevas versiones, añadir funciones o mejorar los proyectos existentes siempre que se mantenga un uso responsable y moderado del contenido original.
+<br><br>
+Las modificaciones realizadas por terceros no representan oficialmente a Sxgura Inc a menos que sean publicadas desde los canales oficiales.
+</p>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Descargas</h2>
+
+<p>
+Descarga directa desde Telegram.<br>
+Sin intermediarios ni paginas externas.<br>
+Modifica y aprende libremente.<br>
+Comparte tus mejoras con la comunidad.
+</p>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Creatividad</h2>
+
+<p>
+La comunidad esta enfocada en creatividad, aprendizaje y desarrollo colaborativo.  
+Cada mejora o idea puede formar parte de futuras actualizaciones.
+</p>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Canal de Telegram</h2>
+
+<p>
+Oficial
+</p>
+
+<div class="redes">
+
+<a href="https://t.me/SxgProyect" target="_blank">
+INGRESAR
+</a>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+© 2026 Sxgura Inc<br>
+Todos los derechos reservados
+
+</div>
+
+</div>
+
+</body>
+</html>
