@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sxgura System v6.2.0</title>
+
+<style>
+
+:root{
+--bg:#050505;
+--panel:#0d0d0d;
+--panel2:#111;
+--red:#ff0000;
+--red2:#990000;
+--text:#ffffff;
+--gray:#999;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+}
+
+/* LOADING */
+
+#loading{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:999999;
+}
+
+.loader-logo{
+width:90px;
+height:90px;
+border-radius:20px;
+border:2px solid var(--red);
+box-shadow:0 0 30px rgba(255,0,0,.5);
+margin-bottom:20px;
+object-fit:cover;
+}
+
+#loading h2{
+color:var(--red);
+font-size:28px;
+margin-bottom:12px;
+text-shadow:0 0 15px var(--red);
+}
+
+#loadText{
+color:#ccc;
+font-size:14px;
+}
+
+/* MAIN */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+animation:fade .8s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.top-box{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo{
+font-size:34px;
+font-weight:bold;
+color:var(--red);
+text-shadow:0 0 15px var(--red);
+margin-bottom:10px;
+}
+
+.version{
+display:inline-block;
+padding:8px 14px;
+background:#111;
+border:1px solid #1f1f1f;
+border-radius:10px;
+font-size:13px;
+color:#ccc;
+}
+
+.clock{
+margin-top:15px;
+font-size:14px;
+color:#aaa;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:18px;
+}
+
+/* CARDS */
+
+.card{
+background:linear-gradient(180deg,#0b0b0b,#070707);
+border:1px solid #1b1b1b;
+border-radius:18px;
+padding:18px;
+transition:.25s;
+position:relative;
+overflow:hidden;
+}
+
+.card:hover{
+transform:translateY(-4px);
+border-color:var(--red);
+box-shadow:0 0 25px rgba(255,0,0,.2);
+}
+
+.card::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:3px;
+background:linear-gradient(90deg,var(--red),transparent);
+}
+
+.card h3{
+margin-bottom:14px;
+color:var(--red);
+font-size:18px;
+}
+
+.card p,
+.card div{
+font-size:14px;
+line-height:1.7;
+color:#ccc;
+}
+
+/* BARS */
+
+.bar{
+height:10px;
+background:#111;
+border-radius:30px;
+overflow:hidden;
+margin:8px 0 14px;
+border:1px solid #1d1d1d;
+}
+
+.fill{
+height:100%;
+background:linear-gradient(90deg,#ff0000,#ff4d4d);
+border-radius:30px;
+box-shadow:0 0 15px rgba(255,0,0,.4);
+}
+
+/* BUTTON */
+
+.btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,var(--red),var(--red2));
+color:#fff;
+font-weight:bold;
+cursor:pointer;
+transition:.25s;
+margin-top:10px;
+}
+
+.btn:hover{
+transform:scale(1.03);
+box-shadow:0 0 25px rgba(255,0,0,.45);
+}
+
+/* TERMINAL */
+
+#terminal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+display:none;
+flex-direction:column;
+z-index:99999;
+}
+
+.term-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+border-bottom:1px solid #1f1f1f;
+background:#070707;
+}
+
+.term-header span{
+color:var(--red);
+font-weight:bold;
+}
+
+.exit{
+background:var(--red);
+border:none;
+padding:10px 14px;
+border-radius:10px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+#console{
+flex:1;
+overflow:hidden;
+padding:15px;
+font-family:Consolas,monospace;
+font-size:12px;
+line-height:1.6;
+color:#00ff66;
+}
+
+.term-footer{
+padding:15px;
+border-top:1px solid #1f1f1f;
+background:#070707;
+}
+
+.whatsapp{
+width:100%;
+padding:14px;
+background:#25D366;
+border:none;
+border-radius:12px;
+font-weight:bold;
+color:white;
+display:none;
+cursor:pointer;
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:30px;
+text-align:center;
+color:#666;
+font-size:13px;
+line-height:1.8;
+padding-bottom:30px;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- LOADING -->
+
+<div id="loading">
+
+<img 
+src="https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg"
+class="loader-logo"
+>
+
+<h2>Estamos Haciendo Magia...</h2>
+
+<p id="loadText">
+Inicializando núcleo...
+</p>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="container" id="main" style="display:none;">
+
+<div class="top-box">
+
+<div class="logo">
+S'xgura B'rrokal
+</div>
+
+<div class="version">
+VERSION 6.2.0 • TOP
+</div>
+
+<div class="clock" id="clock"></div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Información General</h3>
+
+<p>
+Empresa: Sxgura Inc<br>
+Localidad: Colombia<br>
+Sistema: Plataforma Digital<br>
+Estado: Operativo<br>
+Seguridad: Activa
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Descripción</h3>
+
+<p>
+Sxgura System es un entorno digital moderno diseñado para integrar herramientas, sistemas visuales, utilidades y experiencias interactivas en una sola plataforma rápida, elegante y funcional.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Rendimiento General</h3>
+
+<div>Velocidad</div>
+<div class="bar">
+<div class="fill" style="width:96%"></div>
+</div>
+
+<div>Seguridad</div>
+<div class="bar">
+<div class="fill" style="width:94%"></div>
+</div>
+
+<div>Estabilidad</div>
+<div class="bar">
+<div class="fill" style="width:97%"></div>
+</div>
+
+<div>Interfaz</div>
+<div class="bar">
+<div class="fill" style="width:99%"></div>
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Estado</h3>
+
+<p>
+Estable y funcionando correctamente.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Sistema de Actualización</h3>
+
+<p>
+Verificación del sistema y monitoreo interno de estabilidad.
+</p>
+
+<button class="btn" onclick="startTerminal()">
+Verificar Sistema
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Características</h3>
+
+<p>
+• Paneles dinámicos<br>
+• Entretenimiento<br>
+• Herramientas
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Créditos</h3>
+
+<p>
+Creador: Ell Sxgura<br>
+Organización: Sxgura Inc<br>
+Estado del proyecto: En crecimiento
+</p>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+© 2026 Sxgura Inc Empresa<br>
+Todos los derechos reservados
+
+</div>
+
+</div>
+
+<!-- TERMINAL -->
+
+<div id="terminal">
+
+<div class="term-header">
+
+<span>
+Sistema de Verificación
+</span>
+
+<button class="exit" onclick="exitTerminal()">
+Salir
+</button>
+
+</div>
+
+<div id="console"></div>
+
+</div>
+
+<script>
+
+/* RELOJ */
+
+function clock(){
+
+let now=new Date();
+
+let time=
+new Intl.DateTimeFormat(
+"es-CO",
+{
+timeZone:"America/Bogota",
+hour:"2-digit",
+minute:"2-digit",
+second:"2-digit"
+}
+).format(now);
+
+let date=
+new Intl.DateTimeFormat(
+"es-CO",
+{
+timeZone:"America/Bogota",
+year:"numeric",
+month:"long",
+day:"numeric"
+}
+).format(now);
+
+document.getElementById("clock").innerHTML=
+" "+time+" •  "+date;
+
+}
+
+setInterval(clock,1000);
+
+clock();
+
+/* LOADING */
+
+const steps=[
+
+"Iniciando núcleo del sistema...",
+"Cargando módulos visuales...",
+"Verificando seguridad...",
+"Optimizando interfaz...",
+"Sistema iniciado correctamente"
+
+];
+
+let i=0;
+
+function load(){
+
+if(i<steps.length){
+
+document.getElementById("loadText").innerText=
+steps[i];
+
+i++;
+
+setTimeout(load,700);
+
+}else{
+
+setTimeout(()=>{
+
+document.getElementById("loading").style.display="none";
+
+document.getElementById("main").style.display="block";
+
+},500);
+
+}
+
+}
+
+load();
+
+/* TERMINAL */
+
+function startTerminal(){
+
+document.getElementById("terminal").style.display="flex";
+
+let consoleDiv=document.getElementById("console");
+
+let lines=[];
+
+let count=0;
+
+function rand(n){
+return Math.floor(Math.random()*n);
+}
+
+function hex(){
+return Math.random().toString(16).substring(2,10);
+}
+
+function line(){
+
+const data=[
+
+"Iniciando verificación avanzada...",
+"Conexión segura establecida",
+"Protección del núcleo activa",
+"Analizando estabilidad del sistema",
+"Sin errores detectados",
+"Sincronización completada correctamente",
+"Render visual funcionando correctamente",
+"Firewall principal operativo",
+"Motor gráfico estable",
+"Velocidad del sistema optimizada",
+"Comprobando módulos internos",
+"Escaneo profundo completado",
+"Memoria RAM estable",
+"Latencia actual: "+rand(90)+"ms",
+"CPU en uso: "+rand(100)+"%",
+"RAM utilizada: "+rand(16000)+"MB",
+"Token generado: "+hex(),
+"Servidor principal: ONLINE",
+"Comprobando integridad visual",
+"Conexión protegida correctamente",
+"Cache del sistema optimizada",
+"Interfaz funcionando sin errores",
+"Estado general: ESTABLE",
+"Seguridad del sistema verificada",
+"Verificando versión instalada",
+"Versión detectada: 6.2.0",
+"Build estable encontrada",
+"No se requieren nuevas actualizaciones",
+"Sistema completamente actualizado",
+"Estabilidad verificada correctamente",
+"Optimización completada",
+"Protección avanzada habilitada",
+"Servicios internos funcionando",
+"Verificación completada exitosamente",
+"Sistema funcionando normalmente"
+
+];
+
+return data[rand(data.length)];
+
+}
+
+function update(){
+
+if(count < 180){
+
+lines.push(line());
+
+if(lines.length > 26){
+lines.shift();
+}
+
+consoleDiv.innerHTML = lines.join("<br>");
+
+count++;
+
+setTimeout(update,60);
+
+}else{
+
+setTimeout(()=>{
+
+consoleDiv.innerHTML = `
+
+<div style="
+color:#00ff66;
+line-height:1.8;
+font-family:Consolas,monospace;
+">
+
+<div style="
+font-size:20px;
+margin-bottom:18px;
+color:#00ff66;
+text-shadow:0 0 10px #00ff66;
+">
+SISTEMA ACTUALIZADO
+</div>
+
+━━━━━━━━━━━━━━━━━━━━━━
+░█▀▀░█░█░█▀▀░█░█░█▀▄░█▀█
+░▀▀█░▄▀▄░█░█░█░█░█▀▄░█▀█
+░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀░▀
+━━━━━━━━━━━━━━━━━━━━━━
+
+<br><br>
+
+Versión instalada: 6.2.0<br>
+Estado actual: ESTABLE<br>
+Protección: ACTIVA<br>
+Firewall: OPERATIVO<br>
+Servidor principal: ONLINE<br>
+Integridad: VERIFICADA<br>
+Optimización: COMPLETADA<br>
+Hosting: GitHub<br>
+Automatización: ENDO V XR<br> 
+
+<br>
+
+El sistema se actualiza automáticamente.
+
+`;
+
+
+},1200);
+
+}
+
+}
+
+update();
+
+}
+
+
+/* EXIT */
+
+function exitTerminal(){
+
+document.getElementById("terminal").style.display="none";
+
+document.getElementById("waBtn").style.display="none";
+
+}
+
+
+</script>
+
+</body>
+</html>
