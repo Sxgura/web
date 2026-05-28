@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Información | S'xgura Inc</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#000;
+color:#fff;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+overflow-x:hidden;
+}
+
+/* CARD */
+
+.info-box{
+width:100%;
+max-width:380px;
+background:#070707;
+border:1px solid #1a1a1a;
+border-radius:22px;
+padding:28px;
+box-shadow:0 0 30px rgba(255,0,0,.18);
+animation:fade .6s ease;
+}
+
+/* ANIMACIÓN */
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* PERFIL */
+
+.profile{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-bottom:25px;
+}
+
+.avatar{
+position:relative;
+width:95px;
+height:95px;
+margin-bottom:15px;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+border-radius:50%;
+object-fit:cover;
+border:3px solid #ff0000;
+box-shadow:0 0 20px rgba(255,0,0,.4);
+}
+
+.online{
+position:absolute;
+bottom:4px;
+right:4px;
+width:18px;
+height:18px;
+background:#00ff66;
+border-radius:50%;
+border:3px solid #000;
+box-shadow:0 0 12px #00ff66;
+}
+
+.profile h1{
+font-size:24px;
+color:#ff0000;
+margin-bottom:6px;
+text-align:center;
+}
+
+.profile p{
+font-size:13px;
+color:#aaa;
+text-align:center;
+line-height:1.5;
+}
+
+/* INFO */
+
+.info-section{
+margin-top:22px;
+}
+
+.info-item{
+background:#0d0d0d;
+border:1px solid #161616;
+border-radius:14px;
+padding:14px;
+margin-bottom:14px;
+transition:.25s;
+}
+
+.info-item:hover{
+border-color:#ff0000;
+transform:scale(1.02);
+}
+
+.label{
+font-size:12px;
+color:#888;
+margin-bottom:6px;
+}
+
+.value{
+font-size:15px;
+font-weight:bold;
+color:#fff;
+word-break:break-word;
+}
+
+/* TIMER */
+
+.timer{
+display:flex;
+justify-content:space-between;
+gap:10px;
+margin-top:10px;
+}
+
+.time-box{
+flex:1;
+background:#111;
+border-radius:12px;
+padding:10px;
+text-align:center;
+border:1px solid #1f1f1f;
+}
+
+.time-box h2{
+font-size:20px;
+color:#ff0000;
+margin-bottom:5px;
+}
+
+.time-box span{
+font-size:11px;
+color:#999;
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:22px;
+text-align:center;
+font-size:12px;
+color:#666;
+line-height:1.6;
+}
+
+/* GLOW */
+
+.glow{
+color:#ff0000;
+text-shadow:0 0 10px rgba(255,0,0,.7);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="info-box">
+
+<!-- PERFIL -->
+
+<div class="profile">
+
+<div class="avatar">
+
+<img src="https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg">
+
+<div class="online"></div>
+
+</div>
+
+<h1>S'xgura B'rrokal</h1>
+
+<p>
+
+</p>
+
+</div>
+
+<!-- CRÉDITOS -->
+
+<div class="info-section">
+
+<div class="info-item">
+
+<div class="label">
+Creador
+</div>
+
+<div class="value">
+Ell Sxgura
+</div>
+
+</div>
+
+<div class="info-item">
+
+<div class="label">
+Asociación
+</div>
+
+<div class="value">
+Sxgura Inc Empresa
+</div>
+
+</div>
+
+<div class="info-item">
+
+<div class="label">
+País
+</div>
+
+<div class="value">
+Colombia
+</div>
+
+</div>
+
+<div class="info-item">
+
+<div class="label">
+Versión
+</div>
+
+<div class="value">
+v8.2.0
+</div>
+
+</div>
+
+</div>
+
+<!-- ACTIVIDAD -->
+
+<div class="info-section">
+
+<div class="info-item">
+
+<div class="label">
+Tiempo de actividad
+</div>
+
+<div class="timer">
+
+<div class="time-box">
+<h2 id="days">00</h2>
+<span>Días</span>
+</div>
+
+<div class="time-box">
+<h2 id="hours">00</h2>
+<span>Horas</span>
+</div>
+
+<div class="time-box">
+<h2 id="minutes">00</h2>
+<span>Min</span>
+</div>
+
+<div class="time-box">
+<h2 id="seconds">00</h2>
+<span>Seg</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FECHA -->
+
+<div class="info-section">
+
+<div class="info-item">
+
+<div class="label">
+Hora actual Colombia
+</div>
+
+<div class="value" id="clock">
+Cargando...
+</div>
+
+</div>
+
+<div class="info-item">
+
+<div class="label">
+Fecha actual
+</div>
+
+<div class="value" id="date">
+Cargando...
+</div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<span class="glow">
+© 2026 Sxgura Inc.
+</span>
+
+<br>
+
+Todos los derechos reservados.
+
+</div>
+
+</div>
+
+<script>
+
+/* TIMER */
+
+const startDate = new Date("2026-05-28T00:00:00").getTime();
+
+function updateTimer(){
+
+const now = new Date().getTime();
+
+const distance = now - startDate;
+
+const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+const hours = Math.floor(
+(distance % (1000 * 60 * 60 * 24))
+/
+(1000 * 60 * 60)
+);
+
+const minutes = Math.floor(
+(distance % (1000 * 60 * 60))
+/
+(1000 * 60)
+);
+
+const seconds = Math.floor(
+(distance % (1000 * 60))
+/
+1000
+);
+
+document.getElementById("days").innerText =
+String(days).padStart(2,"0");
+
+document.getElementById("hours").innerText =
+String(hours).padStart(2,"0");
+
+document.getElementById("minutes").innerText =
+String(minutes).padStart(2,"0");
+
+document.getElementById("seconds").innerText =
+String(seconds).padStart(2,"0");
+
+}
+
+setInterval(updateTimer,1000);
+
+updateTimer();
+
+/* RELOJ COLOMBIA */
+
+function updateDateTime(){
+
+const now = new Date();
+
+const optionsTime = {
+timeZone:"America/Bogota",
+hour:"2-digit",
+minute:"2-digit",
+second:"2-digit"
+};
+
+const optionsDate = {
+timeZone:"America/Bogota",
+year:"numeric",
+month:"long",
+day:"numeric"
+};
+
+document.getElementById("clock").innerText =
+now.toLocaleTimeString("es-CO",optionsTime);
+
+document.getElementById("date").innerText =
+now.toLocaleDateString("es-CO",optionsDate);
+
+}
+
+setInterval(updateDateTime,1000);
+
+updateDateTime();
+
+</script>
+
+</body>
+</html>
