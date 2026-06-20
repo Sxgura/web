@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Downloader Cyber PRO</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+ background:#000;
+animation:none;
+  color:#fff;
+
+  /* 🔥 FIX SCROLL */
+  display:block;
+  min-height:100vh;
+  overflow-y:auto;
+}
+
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+
+/* caja */
+.box{
+  width:260px;
+  padding:20px;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 0 20px rgba(100,100,255,0.2);
+  animation:fadeIn 1s ease, glow 3s infinite alternate;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1;}
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 15px #3a6cff;}
+  to{box-shadow:0 0 30px #7b3cff;}
+}
+
+/* input */
+.input-box{position:relative;}
+
+input{
+  width:100%;
+  padding:12px 45px 12px 12px;
+  border:none;
+  border-radius:10px;
+  background:#0a0f2c;
+  color:#fff;
+  box-sizing:border-box;
+}
+
+.clear-btn{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+
+/* botón */
+button{
+  margin-top:15px;
+  width:100%;
+  padding:12px;
+  background:linear-gradient(45deg,#3a6cff,#7b3cff);
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  color:#fff;
+}
+
+button:hover{
+  box-shadow:0 0 15px #3a6cff;
+}
+
+/* video */
+video{
+  width:180px;
+  margin-top:15px;
+  border-radius:12px;
+  animation:fadeIn 0.6s ease;
+}
+
+/* link */
+a{
+  display:block;
+  margin-top:10px;
+  padding:8px;
+  background:#3a6cff;
+  color:#fff;
+  border-radius:8px;
+  text-decoration:none;
+}
+
+/* footer */
+.footer{
+  margin-top:20px;
+  font-size:11px;
+  color:#888;
+  opacity:0.7;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="box">
+    <h2>Instagram Downloader</h2>
+
+    <div class="input-box">
+      <input id="link" placeholder="Pegar enlace aquí">
+      <span class="clear-btn" onclick="limpiar()">✖</span>
+    </div>
+
+    <button onclick="descargar()">Descargar</button>
+
+    <div id="resultado"></div>
+
+    <div class="footer">Sxgura Inc</div>
+  </div>
+</div>
+
+
+<script>
+function limpiar(){
+  document.getElementById("link").value="";
+  document.getElementById("resultado").innerHTML="";
+}
+
+
+async function descargar(){
+  const link=document.getElementById("link").value;
+  const resDiv=document.getElementById("resultado");
+
+  if(!link){
+    alert("Pega un enlace");
+    return;
+  }
+
+  resDiv.innerHTML="Cargando...";
+
+  try{
+    const api="https://api.deline.web.id/downloader/ig?url="+encodeURIComponent(link);
+    const res=await fetch(api);
+    const data=await res.json();
+
+    let video=data?.result?.media?.videos?.[0];
+
+    if(video){
+      resDiv.innerHTML=`
+        <video controls src="${video}"></video>
+        <a href="${video}" download>Guardar</a>
+      `;
+    }else{
+      resDiv.innerHTML="Sin resultados.";
+    }
+
+  }catch{
+    resDiv.innerHTML="Error";
+  }
+}
+</script>
+
+</body>
+</html>
