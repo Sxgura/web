@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Poppins&size=28&pause=1000&color=3B82F6&center=true&vCenter=true&width=900&lines=%F0%9F%92%99+Powered+By+Sxgura+Inc;El+Mejor+Sistema;Explora+El+Nuevo+NivelTecnolog%C3%ADa%2C+dise%C3%B1o+y+automatizaci%C3%B3n" />
+<img src="https://readme-typing-svg.demolab.com?font=Poppins&size=35&pause=1000&color=3B82F6&center=true&vCenter=true&width=900&lines=%F0%9F%92%99+Powered+By+Sxgura+Inc;El+Mejor+Sistema;Explora+El+Nuevo+Nivel;Tecnolog%C3%ADa%2C+dise%C3%B1o+y+automatizaci%C3%B3n" />
 
 ### By Sxgura Inc
 
@@ -22,23 +22,3 @@ Aquí encontrarás juegos, herramientas, sistema de descargas, funciones útiles
 
 </div>
 </div>
-indice++;
-
-if(indice >= textos.length){
-
-indice = 0;
-
-}
-
-}
-
-}
-
-setTimeout(animar, 70);
-
-}
-
-animar();
-
-</script></body>
-</html>
