@@ -1,29 +1,30 @@
-<div align="center">💙 By Sxgura Inc.
+<div align="center"><img src="https://readme-typing-svg.demolab.com?font=Poppins&size=24&pause=1000&color=3B82F6&center=true&vCenter=true&width=1000&lines=%F0%9F%92%99+Powered+By+Sxgura+Inc;🎮+Juegos+y+entretenimiento;📥+Sistema+de+descargas+integrado;🛠+Herramientas+y+funciones+útiles;⚡+Nuevas+características+en+desarrollo;🔄+Actualizaciones+constantes;🚀+Proyecto+en+constante+evolución" />💙 By Sxgura Inc
 
-<img src="https://readme-typing-svg.demolab.com?font=Arial&weight=700&size=24&duration=3500&pause=1500&color=1976FF&center=true&vCenter=true&width=900&lines=Bienvenido+a+By+Sxgura+Inc.;🎮+Juegos+y+entretenimiento.;📥+Sistema+de+descargas.;🛠+Herramientas+y+funciones+útiles.;⚡+Nuevas+funciones+en+desarrollo.;🔄+Actualizaciones+constantes.;🚀+Proyecto+en+constante+evolución." /><br>""WhatsApp" (https://img.shields.io/badge/WhatsApp-1976FF?style=for-the-badge&logo=whatsapp&logoColor=white)" (https://wa.me/254102300454)
+Proyecto principal desarrollado y mantenido por By Sxgura Inc.
 
-""Telegram" (https://img.shields.io/badge/Telegram-1976FF?style=for-the-badge&logo=telegram&logoColor=white)" (https://t.me/EllSxgura)
+Aquí encontrarás juegos, herramientas, sistema de descargas, funciones útiles y nuevas características que seguirán llegando mediante futuras actualizaciones.
 
----
+<br><a href="https://wa.me/254102300454">
+<img src="https://img.shields.io/badge/WhatsApp-Enviar%20Mensaje-3B82F6?style=for-the-badge&logo=whatsapp&logoColor=white">
+</a>  
 
-💙 Acerca del proyecto
+<a href="https://t.me/EllSxgura">
+<img src="https://img.shields.io/badge/Telegram-Contactar-3B82F6?style=for-the-badge&logo=telegram&logoColor=white">
+</a><br><br>
 
-🎮 Juegos interactivos
+💙 Juegos interactivos
 
-📥 Sistema avanzado de descargas
+💙 Sistema de descargas
 
-🛠 Herramientas y funciones útiles
+💙 Herramientas útiles
 
-⚡ Funciones exclusivas
+💙 Funciones exclusivas
 
-🔄 Actualizaciones frecuentes
+💙 Actualizaciones frecuentes
 
-🚀 Proyecto mantenido y mejorado constantemente
+💙 Proyecto en crecimiento constante
 
----
-
-<img src="https://readme-typing-svg.demolab.com?font=Arial&weight=700&size=20&duration=3000&pause=1000&color=1976FF&center=true&vCenter=true&width=700&lines=Gracias+por+visitar+By+Sxgura+Inc.;Seguimos+mejorando.;Nuevas+actualizaciones+próximamente." /></div>escribiendo = true;
-
+</div>
 indice++;
 
 if(indice >= textos.length){
