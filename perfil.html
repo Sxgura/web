@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ivan Segura • Perfil Oficial</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --bg:#000;
+    --blue:#1976ff;
+    --card:#080808;
+    --border:#232323;
+    --text:#fff;
+    --sub:#9ca3af;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+.container{
+    width:100%;
+    max-width:520px;
+    margin:auto;
+    min-height:100vh;
+    background:#000;
+}
+
+/* CABECERA */
+
+.cover{
+    width:100%;
+    height:160px;
+    background:var(--blue);
+}
+
+/* PERFIL */
+
+.profile{
+    margin-top:-55px;
+    text-align:center;
+}
+
+.avatar-box{
+    position:relative;
+    width:112px;
+    margin:auto;
+}
+
+.avatar{
+    width:112px;
+    height:112px;
+    border-radius:50%;
+    border:3px solid var(--blue);
+    background-size:cover;
+    background-position:center;
+    box-shadow:0 0 0 5px #000;
+}
+
+.avatar-badge{
+    position:absolute;
+    top:4px;
+    left:-4px;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--blue);
+    border:2px solid #000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.avatar-badge svg{
+    width:14px;
+    height:14px;
+    fill:#fff;
+}
+
+.profile-name{
+    margin-top:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:4px;
+    font-size:24px;
+    font-weight:700;
+}
+
+.verify img{
+    width:18px;
+    height:18px;
+    display:block;
+}
+
+.profile-status{
+    margin-top:6px;
+    color:var(--sub);
+    font-size:14px;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    display:inline-block;
+    background:#1ed760;
+    border-radius:50%;
+    margin-right:5px;
+}
+
+/* REDES */
+
+.social-grid{
+    margin:22px 12px 0;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+
+.social-item{
+    text-align:center;
+}
+
+.social-btn{
+    width:36px;
+    height:36px;
+    margin:auto;
+    border-radius:50%;
+    background:#0b0b0b;
+    border:1px solid #2b2b2b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.2s;
+}
+
+.social-btn:hover{
+    transform:translateY(-2px);
+    border-color:#4a4a4a;
+}
+
+.social-btn svg{
+    width:18px;
+    height:18px;
+    fill:#fff;
+}
+
+.social-label{
+    margin-top:5px;
+    font-size:9px;
+    color:#d0d0d0;
+}
+
+/* TARJETA */
+
+.comment-card{
+    margin:18px 12px;
+    padding:12px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+}
+
+.comment-title{
+    color:#d5d5d5;
+    font-size:13px;
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+.comment-box{
+    display:flex;
+    gap:10px;
+}
+
+.comment-avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background-size:cover;
+    background-position:center;
+    flex-shrink:0;
+}
+
+.comment-content{
+    flex:1;
+}
+
+.comment-user{
+    display:flex;
+    align-items:center;
+    gap:3px;
+    color:#b7bcc5;
+    font-size:11px;
+    margin-bottom:3px;
+}
+
+.comment-user img{
+    width:13px;
+    height:13px;
+}
+
+.comment-text{
+    font-size:13px;
+    font-weight:600;
+    line-height:1.25;
+    color:#fff;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    color:#666;
+    font-size:12px;
+    padding:22px 10px;
+}
+
+.avatar,
+.social-btn{
+    transition:.2s;
+}
+
+.avatar:hover{
+    transform:scale(1.02);
+}
+
+@media(max-width:460px){
+
+    .profile-name{
+        font-size:22px;
+    }
+
+    .social-btn{
+        width:34px;
+        height:34px;
+    }
+
+    .social-btn svg{
+        width:16px;
+        height:16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+
+<div class="container">
+
+    <div class="cover"></div>
+
+    <div class="profile">
+
+        <div class="avatar-box">
+
+            <div class="avatar"
+            style="background-image:url('https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg');">
+            </div>
+
+        </div>
+
+        <div class="profile-name">
+            <span>S'xgura B'rrokal</span>
+            <span class="verify">
+                <img src="https://i.ibb.co/bMWTtN4M/file-00000000c864720eab00a08370862ecb.png">
+            </span>
+        </div>
+
+        <div class="profile-status">
+            <span class="status-dot"></span>
+            en línea
+        </div>
+
+    </div>
+
+    <div class="social-grid">
+
+        
+<div class="social-item">
+    <a href="https://wa.me/254102300454" target="_blank" class="social-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+             style="width:20px;height:20px;">
+    </a>
+    <div class="social-label">WhatsApp</div>
+</div>
+
+        <!-- Facebook -->
+<div class="social-item">
+    <a href="https://facebook.com/EllSxgura" target="_blank" class="social-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+             style="width:20px;height:20px;">
+    </a>
+    <div class="social-label">Facebook</div>
+</div>
+
+<!-- Instagram -->
+<div class="social-item">
+    <a href="https://instagram.com/sxgurabrrokal" target="_blank" class="social-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+             style="width:20px;height:20px;">
+    </a>
+    <div class="social-label">Instagram</div>
+</div>
+
+<!-- Telegram -->
+<div class="social-item">
+    <a href="https://t.me/EllSxgura" target="_blank" class="social-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
+             style="width:20px;height:20px;">
+    </a>
+    <div class="social-label">Telegram</div>
+</div>
+
+<!-- Canal -->
+<div class="social-item">
+    <a href="https://t.me/SxgProyect" target="_blank" class="social-btn">
+        <svg viewBox="0 0 24 24"
+             style="width:20px;height:20px;fill:#ff3b3b;">
+            <path d="M3 10v4c0 .55.45 1 1 1h2l5 4V5L6 9H4c-.55 0-1 .45-1 1zm13.5 2c0-1.77-.77-3.29-2-4.31v8.62c1.23-1.02 2-2.54 2-4.31zM14.5 3.23v2.06c2.89 1.15 5 3.97 5 7.71s-2.11 6.56-5 7.71v2.06c4.01-1.24 7-4.98 7-9.77s-2.99-8.53-7-9.77z"/>
+        </svg>
+    </a>
+    <div class="social-label">Canal</div>
+</div>
+
+    </div>
+
+    <!-- TARJETA DESTACADA -->
+
+    <div class="comment-card">
+
+        <div class="comment-title">
+            Destacada
+        </div>
+
+        <div class="comment-box">
+
+            <div class="comment-avatar"
+            style="
+            background-image:url('https://i.ibb.co/tpqy8kLz/thumbnail.jpg');
+            ">
+            </div>
+
+            <div class="comment-content">
+
+                <div class="comment-user">
+                    <span>S'xgura B'rrokal</span>
+
+                    <img src="https://i.ibb.co/bMWTtN4M/file-00000000c864720eab00a08370862ecb.png"
+                    alt="Verificado">
+
+                </div>
+
+                <div class="comment-text">
+                    Sígueme en mis redes sociales.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        
+    </div>
+
+</div>
+
+<script>
+
+/* ==================================================
+   CONFIGURACIÓN DE ENLACES
+   Solo cambia los enlaces entre las comillas.
+================================================== */
+
+
+document.getElementById("link-whatsapp").target  = "_blank";
+document.getElementById("link-facebook").target  = "_blank";
+document.getElementById("link-instagram").target = "_blank";
+document.getElementById("link-telegram").target  = "_blank";
+document.getElementById("link-canal").target     = "_blank";
+
+/* ==================================================
+   ANIMACIÓN DE ENTRADA
+================================================== */
+
+window.addEventListener("load",()=>{
+
+
+document.querySelector(".profile").animate(
+        [
+            {
+                opacity:0,
+                transform:"translateY(18px)"
+            },
+            {
+                opacity:1,
+                transform:"translateY(0)"
+            }
+        ],
+        {
+            duration:500,
+            fill:"forwards"
+        }
+    );
+
+});
+
+
+</script>
+
+</body>
+</html>
