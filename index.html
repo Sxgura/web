@@ -1,0 +1,3115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S'xgura B'rrokal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:url("https://i.ibb.co/GfLJKmYY/file-0000000022cc720e9735bd792a29d8bb.png") center center / cover no-repeat fixed;
+color:#fff;
+overflow:hidden;
+height:100vh;
+}
+
+
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:calc(100vh - 60px);
+  padding:20px;
+}
+
+
+/* LOADER */
+
+#loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999999;
+transition:.5s;
+}
+
+.loader-container{
+width:80%;
+max-width:280px;
+text-align:center;
+}
+
+.loader-logo{
+width:135px;
+height:135px;
+border-radius:22px;
+border:none;
+box-shadow:none;
+margin-bottom:22px;
+object-fit:cover;
+}
+
+
+.loader-percent{
+margin-top:10px;
+font-size:16px;
+font-weight:bold;
+color:#ff0000;
+}
+
+.loader-footer{
+margin-top:8px;
+font-size:14px;
+color:#888;
+letter-spacing:.5px;
+text-align:center;
+user-select:none;
+}
+
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:10px 12px;
+position:sticky;
+top:0;
+background:#000;
+z-index:998;
+gap:10px;
+}
+
+/* IZQUIERDA */
+
+.left-icons{
+display:flex;
+align-items:center;
+font-size:20px;
+flex-shrink:0;
+min-width:auto;
+}
+
+/* LOGO */
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#ffffff;
+text-shadow:none;
+white-space:nowrap;
+flex:1;
+text-align:center;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+/* DERECHA */
+
+.right-icons{
+display:flex;
+align-items:center;
+gap:14px;
+font-size:18px;
+flex-shrink:0;
+min-width:auto;
+}
+
+/* HERO */
+
+.hero{
+padding:35px 28px 0;
+display:flex;
+flex-direction:column;
+justify-content:center;
+height:calc(100vh - 90px);
+animation:fade .7s ease;
+overflow:hidden;
+touch-action:none;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.hero-status{
+    width:100%;
+    overflow:hidden;
+    margin:18px auto;
+}
+
+.hero-status-track{
+    display:flex;
+    width:max-content;
+    white-space:nowrap;
+    animation:ticker 8s linear infinite;
+}
+
+.hero-status-track span{
+    color:#00aaff;
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    text-shadow:0 0 8px rgba(0,170,255,.6);
+    padding-right:60px;
+}
+
+@keyframes ticker{
+    from{
+        transform:translateX(0);
+    }
+    to{
+        transform:translateX(-50%);
+    }
+}
+
+.hero h1{
+font-size:58px;
+font-weight:900;
+line-height:.95;
+color:#ffffff;
+margin:0;
+}
+
+.hero h1 span{
+color:#008cff;
+text-shadow:0 0 18px rgba(0,140,255,.45);
+}
+
+.hero p{
+margin-top:24px;
+max-width:320px;
+font-size:15px;
+line-height:1.5;
+color:#b8b8b8;
+}
+
+/* TITLES */
+
+.section-title{
+text-align:center;
+margin:24px 0;
+font-size:22px;
+}
+
+/* SOCIAL */
+
+.social-grid,
+.store-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+padding:15px;
+}
+
+.card,
+.store-card{
+background:#050505;
+border:1px solid #111;
+border-radius:14px;
+overflow:hidden;
+transition:.25s;
+}
+
+.card:hover,
+.store-card:hover{
+border-color:#ff0000;
+}
+
+.card img{
+width:100%;
+height:135px;
+object-fit:cover;
+}
+
+.card-content,
+.store-card{
+padding:12px;
+}
+
+.card h2,
+.store-card h3{
+font-size:15px;
+margin-bottom:8px;
+}
+
+.card p,
+.store-card p{
+font-size:12px;
+color:#aaa;
+margin-bottom:10px;
+line-height:1.5;
+}
+
+.card button,
+.store-card button{
+width:100%;
+padding:10px;
+border:none;
+background:#b30000;
+color:#fff;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+transition:.25s;
+}
+
+.card button:hover,
+.store-card button:hover{
+transform:scale(1.04);
+background:#ff0000;
+box-shadow:0 0 15px rgba(255,0,0,.45);
+}
+
+/* MENU */
+
+
+
+.close-menu,
+.close-login{
+font-size:30px;
+cursor:pointer;
+position:absolute;
+top:20px;
+left:20px;
+color:#fff;
+z-index:10;
+}
+.menu,
+.login-panel,
+.store-panel{
+
+position:fixed;
+top:0;
+width:100%;
+height:100vh;
+background:#000;
+z-index:9999;
+overflow-y:auto;
+overflow-x:hidden;
+padding:25px;
+transition:.4s;
+overscroll-behavior:contain;
+
+opacity:0;
+pointer-events:none;
+}
+
+/* MENU */
+
+
+.menu{
+left:-100%;
+}
+
+.menu.active{
+left:0;
+opacity:1;
+pointer-events:auto;
+}
+
+/* LOGIN + STORE */
+
+.login-panel,
+.store-panel{
+right:-100%;
+}
+
+.login-panel.active,
+.store-panel.active{
+right:0;
+opacity:1;
+pointer-events:auto;
+}
+
+.menu a{
+display:block;
+padding:10px;
+margin:10px 0;
+border-radius:8px;
+background:#050505;
+border:1px solid #111;
+font-size:14px;
+font-weight:bold;
+letter-spacing:1px;
+text-decoration:none;
+color:#fff;
+transition:.25s;
+}
+
+.menu a:first-of-type{
+margin-top:70px;
+}
+
+.menu a:hover{
+transform:scale(1.04);
+background:transparent;
+border:1px solid #008cff;
+color:#008cff;
+box-shadow:0 0 10px rgba(0,140,255,.35);
+}
+
+/* LOGIN */
+
+.input-box{
+margin-bottom:18px;
+}
+
+.input-box label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+color:#ccc;
+}
+
+.input-box input{
+width:100%;
+padding:14px;
+background:#050505;
+border:1px solid #222;
+border-radius:10px;
+color:#fff;
+}
+
+.password-box{
+position:relative;
+}
+
+.password-box i{
+position:absolute;
+right:15px;
+top:44px;
+cursor:pointer;
+}
+
+.login-btn{
+width:100%;
+padding:14px;
+background:#b30000;
+border:none;
+border-radius:10px;
+color:#fff;
+font-weight:bold;
+cursor:pointer;
+transition:.25s;
+}
+
+.login-btn:hover{
+transform:scale(1.03);
+background:#ff0000;
+}
+
+#error{
+display:none;
+margin-top:15px;
+color:red;
+font-weight:bold;
+}
+
+/* ADMIN */
+
+.admin-panel{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+z-index:7000;
+overflow:auto;
+padding:20px;
+}
+
+.admin-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:nowrap;
+
+will-change:transform;
+transform:translateZ(0);
+backface-visibility:hidden;
+}
+
+.admin-header > div:first-child{
+display:flex;
+align-items:center;
+gap:10px;
+flex:1;
+min-width:0;
+}
+
+.admin-buttons{
+display:flex;
+align-items:center;
+gap:8px;
+flex-shrink:0;
+margin-left:auto;
+}
+
+.admin-header h2{
+font-size:18px;
+white-space:nowrap;
+}
+
+#visitCount{
+flex-shrink:0;
+}
+.close-admin,
+.close-store,
+.admin-clear{
+background:#b30000;
+border:none;
+padding:10px 12px;
+border-radius:8px;
+color:#fff;
+cursor:pointer;
+transition:.25s;
+width:auto;
+margin-top:0;
+}
+
+
+.visit-box{
+background:#050505;
+border:1px solid #111;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+transition:.3s;
+}
+
+/* VISITAS NUEVAS */
+{
+border:1px solid #00ff88;
+box-shadow:0 0 18px rgba(0,255,136,.25);
+background:rgba(0,255,136,.05);
+}
+
+{
+display:inline-block;
+margin-top:10px;
+padding:5px 10px;
+border-radius:8px;
+background:#00cc66;
+color:#fff;
+font-size:11px;
+font-weight:bold;
+box-shadow:0 0 10px rgba(0,255,136,.4);
+}
+
+@keyframes newVisitGlow{
+
+from{
+box-shadow:0 0 10px rgba(0,255,136,.15);
+}
+
+to{
+box-shadow:0 0 22px rgba(0,255,136,.45);
+}
+
+}
+
+/* NUEVA VISITA */
+
+.visit-box.new-visit{
+border:1px solid #00ff88;
+box-shadow:0 0 18px rgba(0,255,136,.25);
+background:rgba(0,255,136,.05);
+}
+
+.visit-badge{
+display:inline-block;
+margin-top:10px;
+padding:5px 10px;
+border-radius:8px;
+background:#00cc66;
+color:#fff;
+font-size:11px;
+font-weight:bold;
+}
+
+.visit-box h3{
+color:#00ffbf;
+margin-bottom:10px;
+}
+
+.visit-box p{
+font-size:13px;
+margin:5px 0;
+color:#ccc;
+}
+
+footer{
+position:fixed;
+bottom:12px;
+left:0;
+width:100%;
+text-align:center;
+font-size:13px;
+color:#666;
+background:transparent;
+}
+
+
+
+body.panel-open{
+overflow-y:hidden;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+body{
+    position:relative;
+}
+
+footer{
+    position:fixed;
+    bottom:15px;
+    left:0;
+    width:100%;
+    text-align:center;
+    font-size:13px;
+    color:#666;
+    background:transparent;
+}
+
+/* ===== CATÁLOGO NUEVO ===== */
+
+.store-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.store-header h2{
+color:#008cff;
+font-size:24px;
+letter-spacing:2px;
+}
+
+.store-stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:20px;
+}
+
+.stat-box{
+background:#050505;
+border:1px solid #151515;
+padding:12px;
+border-radius:12px;
+text-align:center;
+font-size:12px;
+transition:.3s;
+position:relative;
+overflow:hidden;
+}
+
+.stat-box i{
+font-size:16px;
+margin-bottom:6px;
+display:block;
+opacity:.9;
+}
+
+/* COLORES VARIADOS */
+
+.stat-box.green{
+border-color:rgba(0,255,140,.4);
+box-shadow:0 0 10px rgba(0,255,140,.08);
+}
+
+.stat-box.green i{
+color:#00ff8c;
+}
+
+.stat-box.purple{
+border-color:rgba(160,80,255,.4);
+box-shadow:0 0 10px rgba(160,80,255,.08);
+}
+
+.stat-box.purple i{
+color:#a050ff;
+}
+
+.stat-box.orange{
+border-color:rgba(255,140,0,.4);
+box-shadow:0 0 10px rgba(255,140,0,.08);
+}
+
+.stat-box.orange i{
+color:#ff8c00;
+}
+
+.stat-box.blue{
+border-color:rgba(0,140,255,.4);
+box-shadow:0 0 10px rgba(0,140,255,.08);
+}
+
+.stat-box.blue i{
+color:#008cff;
+}
+
+.stat-number{
+font-size:22px;
+font-weight:bold;
+margin-bottom:4px;
+}
+
+.stat-label{
+font-size:10px;
+color:#777;
+letter-spacing:1px;
+}
+
+/* ===== PANEL DE PRODUCTO ===== */
+
+.product-panel{
+position:fixed;
+top:0;
+right:-100%;
+width:100%;
+height:100vh;
+background:#000;
+z-index:10000;
+padding:25px;
+overflow-y:auto;
+transition:.35s;
+}
+
+.product-panel.active{
+right:0;
+}
+
+.product-close{
+font-size:32px;
+margin-bottom:25px;
+cursor:pointer;
+}
+
+.product-image{
+width:100%;
+height:230px;
+object-fit:cover;
+border-radius:18px;
+margin-bottom:20px;
+border:1px solid #111;
+box-shadow:
+0 0 25px rgba(0,140,255,.12);
+}
+
+.product-panel h2{
+font-size:26px;
+font-weight:800;
+margin-bottom:10px;
+color:#fff;
+letter-spacing:.5px;
+}
+
+.product-panel p{
+font-size:12px;
+color:#888;
+line-height:1.5;
+margin-bottom:12px;
+}
+
+.product-status{
+display:inline-block;
+padding:8px 14px;
+border-radius:12px;
+background:rgba(0,255,106,.08);
+border:1px solid rgba(0,255,106,.3);
+color:#00ff88;
+margin-bottom:18px;
+font-size:12px;
+font-weight:700;
+letter-spacing:1px;
+}
+
+.product-price{
+margin-bottom:15px;
+}
+
+.price-from{
+font-size:11px;
+color:#777;
+margin-bottom:2px;
+}
+
+.price-value{
+font-size:34px;
+font-weight:900;
+color:#fff;
+line-height:1;
+}
+
+.price-value span{
+color:#008cff;
+}
+
+.product-price span{
+color:#008cff;
+}
+
+.product-buy{
+width:100%;
+height:58px;
+border:1px solid #008cff;
+border-radius:16px;
+background:transparent;
+color:#008cff;
+font-size:15px;
+font-weight:800;
+letter-spacing:1px;
+cursor:pointer;
+transition:.25s;
+box-shadow:none;
+animation:none;
+}
+
+.product-buy:hover{
+background:rgba(0,140,255,.08);
+transform:translateY(-2px);
+box-shadow:0 0 18px rgba(0,140,255,.18);
+}
+
+@keyframes pulseBuy{
+0%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(0,140,255,0);
+}
+50%{
+transform:scale(1.03);
+box-shadow:0 0 10px rgba(0,140,255,0.25);
+}
+100%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(0,140,255,0);
+}
+}
+
+.catalog-ticker{
+width:100%;
+overflow:hidden;
+margin:20px 0 30px;
+border-top:1px solid #0d0d0d;
+border-bottom:1px solid #0d0d0d;
+padding:10px 0;
+}
+
+.catalog-ticker-track{
+display:flex;
+width:max-content;
+white-space:nowrap;
+animation:ticker 12s linear infinite;
+}
+
+.catalog-ticker-track span{
+color:#ff2b2b;
+font-size:12px;
+font-weight:bold;
+letter-spacing:4px;
+padding-right:60px;
+text-shadow:0 0 8px rgba(255,0,0,0.4);
+}
+
+.catalog-title-small{
+color:#888;
+font-size:9px;
+letter-spacing:6px;
+margin-bottom:6px;
+text-transform:uppercase;
+opacity:0.6;
+}
+
+.catalog-title{
+font-size:26px;
+font-weight:800;
+margin-bottom:18px;
+letter-spacing:2px;
+color:#fff;
+}
+
+.catalog-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:15px;
+}
+
+.catalog-card{
+position:relative;
+background:#050505;
+border:1px solid #111;
+border-left:4px solid #4d79ff;
+padding:12px;
+border-radius:10px;
+transition:.25s;
+cursor:pointer;
+box-shadow:0 0 8px rgba(77,121,255,0.15);
+overflow:hidden;
+}
+
+.catalog-badge{
+position:absolute;
+top:10px;
+right:10px;
+padding:4px 8px;
+border-radius:8px;
+font-size:10px;
+font-weight:700;
+letter-spacing:.5px;
+}
+
+.catalog-badge i{
+margin-right:4px;
+font-size:10px;
+}
+
+.badge-hot{
+background:rgba(255,70,70,.15);
+border:1px solid rgba(255,70,70,.4);
+color:#ff5555;
+}
+
+.badge-new{
+background:rgba(0,140,255,.15);
+border:1px solid rgba(0,140,255,.4);
+color:#008cff;
+}
+
+.badge-premium{
+background:rgba(180,120,255,.15);
+border:1px solid rgba(180,120,255,.4);
+color:#b478ff;
+}
+
+.badge-best{
+background:rgba(0,255,140,.15);
+border:1px solid rgba(0,255,140,.4);
+color:#00ff8c;
+}
+
+
+.catalog-card:hover{
+transform:translateY(-2px);
+}
+
+.catalog-card h3{
+font-size:15px;
+margin-bottom:5px;
+color:#fff;
+}
+
+.catalog-card p{
+font-size:10px;
+color:#00ff6a;
+opacity:0.35;
+font-weight:400;
+}
+
+.catalog-x{
+font-size:28px;
+color:#fff;
+cursor:pointer;
+padding:6px 10px;
+border-radius:8px;
+transition:.25s;
+opacity:0.6;
+}
+
+.catalog-x:hover{
+opacity:1;
+transform:scale(1.15);
+background:#111;
+color:#ff4d4d;
+}
+
+
+/* ===== VENTAJAS TÁCTICAS ===== */
+
+.benefits-section{
+margin-top:35px;
+margin-bottom:20px;
+}
+
+.benefits-head{
+margin-bottom:18px;
+}
+
+.benefits-kicker{
+font-size:9px;
+letter-spacing:4px;
+color:#777;
+margin-bottom:8px;
+text-transform:uppercase;
+opacity:.85;
+}
+
+.benefits-head h2{
+font-size:26px;
+font-weight:900;
+line-height:1;
+color:#fff;
+}
+
+.benefits-box{
+border:1px solid #1a1a1a;
+background:rgba(5,5,5,.75);
+border-radius:14px;
+overflow:hidden;
+}
+
+.benefit-item{
+display:flex;
+gap:16px;
+padding:24px 18px;
+border-bottom:1px solid #151515;
+}
+
+.benefit-item:last-child{
+border-bottom:none;
+}
+
+.benefit-icon{
+width:44px;
+height:44px;
+min-width:44px;
+border:1px solid rgba(0,140,255,.18);
+background:rgba(0,140,255,.05);
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:4px;
+color:#ff2b2b;
+font-size:15px;
+}
+
+.benefit-text h3{
+font-size:11px;
+letter-spacing:1px;
+font-weight:700;
+color:#fff;
+margin-bottom:5px;
+text-transform:uppercase;
+}
+
+.benefit-text p{
+font-size:11px;
+line-height:1.5;
+color:#7f7f7f;
+}
+
+
+/* ===== NUEVO LOGIN MODERNO ===== */
+
+.login-panel{
+background:#000;
+padding:25px;
+overflow-y:auto;
+}
+
+.login-modern-header{
+text-align:center;
+margin-top:25px;
+margin-bottom:30px;
+}
+
+.login-modern-icon{
+width:60px;
+height:60px;
+margin:0 auto 15px;
+background:#ff003c;
+border-radius:16px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+color:#fff;
+box-shadow:0 0 15px rgba(255,0,60,.20);
+}
+
+.login-modern-header h1{
+font-size:30px;
+font-weight:800;
+color:#fff;
+margin-bottom:8px;
+}
+
+.login-modern-header p{
+font-size:15px;
+color:#888;
+}
+
+.login-modern-card{
+background:#050505;
+border:1px solid #161616;
+border-radius:18px;
+padding:20px;
+margin-top:12px;
+max-width:520px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.login-code-btn{
+width:100%;
+height:54px;
+background:#090909;
+border:1px solid #222;
+border-radius:16px;
+color:#fff;
+font-size:16px;
+font-weight:600;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:12px;
+cursor:pointer;
+margin-bottom:25px;
+transition:.25s;
+}
+
+.login-code-btn:hover{
+border-color:#333;
+background:#111;
+}
+
+.login-code-btn:hover{
+border-color:#333;
+background:#111;
+}
+
+.login-code-btn i{
+font-size:18px;
+color:#ff003c;
+}
+
+.login-divider{
+display:flex;
+align-items:center;
+gap:16px;
+margin-bottom:28px;
+}
+
+.login-divider span{
+flex:1;
+height:1px;
+background:#222;
+}
+
+.login-divider b{
+color:#999;
+font-size:18px;
+font-weight:500;
+}
+
+.input-box{
+margin-bottom:20px;
+}
+
+.input-box label{
+display:block;
+margin-bottom:10px;
+font-size:14px;
+font-weight:600;
+color:#fff;
+}
+
+.modern-input{
+display:flex;
+align-items:center;
+height:48px;
+border:1px solid #1d1d1d;
+background:#080808;
+padding:0 14px;
+border-radius:12px;
+transition:.2s;
+}
+
+.modern-input:focus-within{
+border-color:#303030;
+}
+
+.modern-input > i:first-child{
+display:flex;
+align-items:center;
+justify-content:center;
+width:20px;
+min-width:20px;
+height:20px;
+margin-right:12px;
+color:#8a8a8a;
+font-size:15px;
+flex-shrink:0;
+}
+
+.modern-input input{
+flex:1;
+background:transparent;
+border:none;
+outline:none;
+color:#fff;
+font-size:15px;
+height:100%;
+}
+
+.modern-input input::placeholder{
+color:#666;
+}
+
+.toggle-pass{
+display:flex;
+align-items:center;
+justify-content:center;
+margin-left:12px;
+cursor:pointer;
+color:#8a8a8a;
+font-size:15px;
+flex-shrink:0;
+transition:.2s;
+}
+
+.toggle-pass:hover{
+color:#fff;
+}
+
+
+.login-btn{
+width:100%;
+height:52px;
+margin-top:12px;
+border:none;
+border-radius:14px;
+background:#ff003c;
+color:#fff;
+font-size:17px;
+font-weight:700;
+cursor:pointer;
+transition:none;
+-webkit-tap-highlight-color:transparent;
+outline:none;
+}
+
+.login-btn:hover,
+.login-btn:active,
+.login-btn:focus{
+background:#ff003c;
+color:#fff;
+transform:none;
+outline:none;
+box-shadow:none;
+}
+
+#error{
+display:none;
+margin-top:16px;
+text-align:center;
+font-size:14px;
+color:#ff4040;
+font-weight:bold;
+}
+
+/* ===== CODE PANEL ===== */
+
+.code-panel{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+background:#000;
+z-index:20000;
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.code-panel.active{
+display:flex;
+}
+
+.code-container{
+width:100%;
+max-width:320px;
+text-align:center;
+padding:18px;
+}
+
+/* reutilizamos lock y keypad de tu segundo código */
+
+#display{
+height:34px;
+font-size:28px;
+letter-spacing:5px;
+margin-bottom:26px;
+color:#fff;
+user-select:none;
+}
+
+.keypad{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+}
+
+.btn{
+width:72px;
+height:72px;
+margin:auto;
+border-radius:50%;
+border:2px solid rgba(255,255,255,.9);
+background:rgba(255,255,255,.03);
+color:#fff;
+font-size:28px;
+cursor:pointer;
+transition:.15s;
+}
+
+.btn:active{
+transform:scale(.95);
+}
+
+#msg{
+margin-top:16px;
+font-size:14px;
+color:#ff5f5f;
+min-height:18px;
+}
+
+.success{
+color:#55ff88 !important;
+}
+
+
+/* QUITAR FONDO BLANCO DEL AUTOCOMPLETADO */
+
+input,
+textarea,
+select{
+-webkit-tap-highlight-color:transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+-webkit-box-shadow:0 0 0 1000px #080808 inset !important;
+box-shadow:0 0 0 1000px #080808 inset !important;
+-webkit-text-fill-color:#fff !important;
+caret-color:#fff;
+transition:background-color 9999s ease-in-out 0s;
+}
+
+/* CAMPOS OBLIGATORIOS */
+
+.modern-input.input-error{
+border:1px solid #ff3b3b !important;
+box-shadow:0 0 10px rgba(255,59,59,.25);
+transition:.25s;
+}
+
+/* ===== PANEL DE CÓDIGO (BLOQUEO) ===== */
+
+.code-panel{
+position:fixed;
+inset:0;
+background:#000;
+z-index:10050;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:20px;
+
+opacity:0;
+pointer-events:none;
+transition:.3s ease;
+}
+
+.code-panel.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.code-container{
+width:100%;
+max-width:340px;
+text-align:center;
+background:#030303;
+border:1px solid #111;
+border-radius:26px;
+padding:25px;
+box-shadow:
+0 0 35px rgba(0,0,0,.55);
+}
+
+/* botón cerrar */
+.code-close{
+position:absolute;
+top:18px;
+left:18px;
+font-size:30px;
+cursor:pointer;
+color:#fff;
+opacity:.7;
+transition:.2s;
+}
+
+.code-close:hover{
+opacity:1;
+transform:scale(1.1);
+}
+
+/* display PIN */
+#codeDisplay{
+height:65px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+letter-spacing:4px;
+margin-bottom:25px;
+color:#fff;
+user-select:none;
+background:#050505;
+border:1px solid #151515;
+border-radius:16px;
+box-shadow:
+0 0 0 1px rgba(255,255,255,.03) inset;
+overflow:hidden;
+padding:0 15px;
+white-space:nowrap;
+text-overflow:ellipsis;
+text-align:center;
+}
+
+#codeDisplay.code-error{
+border:1px solid #ff3b3b;
+box-shadow:
+0 0 15px rgba(255,59,59,.35),
+0 0 0 1px rgba(255,59,59,.15) inset;
+animation:shake .25s linear 2;
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0);}
+25%{transform:translateX(-4px);}
+50%{transform:translateX(4px);}
+75%{transform:translateX(-4px);}
+100%{transform:translateX(0);}
+
+}
+
+/* teclado */
+.keypad{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:16px;
+justify-items:center;
+margin-top:20px;
+}
+
+.btn{
+width:82px;
+height:82px;
+border:none;
+border-radius:24px;
+background:#080808;
+color:#fff;
+font-size:25px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+box-shadow:
+0 0 0 1px #181818 inset,
+0 8px 20px rgba(0,0,0,.50);
+}
+
+.btn:hover{
+border-color:#008cff;
+background:#101010;
+box-shadow:
+0 0 15px rgba(0,140,255,.15),
+0 8px 20px rgba(0,0,0,.50);
+transform:translateY(-2px);
+}
+
+.btn:active{
+transform:scale(.93);
+}
+
+.btn i{
+font-size:20px;
+}
+
+.btn:last-child{
+background:linear-gradient(
+180deg,
+#008cff,
+#0066cc
+);
+box-shadow:
+0 0 20px rgba(0,140,255,.35);
+}
+
+.btn:last-child:hover{
+background:linear-gradient(
+180deg,
+#1b9cff,
+#0075ea
+);
+}
+
+/* mensaje */
+#codeMsg{
+margin-top:15px;
+font-size:14px;
+min-height:18px;
+color:#ff5f5f;
+}
+
+#codeMsg.success{
+color:#55ff88;
+}
+
+/* reutilizamos el estilo del candado del otro código */
+.lock{
+position:relative;
+width:80px;
+height:90px;
+margin:0 auto 18px;
+}
+
+.lock-top{
+position:absolute;
+width:42px;
+height:30px;
+left:50%;
+transform:translateX(-50%);
+border:4px solid #fff;
+border-bottom:none;
+border-radius:22px 22px 0 0;
+}
+
+.lock-body{
+position:absolute;
+width:60px;
+height:48px;
+left:50%;
+top:26px;
+transform:translateX(-50%);
+border:2px solid rgba(255,255,255,.9);
+border-radius:12px;
+background:rgba(255,255,255,.03);
+}
+
+.lock-hole{
+position:absolute;
+width:10px;
+height:10px;
+left:50%;
+top:42px;
+transform:translateX(-50%);
+border:2px solid #fff;
+border-radius:50%;
+}
+
+.lock-hole::after{
+content:"";
+position:absolute;
+width:2px;
+height:11px;
+background:#fff;
+left:50%;
+transform:translateX(-50%);
+top:8px;
+}
+
+
+/* MENSAJE SUPERIOR */
+
+.login-alert{
+display:none;
+width:100%;
+padding:14px;
+margin-bottom:18px;
+border-radius:10px;
+background:#2a0008;
+border:1px solid #ff003c;
+color:#ff4f6f;
+font-size:14px;
+font-weight:600;
+}
+
+/* CAMPO ERROR */
+
+.modern-input.input-error{
+border:1px solid #ff003c !important;
+box-shadow:0 0 10px rgba(255,0,60,.20);
+}
+
+/* MENSAJE DEBAJO */
+
+.field-error{
+display:none;
+margin-top:8px;
+margin-left:4px;
+font-size:13px;
+color:#ff4f6f;
+font-weight:600;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+
+<div id="loader">
+
+<div class="loader-container">
+
+<img 
+src="https://i.ibb.co/Kpqhqg1W/file-000000004e1c720e9e07fa81e9083a95.png"
+class="loader-logo"
+>
+
+<div class="loader-footer">
+</div>
+
+<div class="loader-bar">
+<div class="loader-fill" id="progressBar"></div>
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="left-icons">
+<i class="fas fa-bars" onclick="openMenu()"></i>
+</div>
+
+<div class="logo">
+S'xgura B'rrokal
+</div>
+
+<div class="right-icons">
+
+<i class="fas fa-globe" onclick="location.href='perfil.html'"></i>
+
+<i class="fas fa-user" onclick="openLogin()"></i>
+
+<i class="fas fa-bag-shopping" onclick="openStore()"></i>
+
+</div>
+
+</div>
+
+<!-- HERO -->
+
+<div class="hero">
+
+<div class="hero-status">
+    <div class="hero-status-track">
+        <span>EL COMIENZO EMPIEZA AHORA    •    SXGURA NETWORK  • EL MEJOR SISTEMA&nbsp;&nbsp;&nbsp;EN CONSTANTE INNOVACIÓN&nbsp;&nbsp;&nbsp;</span>
+        <span>EL COMIENZO EMPIEZA AHORA    •    SXGURA NETWORK  • EL MEJOR SISTEMA&nbsp;&nbsp;&nbsp;EN CONSTANTE INNOVACIÓN&nbsp;&nbsp;&nbsp;</span>
+    </div>
+</div>
+
+<h1>
+DESCUBRE<br>
+<span>EL NUEVO</span><br>
+NIVEL
+</h1>
+
+<p>
+Herramientas, servicios y recursos digitales
+organizados en una sola plataforma para todo el público.
+</p>
+
+</div>
+
+<!-- MENU -->
+
+<div class="menu" id="menu">
+
+<div class="close-menu" onclick="closeMenu()">
+✕
+</div>
+
+<a href="igdl.html">
+[ Descargas ]
+</a>
+
+<a href="informacion.html">
+[ Información ]
+</a>
+
+<a href="herramientas.html">
+[ Herramientas ]
+</a>
+
+<a href="tresenrayas.html">
+[ Tres En Rayas ]
+</a>
+
+<a href="galaxy.html">
+[ Galaxy Shooter ]
+</a>
+
+</div>
+
+
+<!-- LOGIN -->
+
+<div class="login-panel" id="loginPanel">
+
+<div class="close-login" onclick="closeLogin()">
+✕
+</div>
+
+<div class="login-modern-header">
+
+<div class="login-modern-icon">
+<i class="fas fa-right-to-bracket"></i>
+</div>
+
+<h1>Bienvenido de nuevo</h1>
+
+<p>Inicie sesión en su cuenta</p>
+
+</div>
+
+<div class="login-modern-card">
+
+<button class="login-code-btn" onclick="openCodePanel()">
+<i class="fas fa-key"></i>
+<span>Continuar con código</span>
+</button>
+
+<div class="login-divider">
+<span></span>
+<b>o</b>
+<span></span>
+</div>
+
+<div class="login-alert" id="loginAlert">
+Correo electrónico o contraseña no válidos
+</div>
+
+<div class="input-box">
+
+<label>Correo electrónico</label>
+
+<div class="modern-input" id="userBox">
+<i class="fas fa-envelope"></i>
+<input type="text" id="user" placeholder="you@example.com">
+</div>
+
+<div class="field-error" id="userError">
+⚠ Completa este campo
+</div>
+
+</div>
+
+<div class="input-box">
+
+<label>Contraseña</label>
+
+<div class="modern-input" id="passBox">
+
+<i class="fas fa-lock"></i>
+
+<input
+type="password"
+id="pass"
+placeholder="••••••••"
+autocomplete="current-password"
+>
+
+<span
+class="toggle-pass"
+id="togglePassBtn"
+onclick="togglePass()"
+>
+<i class="fas fa-eye"></i>
+</span>
+
+</div>
+
+<div class="field-error" id="passError">
+⚠ Completa este campo
+</div>
+
+</div>
+
+<button class="login-btn" onclick="loginAdmin()">
+Iniciar sesión
+</button>
+
+<div id="error">
+Credenciales incorrectas
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PANEL DE CÓDIGO -->
+
+<div class="code-panel" id="codePanel">
+
+<div class="code-close" onclick="closeCodePanel()">
+✕
+</div>
+
+<div class="code-container">
+
+<div class="lock">
+<div class="lock-top"></div>
+<div class="lock-body"></div>
+<div class="lock-hole"></div>
+</div>
+
+<h2 style="
+font-size:24px;
+margin-bottom:8px;
+">
+Verifica tu cuenta
+</h2>
+
+<p style="
+color:#777;
+font-size:13px;
+margin-bottom:20px;
+">
+Ingrese su código de acceso
+</p>
+
+<div id="codeDisplay"></div>
+
+<div class="keypad">
+<button class="btn" onclick="addNum('1')">1</button>
+<button class="btn" onclick="addNum('2')">2</button>
+<button class="btn" onclick="addNum('3')">3</button>
+
+<button class="btn" onclick="addNum('4')">4</button>
+<button class="btn" onclick="addNum('5')">5</button>
+<button class="btn" onclick="addNum('6')">6</button>
+
+<button class="btn" onclick="addNum('7')">7</button>
+<button class="btn" onclick="addNum('8')">8</button>
+<button class="btn" onclick="addNum('9')">9</button>
+
+<button class="btn" onclick="removeNum()">
+<i class="fas fa-delete-left"></i>
+</button>
+<button class="btn" onclick="addNum('0')">0</button>
+<button class="btn" onclick="checkCode()">
+<i class="fas fa-arrow-right"></i>
+</button>
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- ADMIN -->
+
+<div class="admin-panel" id="adminPanel">
+
+<div class="admin-header">
+
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+flex:1;
+min-width:0;
+">
+
+<h2 style="color:#ff0000;">
+Visualizaciones
+</h2>
+
+<div id="visitCount" style="
+background:#111;
+padding:6px 12px;
+border-radius:10px;
+font-size:13px;
+color:#00ffbf;
+font-weight:bold;
+border:1px solid #00ffbf;
+">
+0
+</div>
+
+</div>
+
+<div class="admin-buttons">
+
+
+<button class="close-admin" onclick="closeAdmin()">
+Cerrar
+</button>
+
+</div>
+
+</div>
+
+<div id="visits"></div>
+
+</div>
+
+<!-- STORE PANEL -->
+
+<div class="store-panel" id="storePanel">
+
+<div class="store-header">
+
+<div class="catalog-x" onclick="closeStore()">
+✕
+</div>
+
+</div>
+
+<!-- ESTADÍSTICAS -->
+
+<div class="store-stats">
+
+<div class="stat-box green">
+<i class="fas fa-box"></i>
+<div class="stat-number">4</div>
+<div class="stat-label">PRODUCTOS ACTIVOS</div>
+</div>
+
+<div class="stat-box purple">
+<i class="fas fa-infinity"></i>
+<div class="stat-number">+10</div>
+<div class="stat-label">DISPONIBLES</div>
+</div>
+
+<div class="stat-box orange">
+<i class="fas fa-headset"></i>
+<div class="stat-number">24/7</div>
+<div class="stat-label">SOPORTE</div>
+</div>
+
+<div class="stat-box blue">
+<i class="fas fa-shield-alt"></i>
+<div class="stat-number">100%</div>
+<div class="stat-label">SEGURO</div>
+</div>
+
+</div>
+
+<!-- 👇 AQUÍ VA EL CATÁLOGO -->
+
+<!-- CINTA -->
+
+<div class="catalog-ticker">
+<div class="catalog-ticker-track">
+<span>S'XGURA STORE EL MEJOR SISTEMA • NÚMEROS VIRTUALES • WHATSAPP • TELEGRAM • GRUPOS ANTIGUOS • CRECIMIENTO DIGITAL •</span>
+<span>S'XGURA STORE EL MEJOR SISTEMA • NÚMEROS VIRTUALES • WHATSAPP • TELEGRAM • GRUPOS ANTIGUOS • CRECIMIENTO DIGITAL •</span>
+</div>
+</div>
+
+<!-- TÍTULO -->
+
+<div class="catalog-title-small">
+PRODUCTOS DISPONIBLES
+</div>
+
+<h1 class="catalog-title">
+CATÁLOGO
+</h1>
+
+<!-- GRID -->
+
+<div class="catalog-grid">
+
+<div class="catalog-card" onclick="openProduct('whatsapp')">
+
+<div class="catalog-badge badge-hot">
+<i class="fas fa-fire"></i> Popular
+</div>
+
+<h3>Número Virtual WhatsApp</h3>
+<p>Disponible</p>
+
+</div>
+
+<div class="catalog-card" onclick="openProduct('telegram')">
+
+<div class="catalog-badge badge-best">
+<i class="fas fa-star"></i> Recomendado
+</div>
+
+<h3>Número Virtual Telegram</h3>
+<p>Disponible</p>
+
+</div>
+
+<div class="catalog-card" onclick="openProduct('grupos')">
+<h3>Grupos WhatsApp</h3>
+<p>Disponible</p>
+</div>
+
+<div class="catalog-card" onclick="openProduct('crecimiento')">
+<h3>Crecimiento Digital</h3>
+<p>Disponible</p>
+</div>
+
+<div class="catalog-card" onclick="openProduct('premium')">
+<h3>Creaciones Web</h3>
+<p>Disponible</p>
+</div>
+
+<div class="catalog-card" onclick="openProduct('extra')">
+<h3>Bots Multidevice</h3>
+<p>Disponible</p>
+</div>
+
+</div>
+
+<!-- SECCIÓN VENTAJAS -->
+
+<section class="benefits-section">
+
+<div class="benefits-head">
+<div class="benefits-kicker">// POR QUÉ ELEGIRNOS</div>
+<h2>VENTAJAS TECNICAS</h2>
+</div>
+
+<div class="benefits-box">
+
+<div class="benefit-item">
+<div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+<div class="benefit-text">
+<h3>SEGURIDAD DIGITAL</h3>
+<p>Protege tu identidad y mantén tu privacidad en línea con nuestros servicios.</p>
+</div>
+</div>
+
+<div class="benefit-item">
+<div class="benefit-icon"><i class="fas fa-bolt"></i></div>
+<div class="benefit-text">
+<h3>ACTIVACIÓN INSTANTÁNEA</h3>
+<p>Recibe tu servicio y actívalo al instante. Sin esperas, sin complicaciones.</p>
+</div>
+</div>
+
+<div class="benefit-item">
+<div class="benefit-icon"><i class="fas fa-lock"></i></div>
+<div class="benefit-text">
+<h3>PAGO SEGURO</h3>
+<p>Transacciones 100% seguras. Tus datos protegidos en todo momento.</p>
+</div>
+</div>
+
+<div class="benefit-item">
+<div class="benefit-icon"><i class="fas fa-headset"></i></div>
+<div class="benefit-text">
+<h3>SOPORTE 24/7</h3>
+<p>Equipo disponible en todo momento para resolver cualquier duda.</p>
+</div>
+</div>
+
+<div class="benefit-item">
+<div class="benefit-icon"><i class="fas fa-sync-alt"></i></div>
+<div class="benefit-text">
+<h3>ACTUALIZACIONES</h3>
+<p>Servicios actualizados constantemente para mantenerse al día con cada parche.</p>
+</div>
+</div>
+
+<div class="benefit-item">
+<div class="benefit-icon"><i class="fas fa-globe"></i></div>
+<div class="benefit-text">
+<h3>MULTI-REGIÓN</h3>
+<p>Disponibles para varios paises.</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<div style="height:120px;"></div>
+
+</div>
+
+<!-- PANEL DEL PRODUCTO -->
+
+<div class="product-panel" id="productPanel">
+
+<div class="product-close" onclick="closeProduct()">
+✕
+</div>
+
+<img id="productImage"
+src=""
+class="product-image">
+
+<h2 id="productTitle"></h2>
+
+<p id="productDescription"></p>
+
+<div class="product-status" id="productStatus">
+Disponible
+</div>
+
+<div class="product-price">
+<div class="price-from">Desde</div>
+<div class="price-value">$<span id="productPrice">1</span></div>
+</div>
+
+<button class="product-buy" onclick="buyCurrentProduct()">
+OBTENER
+</button>
+
+</div>
+
+<footer>
+© 2026 Sxgura Inc. Todos los derechos reservados.
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc,
+query,
+orderBy,
+serverTimestamp,
+setDoc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyApiO7_x468L0k0u7vheUW_luEWJ41VRUQ",
+
+authDomain: "sxgura-web.firebaseapp.com",
+
+projectId: "sxgura-web",
+
+storageBucket: "sxgura-web.firebasestorage.app",
+
+messagingSenderId: "912354449131",
+
+appId: "1:912354449131:web:4df2a48d6eb84223bd10ae"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* VISITAS FIREBASE */
+
+async function registerVisit(){
+
+if(sessionStorage.getItem("sx_visit_done")) return;
+
+try{
+
+const controller = new AbortController();
+
+setTimeout(()=>controller.abort(),5000);
+
+const res = await fetch(
+"https://ipapi.co/json/",
+{
+signal: controller.signal
+}
+);
+
+const data = await res.json();
+
+await addDoc(collection(db,"visitas"),{
+
+pais:data.country_name || "Desconocido",
+
+ciudad:data.city || "Desconocida",
+
+ip:data.ip || "Oculta",
+
+fecha:new Date().toLocaleDateString(),
+
+hora:new Date().toLocaleTimeString(),
+
+timestamp:serverTimestamp()
+
+});
+
+sessionStorage.setItem(
+"sx_visit_done",
+"true"
+);
+
+}catch(e){
+
+console.log(e);
+
+}
+
+}
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+registerVisit();
+
+},1500);
+
+});
+
+async function loadVisits(){
+
+const container =
+document.getElementById("visits");
+
+const counter =
+document.getElementById("visitCount");
+
+container.innerHTML="";
+
+const q = query(
+collection(db,"visitas"),
+orderBy("timestamp","desc")
+);
+
+const querySnapshot =
+await getDocs(q);
+
+/* CONTADOR TOTAL */
+
+counter.innerText =
+querySnapshot.size;
+
+/* VISITAS YA VISTAS */
+
+let viewedVisits =
+JSON.parse(
+localStorage.getItem("viewedVisits") || "[]"
+);
+
+/* ARRAY NUEVO */
+
+let currentVisits = [];
+
+/* SIN VISITAS */
+
+if(querySnapshot.empty){
+
+container.innerHTML=`
+
+<div class="visit-box">
+
+<h3>Sin visitas</h3>
+
+<p>No hay registros.</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+/* MOSTRAR VISITAS */
+
+querySnapshot.forEach((docu)=>{
+
+const v = docu.data();
+
+const visitId = docu.id;
+
+currentVisits.push(visitId);
+
+/* NUEVA VISITA */
+
+const isNew =
+!viewedVisits.includes(visitId);
+
+/* AGREGAR VISITA */
+
+container.innerHTML += `
+
+<div class="visit-box ${isNew ? "new-visit" : ""}">
+
+<h3>${v.pais}</h3>
+
+<p>Ciudad: ${v.ciudad}</p>
+
+<p>IP: ${v.ip}</p>
+
+<p>Fecha: ${v.fecha}</p>
+
+<p>Hora: ${v.hora}</p>
+
+${isNew ? `
+<div class="visit-badge">
+NUEVA VISITA
+</div>
+` : ""}
+
+</div>
+
+`;
+
+});
+
+/* GUARDAR COMO VISTAS */
+
+localStorage.setItem(
+"viewedVisits",
+JSON.stringify(currentVisits)
+);
+
+}
+
+
+
+/* LOADER */
+
+let load = 0;
+
+const progressText = document.getElementById("progressText");
+
+const loadingInterval = setInterval(() => {
+
+load += 5;
+
+
+if(load >= 100){
+
+clearInterval(loadingInterval);
+
+setTimeout(() => {
+
+document.getElementById("loader").style.opacity = "0";
+
+setTimeout(() => {
+
+document.getElementById("loader").style.display = "none";
+
+}, 500);
+
+}, 500);
+
+}
+
+}, 120);
+
+
+/* MENU */
+
+function openMenu(){
+document.getElementById("menu").classList.add("active");
+}
+
+function closeMenu(){
+document.getElementById("menu").classList.remove("active");
+}
+
+/* STORE */
+
+function openStore(){
+
+document.getElementById("storePanel").classList.add("active");
+
+document.body.classList.add("panel-open");
+
+}
+
+function closeStore(){
+
+document.getElementById("storePanel").classList.remove("active");
+
+document.body.classList.remove("panel-open");
+
+}
+
+function buyProduct(product){
+
+window.open(
+`https://wa.me/254102300454?text=${encodeURIComponent("Hola buenas, me interesa obtener información hacerca de "+product)}`,
+"_blank"
+);
+
+}
+
+/* LOGIN */
+
+function openLogin(){
+
+document.getElementById("loginPanel").classList.add("active");
+
+document.body.classList.add("panel-open");
+
+}
+
+function closeLogin(){
+
+document.getElementById("loginPanel").classList.remove("active");
+
+document.body.classList.remove("panel-open");
+
+/* LIMPIAR CAMPOS */
+document.getElementById("user").value = "";
+document.getElementById("pass").value = "";
+
+/* RESTABLECER CONTRASEÑA OCULTA */
+document.getElementById("pass").type = "password";
+
+const icon = document.querySelector("#togglePassBtn i");
+
+if(icon){
+icon.classList.remove("fa-eye-slash");
+icon.classList.add("fa-eye");
+}
+
+/* OCULTAR MENSAJES Y QUITAR BORDES DE ERROR */
+document.getElementById("error").style.display = "none";
+document.getElementById("error").innerText = "Credenciales incorrectas";
+
+document.querySelectorAll(".input-error").forEach(el=>{
+el.classList.remove("input-error");
+});
+
+}
+
+function togglePass(){
+
+const pass = document.getElementById("pass");
+const icon = document.querySelector("#togglePassBtn i");
+
+if(pass.type === "password"){
+
+pass.type = "text";
+icon.classList.remove("fa-eye");
+icon.classList.add("fa-eye-slash");
+
+}else{
+
+pass.type = "password";
+icon.classList.remove("fa-eye-slash");
+icon.classList.add("fa-eye");
+
+}
+
+}
+
+/* LOGIN SEGURO SHA-256 */
+
+const secretSalt =
+"X9DarkSecure_2026";
+
+async function hashText(text){
+
+const encoder = new TextEncoder();
+
+const data = encoder.encode(text);
+
+const hashBuffer =
+await crypto.subtle.digest("SHA-256", data);
+
+const hashArray =
+Array.from(new Uint8Array(hashBuffer));
+
+const hashHex =
+hashArray.map(b =>
+b.toString(16).padStart(2,"0")
+).join("");
+
+return hashHex;
+
+}
+
+async function loginAdmin(){
+
+const userInput = document.getElementById("user");
+const passInput = document.getElementById("pass");
+
+const user = userInput.value.trim();
+const pass = passInput.value.trim();
+
+const error = document.getElementById("error");
+
+const userBox = userInput.parentElement;
+const passBox = passInput.parentElement;
+
+/* VALIDAR CAMPOS OBLIGATORIOS */
+
+document.getElementById("loginAlert").style.display="none";
+
+document.getElementById("userError").style.display="none";
+document.getElementById("passError").style.display="none";
+
+userBox.classList.remove("input-error");
+passBox.classList.remove("input-error");
+
+let hasError = false;
+
+if(user === ""){
+
+userBox.classList.add("input-error");
+
+const userError =
+document.getElementById("userError");
+
+userError.style.display="block";
+
+setTimeout(()=>{
+userError.style.display="none";
+userBox.classList.remove("input-error");
+},3000);
+
+hasError = true;
+
+}
+
+if(pass === ""){
+
+passBox.classList.add("input-error");
+
+const passError =
+document.getElementById("passError");
+
+passError.style.display="block";
+
+setTimeout(()=>{
+passError.style.display="none";
+passBox.classList.remove("input-error");
+},3000);
+
+hasError = true;
+
+}
+
+if(hasError){
+return;
+}
+
+/* HASH USER */
+
+const hashedUser =
+await hashText(
+user + secretSalt
+);
+
+/* HASH PASS */
+
+const hashedPass =
+await hashText(
+pass + secretSalt
+);
+
+/* HASHES CORRECTOS */
+
+const correctUserHash =
+"6e1749c8d7b1e1401127f1660ab4fc035b66ef9e8e10435d886c5751115f0459";
+
+const correctPassHash =
+"bafcd9a1a056466f29704ddbbbd488773859ba8000edb3545c3f5b0ad070a348";
+
+if(
+hashedUser===correctUserHash
+&&
+hashedPass===correctPassHash
+){
+
+document.getElementById("adminPanel").style.display="block";
+document.getElementById("loginPanel").classList.remove("active");
+document.body.classList.remove("panel-open");
+error.style.display="none";
+
+/* LIMPIAR CAMPOS POR SEGURIDAD */
+document.getElementById("user").value = "";
+document.getElementById("pass").value = "";
+document.getElementById("pass").type = "password";
+
+const icon = document.querySelector("#togglePassBtn i");
+
+if(icon){
+icon.classList.remove("fa-eye-slash");
+icon.classList.add("fa-eye");
+}
+
+loadVisits();
+
+}else{
+
+const alertBox =
+document.getElementById("loginAlert");
+
+/* MOSTRAR MENSAJE */
+alertBox.style.display = "block";
+
+/* LIMPIAR CAMPOS */
+document.getElementById("user").value = "";
+document.getElementById("pass").value = "";
+
+/* QUITAR BORDES DE ERROR SI EXISTEN */
+userBox.classList.remove("input-error");
+passBox.classList.remove("input-error");
+
+/* REINICIAR CONTRASEÑA OCULTA */
+passInput.type = "password";
+
+const icon = document.querySelector("#togglePassBtn i");
+
+if(icon){
+icon.classList.remove("fa-eye-slash");
+icon.classList.add("fa-eye");
+}
+
+/* OCULTAR MENSAJE A LOS 3 SEGUNDOS */
+setTimeout(()=>{
+
+alertBox.style.display = "none";
+
+},3000);
+
+}
+
+}
+
+function closeAdmin(){
+
+const panel =
+document.getElementById("adminPanel");
+
+/* CERRAR PANEL */
+
+panel.style.display = "none";
+
+/* LIMPIAR VISITAS */
+
+document.getElementById("visits").innerHTML = "";
+
+/* RESETEAR SCROLL */
+
+panel.scrollTop = 0;
+
+document.body.scrollTop = 0;
+
+document.documentElement.scrollTop = 0;
+
+/* FORZAR REPAINT */
+
+requestAnimationFrame(()=>{
+
+document.body.style.overflow = "hidden";
+
+requestAnimationFrame(()=>{
+
+document.body.style.overflow = "auto";
+
+});
+
+});
+
+}
+
+let currentProduct = "";
+
+const products = {
+
+whatsapp:{
+title:"Número Virtual WhatsApp",
+image:"https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg",
+description:"Números virtuales disponibles para registro y verificación en WhatsApp.",
+status:"Disponible",
+price:"1",
+message:"Buenas, estoy interesado en un número virtual para WhatsApp. ¿Me podría dar más detalles e información?"
+},
+
+telegram:{
+title:"Número Virtual Telegram",
+image:"https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg",
+description:"Números virtuales para verificación de Telegram de varios países.",
+status:"Disponible",
+price:"0,5",
+message:"Buenas, estoy interesado en un número virtual para Telegram. ¿Me podría dar más detalles e información?"
+},
+
+grupos:{
+title:"Grupos WhatsApp",
+image:"https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg",
+description:"Grupos de Whatsapp con fechas de creación antiguas.",
+status:"Disponible",
+price:"4",
+message:"Buenas, estoy interesado en los grupos de WhatsApp. ¿Me podría dar más detalles e información?"
+},
+
+crecimiento:{
+title:"Crecimiento Digital",
+image:"https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg",
+description:"Servicios de crecimiento y posicionamiento para redes sociales.",
+status:"Disponible",
+price:"1,5",
+message:"Buenas, estoy interesado en el servicio de crecimiento digital. ¿Me podría dar más detalles e información?"
+},
+
+premium:{
+title:"Creaciones Web",
+image:"https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg",
+description:"Te ayudamos a crear tu pagina web, programacion en html ú otro servicio.",
+status:"Disponible",
+price:"1,5",
+message:"Buenas, estoy interesado en la creación web. ¿Me podría dar más información?"
+},
+
+extra:{
+title:"Bots Multidevice de Whatsapp",
+image:"https://i.ibb.co/FNgtpdx/IMG-20260406-001315-178.jpg",
+description:"Bots Multidevice para WhatsApp con múltiples funciones integradas, incluyendo descargas de videos y música, creación de stickers, administración de grupos, respuestas automáticas, herramientas de moderación y muchas funciones adicionales. Contamos con venta del archivo completo del bot, servidor listo para su funcionamiento y guía detallada para su instalación, configuración y uso.",
+status:"Disponible",
+price:"2",
+message:"Buenas, estoy interesado en los bots de Whatsapp. ¿Me podría dar más información?"
+}
+
+};
+
+function openProduct(product){
+
+const p = products[product];
+
+if(!p){
+alert("Producto en desarrollo.");
+return;
+}
+
+currentProduct = product;
+
+document.getElementById("productImage").src = p.image;
+document.getElementById("productTitle").innerText = p.title;
+document.getElementById("productDescription").innerText = p.description;
+document.getElementById("productStatus").innerText = p.status;
+document.getElementById("productPrice").innerText = p.price;
+
+document.getElementById("productPanel").classList.add("active");
+
+}
+
+function closeProduct(){
+
+document.getElementById("productPanel").classList.remove("active");
+
+}
+
+function buyCurrentProduct(){
+
+const p = products[currentProduct];
+
+window.open(
+"https://wa.me/254102300454?text="+encodeURIComponent(p.message),
+"_blank"
+);
+
+}
+
+
+/* HACER FUNCIONES GLOBALES */
+
+window.openMenu = openMenu;
+window.closeMenu = closeMenu;
+
+window.openStore = openStore;
+window.closeStore = closeStore;
+
+window.openLogin = openLogin;
+window.closeLogin = closeLogin;
+
+window.togglePass = togglePass;
+
+window.loginAdmin = loginAdmin;
+
+window.buyProduct = buyProduct;
+
+window.openProduct = openProduct;
+
+window.openCodePanel = openCodePanel;
+window.closeCodePanel = closeCodePanel;
+window.addNum = addNum;
+window.removeNum = removeNum;
+
+let pinAttempts = parseInt(
+localStorage.getItem("pinAttempts") || "0"
+);
+
+let pinBlockedUntil = parseInt(
+localStorage.getItem("pinBlockedUntil") || "0"
+);
+window.checkCode = checkCode;
+
+
+/* ===== PANEL DE CÓDIGO ===== */
+
+let inputCode = "";
+let revealTimeout;
+
+/* ACTUALIZAR PANTALLA */
+
+function updateCodeDisplay(lastVisible = false){
+
+const display = document.getElementById("codeDisplay");
+
+if(inputCode === ""){
+display.textContent = "";
+return;
+}
+
+if(lastVisible){
+
+const last =
+inputCode.slice(-1);
+
+const hidden =
+"•".repeat(
+Math.max(0,inputCode.length-1)
+);
+
+display.textContent =
+hidden + last;
+
+}else{
+
+display.textContent =
+"•".repeat(inputCode.length);
+
+}
+
+}
+
+/* ABRIR PANEL */
+
+function openCodePanel(){
+
+document.getElementById("loginPanel").classList.remove("active");
+
+document.getElementById("codePanel").classList.add("active");
+
+inputCode = "";
+
+updateCodeDisplay();
+
+if(Date.now() < pinBlockedUntil){
+
+const display =
+document.getElementById("codeDisplay");
+
+const remainingMinutes =
+Math.ceil(
+(pinBlockedUntil - Date.now()) / 60000
+);
+
+display.innerHTML =
+`<span style="
+font-size:14px;
+color:#ff4d4d;
+letter-spacing:0;
+">
+Bloqueado. Inténtalo en ${remainingMinutes} mts.
+</span>`;
+
+}
+}
+
+/* CERRAR PANEL */
+
+function closeCodePanel(){
+
+document.getElementById("codePanel").classList.remove("active");
+
+inputCode = "";
+
+document.getElementById("codeMsg").textContent = "";
+
+updateCodeDisplay();
+
+}
+
+function addNum(num){
+
+if(Date.now() < pinBlockedUntil){
+
+const display =
+document.getElementById("codeDisplay");
+
+const remainingMinutes =
+Math.ceil(
+(pinBlockedUntil - Date.now()) / 60000
+);
+
+display.innerHTML =
+`<span style="
+font-size:14px;
+color:#ff4d4d;
+letter-spacing:0;
+">
+Bloqueado. Inténtalo en ${remainingMinutes} mts.
+</span>`;
+
+return;
+
+}
+
+inputCode += num;
+
+clearTimeout(revealTimeout);
+
+updateCodeDisplay(true);
+
+revealTimeout = setTimeout(()=>{
+
+updateCodeDisplay(false);
+
+},500);
+
+}
+
+function removeNum(){
+
+if(Date.now() < pinBlockedUntil){
+
+const display =
+document.getElementById("codeDisplay");
+
+const remainingMinutes =
+Math.ceil(
+(pinBlockedUntil - Date.now()) / 60000
+);
+
+display.innerHTML =
+`<span style="
+font-size:14px;
+color:#ff4d4d;
+letter-spacing:0;
+">
+Bloqueado. Inténtalo en ${remainingMinutes} mts.
+</span>`;
+
+return;
+
+}
+
+inputCode = inputCode.slice(0,-1);
+
+updateCodeDisplay();
+
+}
+
+async function checkCode(){
+
+const display =
+document.getElementById("codeDisplay");
+
+/* BLOQUEO TOTAL */
+
+if(Date.now() < pinBlockedUntil){
+
+const remainingMinutes =
+Math.ceil(
+(pinBlockedUntil - Date.now()) / 60000
+);
+
+display.classList.add("code-error");
+
+display.innerHTML =
+`<span style="
+font-size:14px;
+color:#ff4d4d;
+letter-spacing:0;
+">
+Bloqueado. Inténtalo en ${remainingMinutes} mts.
+</span>`;
+
+return;
+
+}
+
+const correctCodeHash =
+"f1ebf7c24d86648383e9ef4f96898bb5c62b9f56f75e0c6a031dcf6da4956ceb";
+
+const inputHash =
+await hashText(inputCode);
+
+/* VACÍO */
+
+if(inputCode.trim() === ""){
+
+display.classList.add("code-error");
+
+display.innerHTML =
+'<span style="font-size:14px;color:#ff4d4d;letter-spacing:0;">Este campo es obligatorio</span>';
+
+setTimeout(()=>{
+
+display.classList.remove("code-error");
+display.textContent="";
+
+},3000);
+
+return;
+
+}
+
+/* CORRECTO */
+
+if(inputHash === correctCodeHash){
+
+pinAttempts = 0;
+
+localStorage.setItem(
+"pinAttempts",
+"0"
+);
+
+display.classList.remove("code-error");
+
+display.innerHTML =
+'<span style="font-size:15px;color:#55ff88;letter-spacing:0;">Acceso autorizado</span>';
+
+setTimeout(()=>{
+
+document.getElementById("codePanel").classList.remove("active");
+
+document.getElementById("adminPanel").style.display="block";
+
+loadVisits();
+
+},1500);
+
+return;
+
+}
+
+/* INCORRECTO */
+
+pinAttempts++;
+
+localStorage.setItem(
+"pinAttempts",
+pinAttempts
+);
+
+/* PRIMER INTENTO */
+
+if(pinAttempts === 1){
+
+display.classList.add("code-error");
+
+display.innerHTML =
+'<span style="font-size:14px;color:#ff4d4d;letter-spacing:0;">Código incorrecto. Te queda 1 intento.</span>';
+
+setTimeout(()=>{
+
+inputCode="";
+display.classList.remove("code-error");
+display.textContent="";
+
+},3000);
+
+return;
+
+}
+
+/* SEGUNDO INTENTO */
+
+pinBlockedUntil =
+Date.now() + (10 * 60 * 1000);
+
+localStorage.setItem(
+"pinBlockedUntil",
+pinBlockedUntil
+);
+
+pinAttempts = 0;
+
+localStorage.setItem(
+"pinAttempts",
+"0"
+);
+
+display.classList.add("code-error");
+
+display.innerHTML =
+'<span style="font-size:14px;color:#ff4d4d;letter-spacing:0;">Código incorrecto. Bloqueado durante 10 minutos.</span>';
+
+inputCode="";
+
+}
+
+window.closeProduct = closeProduct;
+window.buyCurrentProduct = buyCurrentProduct;
+
+window.closeAdmin = closeAdmin;
+
+
+
+
+</script>
+
+</body>
+</html>
