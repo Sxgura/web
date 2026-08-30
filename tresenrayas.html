@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tres en Raya • Endo IA • Sxgura</title>
+<style>
+  :root{
+    --bg:#0f1419;
+    --card:#161d27;
+    --text:#e8eef7;
+    --muted:#8b9bb4;
+    --line:rgba(255,255,255,.08);
+    --shadow:0 10px 28px rgba(0,0,0,.35);
+    --radius:16px;
+    --ok:#3ecf8e;
+    --pri:#6b8cff;
+    --bad:#ef6b81;
+    --pri-soft:rgba(107,140,255,.16);
+    --ok-soft:rgba(62,207,142,.13);
+    --bad-soft:rgba(239,107,129,.13);
+  }
+  *{box-sizing:border-box}
+  html,body{
+    height:100%;margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(800px 500px at 12% 8%, rgba(107,140,255,.11), transparent 55%),
+      radial-gradient(700px 450px at 88% 12%, rgba(62,207,142,.07), transparent 50%),
+      var(--bg);
+    color:var(--text);
+  }
+  .app{max-width:1100px;margin:0 auto;padding:14px}
+
+  .top{
+    display:flex;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);
+    background:rgba(22,29,39,.92);box-shadow:var(--shadow);flex-wrap:wrap;
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--pri),var(--ok));font-weight:900;font-size:14px;
+  }
+  h1{margin:0;font-size:16px}
+  .sub{margin:2px 0 0;color:var(--muted);font-size:11px}
+  .controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+
+  .btn{
+    border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);
+    padding:7px 10px;border-radius:10px;cursor:pointer;font-size:12px;transition:.15s;user-select:none;
+  }
+  .btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:var(--pri-soft);border-color:rgba(107,140,255,.35)}
+  .btn.good{background:var(--ok-soft);border-color:rgba(62,207,142,.3)}
+  .btn.danger{background:var(--bad-soft);border-color:rgba(239,107,129,.3)}
+  .btn.active-diff{background:var(--pri-soft);border-color:rgba(107,140,255,.5);color:#fff}
+
+  .pill{
+    display:inline-flex;gap:7px;align-items:center;padding:6px 10px;border-radius:999px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:12px;color:var(--muted);
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:#888;transition:.2s}
+
+  .grid{margin-top:14px;display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+  .card{
+    border:1px solid var(--line);background:rgba(22,29,39,.92);box-shadow:var(--shadow);
+    border-radius:var(--radius);padding:14px;
+  }
+  .card h2{margin:0 0 4px;font-size:15px}
+  .muted{margin:0 0 10px;color:var(--muted);font-size:12px}
+  .gameCard{grid-column:span 7}
+  .sideCard{grid-column:span 5}
+  .row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+
+  .boardWrap{position:relative;margin-top:10px}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;position:relative;z-index:1}
+
+  .winLine{
+    position:absolute;inset:0;pointer-events:none;display:none;z-index:10;overflow:visible;
+  }
+  .winLine .line{
+    position:absolute;
+    height:8px;
+    border-radius:999px;
+    background:linear-gradient(90deg,#6b8cff,#3ecf8e);
+    box-shadow:0 0 16px rgba(62,207,142,.6);
+    transform-origin:center center;
+  }
+
+  .cell{
+    aspect-ratio:1/1;display:grid;place-items:center;border-radius:14px;
+    border:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+    font-size:42px;font-weight:900;cursor:pointer;user-select:none;transition:.12s;
+    position:relative;z-index:2;
+  }
+  .cell:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.2)}
+  .cell.disabled{cursor:not-allowed;opacity:.88}
+  .cell.pop{animation:pop .15s ease-out}
+  @keyframes pop{0%{transform:scale(.95)}100%{transform:scale(1)}}
+  .badgeX{color:var(--pri)}
+  .badgeO{color:var(--ok)}
+
+  .msg{
+    margin-top:10px;padding:9px 11px;border-radius:12px;
+    border:1px dashed rgba(255,255,255,.12);color:var(--muted);font-size:12px;min-height:38px;
+  }
+
+  .kpiGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+  .kpi{border:1px solid var(--line);border-radius:12px;padding:10px;background:rgba(255,255,255,.03)}
+  .kpi .label{color:var(--muted);font-size:11px}
+  .kpi .value{margin-top:4px;font-size:18px;font-weight:900}
+
+  .drawerBack{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:60}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:min(400px,92vw);
+    background:rgba(22,29,39,.97);border-left:1px solid var(--line);box-shadow:var(--shadow);
+    padding:14px;transform:translateX(110%);transition:transform .18s ease;z-index:61;overflow:auto;
+  }
+  .drawerBack.show{display:block}
+  .drawer.show{transform:translateX(0)}
+  .drawer h3{margin:0 0 8px;font-size:16px}
+  .drawer .sec{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.02)}
+  .drawer .secTitle{font-size:11px;color:var(--muted);margin:0 0 8px}
+  .drawer a{color:var(--text);text-decoration:none}
+  .drawer .fullBtn{width:100%;text-align:left;margin-bottom:6px}
+
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .tab{padding:7px 9px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:11px;cursor:pointer}
+  .tab.active{border-color:rgba(107,140,255,.4);background:var(--pri-soft)}
+  .achList{display:grid;gap:7px;max-height:340px;overflow:auto}
+  .ach{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+  .medal{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.05);flex:0 0 30px}
+  .ach .t{font-weight:700;font-size:12px}
+  .ach .d{color:var(--muted);font-size:11px;margin-top:2px}
+  .prog{margin-top:5px;height:6px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}
+  .prog > div{height:100%;background:linear-gradient(90deg,var(--pri),var(--ok))}
+  .small{font-size:11px;color:var(--muted)}
+
+  .modalBack{
+    position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;
+    align-items:center;justify-content:center;padding:16px;z-index:80;
+  }
+  .modalBack.show{display:flex}
+  .modal{
+    width:min(420px,100%);border:1px solid var(--line);border-radius:16px;
+    background:rgba(22,29,39,.98);box-shadow:var(--shadow);padding:18px;
+  }
+  .modal h3{margin:0 0 8px;font-size:16px}
+  .modal p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.5}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end}
+
+  @media(max-width:900px){
+    .gameCard,.sideCard{grid-column:span 12}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">3R</div>
+      <div>
+        <h1>Tres en Raya • <span style="color:var(--ok)">Endo IA</span></h1>
+        <p class="sub">Creador: <b>Sxgura</b></p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <span class="pill"><span class="dot" id="turnDot"></span><span id="turnText">Tu turno</span></span>
+      <button class="btn" id="btnSymbol">Jugar como: X</button>
+      <button class="btn" id="btnSound">Sonido: ON</button>
+      <button class="btn" id="btnMusic">Música: OFF</button>
+      <button class="btn good" id="btnAuto">Auto: OFF</button>
+      <button class="btn primary" id="btnNew">Nueva</button>
+      <button class="btn" id="btnMenu">⋮</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card gameCard">
+      <h2>Tablero</h2>
+      <p class="muted">Elige dificultad y símbolo. Tú vs <b style="color:var(--ok)">Endo IA</b>.</p>
+
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn" data-diff="easy">Fácil</button>
+        <button class="btn active-diff" data-diff="medium">Medio</button>
+        <button class="btn" data-diff="hard">Difícil</button>
+        <button class="btn" data-diff="extreme">Extremo</button>
+      </div>
+
+      <div class="row">
+        <span class="pill">Modo: <b id="modeLabel" style="color:var(--text);margin-left:5px">Medio</b></span>
+        <span class="pill">Racha: <b id="streakLabel" style="color:var(--text);margin-left:5px">0</b></span>
+        <span class="pill">Mejor: <b id="bestStreakLabel" style="color:var(--text);margin-left:5px">0</b></span>
+      </div>
+
+      <div class="boardWrap">
+        <div class="board" id="board"></div>
+        <div class="winLine" id="winLine"><div class="line" id="winLineBar"></div></div>
+      </div>
+
+      <div class="msg" id="msg"></div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="btnHint">Sugerencia</button>
+        <button class="btn" id="btnUndo">Deshacer</button>
+      </div>
+    </section>
+
+    <aside class="card sideCard">
+      <h2>Panel</h2>
+      <p class="muted">Estadísticas guardadas en tu dispositivo.</p>
+      <div class="kpiGrid">
+        <div class="kpi"><div class="label">Partidas</div><div class="value" id="kpiGames">0</div></div>
+        <div class="kpi"><div class="label">Victorias</div><div class="value" id="kpiWins">0</div></div>
+        <div class="kpi"><div class="label">Derrotas</div><div class="value" id="kpiLosses">0</div></div>
+        <div class="kpi"><div class="label">Empates</div><div class="value" id="kpiDraws">0</div></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <span class="pill">Pistas: <b id="hintsUsed" style="color:var(--text);margin-left:5px">0</b></span>
+        <span class="pill">Undo: <b id="undosUsed" style="color:var(--text);margin-left:5px">0</b></span>
+        <span class="pill">Último: <b id="lastResult" style="color:var(--text);margin-left:5px">—</b></span>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div class="drawerBack" id="drawerBack"></div>
+<aside class="drawer" id="drawer">
+  <div class="row" style="justify-content:space-between">
+    <h3>Menú</h3>
+    <button class="btn" id="btnCloseDrawer">Cerrar</button>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Sxgura Inc • Endo IA</div>
+    <button class="btn fullBtn" id="btnCredits">Créditos</button>
+    <a class="btn fullBtn" href="https://wa.me/254102300454?text=Hola%20Sxgura%20Inc" target="_blank" rel="noopener">🟢 WhatsApp</a>
+    <a class="btn fullBtn" href="https://t.me/EllSxgura" target="_blank" rel="noopener">🔵 Telegram</a>
+    <a class="btn fullBtn" href="https://sxgura.github.io/web/" target="_blank" rel="noopener">🌐 Sitio web oficial</a>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Información</div>
+    <div class="small">Versión 8.4 • Colombia 🇨🇴<br>Código abierto • Sxgura Inc</div>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Configuración</div>
+    <div class="row">
+      <button class="btn" id="mSound">Sonido</button>
+      <button class="btn" id="mMusic">Música</button>
+      <button class="btn good" id="mAuto">Auto-start</button>
+      <button class="btn danger" id="btnReset">Reset stats</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="secTitle">Logros</div>
+    <div class="tabs">
+      <div class="tab active" data-tab="done">✅ Completados</div>
+      <div class="tab" data-tab="progress">🟡 En progreso</div>
+      <div class="tab" data-tab="locked">⚪ No iniciados</div>
+    </div>
+    <div class="achList" id="achList"></div>
+  </div>
+</aside>
+
+<div class="modalBack" id="modalCredits">
+  <div class="modal">
+    <h3>Créditos</h3>
+    <p>Juego: <b>Tres en Raya • Endo IA</b><br>Creador: <b>Sxgura</b><br>Marca: <b>Sxgura Inc</b></p>
+    <div class="modal-actions">
+      <button class="btn primary" id="btnCloseCredits">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modalBack" id="modalReset">
+  <div class="modal">
+    <h3>Restablecer estadísticas</h3>
+    <p>¿Estás seguro de que quieres restablecer todas tus partidas?<br>Se perderán todos los datos, rachas y logros.</p>
+    <div class="modal-actions">
+      <button class="btn" id="btnCancelReset">Cancelar</button>
+      <button class="btn danger" id="btnConfirmReset">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const rand = n => Math.floor(Math.random()*n);
+  const pick = arr => arr[rand(arr.length)];
+  const clone = a => a.slice();
+
+  // ===== AUDIO AMBIENTE FUERTE =====
+  let audioEnabled = true;
+  let musicEnabled = false;
+  let audioCtx = null;
+  let master = null;
+  let musicAudio = null;
+let musicIndex = 0;
+
+const playlist = [
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+];
+
+  function ensureAudio(){
+    if(!audioEnabled) return null;
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = AC ? new AC() : null;
+      if(audioCtx){
+        master = audioCtx.createGain();
+        master.gain.value = 1.4;
+        master.connect(audioCtx.destination);
+      }
+    }
+    return audioCtx;
+  }
+  async function resumeAudio(){
+    const ctx = ensureAudio();
+    if(ctx && ctx.state === "suspended") try{ await ctx.resume(); }catch{}
+  }
+
+  function softPlop(freq=440, dur=0.12, vol=0.3){
+    const ctx = ensureAudio(); if(!ctx||!master) return;
+    const t = ctx.currentTime;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.exponentialRampToValueAtTime(Math.max(freq*0.8,70), t+dur);
+    g.gain.setValueAtTime(0.001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t+dur+0.02);
+  }
+  function playClick(){ softPlop(500,0.09,0.28); }
+  function playDraw(){ softPlop(340,0.16,0.3); }
+  function playLose(){ softPlop(180,0.2,0.32); }
+  function playWin(){
+    [523,659,784,988].forEach((f,i)=>setTimeout(()=>softPlop(f,0.14,0.32), i*70));
+  }
+
+
+function startMusic(){
+  stopMusic();
+  if(!playlist.length) return;
+
+  musicAudio = new Audio(playlist[musicIndex]);
+  musicAudio.loop = false;
+  musicAudio.volume = 0.75;
+
+  musicAudio.play().catch(()=>{});
+
+  musicAudio.onended = () => {
+    musicIndex = (musicIndex + 1) % playlist.length;
+    startMusic();
+  };
+}
+
+function stopMusic(){
+  if(musicAudio){
+    musicAudio.pause();
+    musicAudio.currentTime = 0;
+    musicAudio.onended = null;
+    musicAudio = null;
+  }
+}
+
+  // ===== STATE =====
+  let board = Array(9).fill(null);
+  let player = "X";
+  let ai = "O";
+  let yourTurn = true;
+  let gameOver = false;
+  let lastSnapshot = null;
+  let movesPlayer = 0;
+  let autoStart = false;
+  let difficulty = "medium";
+  let achTab = "done";
+
+  const STORE_KEY = "sxgura_ttt_v66";
+  const defaultStats = {
+    games:0, wins:0, losses:0, draws:0,
+    streak:0, bestStreak:0,
+    totals:{hints:0, undos:0},
+    last:"—",
+    modeCounts:{
+      easy:{wins:0,draws:0,losses:0},
+      medium:{wins:0,draws:0,losses:0},
+      hard:{wins:0,draws:0,losses:0},
+      extreme:{wins:0,draws:0,losses:0}
+    }
+  };
+  const loadStats = () => {
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      return raw ? {...structuredClone(defaultStats), ...JSON.parse(raw)} : structuredClone(defaultStats);
+    }catch{ return structuredClone(defaultStats); }
+  };
+  const saveStats = s => localStorage.setItem(STORE_KEY, JSON.stringify(s));
+  let stats = loadStats();
+
+  const WINS = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function winnerInfo(b){
+    for(const combo of WINS){
+      const [a,c,d] = combo;
+      if(b[a] && b[a]===b[c] && b[a]===b[d]) return {who:b[a], combo};
+    }
+    return null;
+  }
+  function isDraw(b){ return b.every(x=>x!==null) && !winnerInfo(b); }
+  function emptyCells(b){ return b.map((v,i)=>v===null?i:null).filter(v=>v!==null); }
+
+  function hideWinLine(){ $("winLine").style.display = "none"; }
+
+  // ===== LÍNEA DE VICTORIA (TODAS LAS POSICIONES CORRECTAS) =====
+  function showWinLine(combo){
+    const key = combo.slice().sort((a,b)=>a-b).join(",");
+    const bar = $("winLineBar");
+    const wrap = $("winLine");
+
+    // Calibrado para grid 3x3 con gap
+    const map = {
+      "0,1,2": {top:"16.7%", left:"50%", width:"92%", rotate:"0deg"},
+      "3,4,5": {top:"50%",   left:"50%", width:"92%", rotate:"0deg"},
+      "6,7,8": {top:"83.3%", left:"50%", width:"92%", rotate:"0deg"},
+      "0,3,6": {top:"50%", left:"16.7%", width:"92%", rotate:"90deg"},
+      "1,4,7": {top:"50%", left:"50%",   width:"92%", rotate:"90deg"},
+      "2,5,8": {top:"50%", left:"83.3%", width:"92%", rotate:"90deg"},
+      "0,4,8": {top:"50%", left:"50%", width:"120%", rotate:"45deg"},
+      "2,4,6": {top:"50%", left:"50%", width:"120%", rotate:"-45deg"}
+    };
+
+    const s = map[key];
+    if(!s) return;
+
+    wrap.style.display = "block";
+    bar.style.top = s.top;
+    bar.style.left = s.left;
+    bar.style.width = s.width;
+    bar.style.height = "8px";
+    bar.style.transform = `translate(-50%, -50%) rotate(${s.rotate})`;
+  }
+
+  function minimax(b, turn){
+    const w = winnerInfo(b);
+    if(w?.who === ai) return {score:10};
+    if(w?.who === player) return {score:-10};
+    if(isDraw(b)) return {score:0};
+    const moves = [];
+    for(const idx of emptyCells(b)){
+      const nb = clone(b); nb[idx] = turn;
+      const r = minimax(nb, turn===ai?player:ai);
+      moves.push({idx, score:r.score});
+    }
+    return turn===ai
+      ? moves.reduce((a,b)=>a.score>b.score?a:b)
+      : moves.reduce((a,b)=>a.score<b.score?a:b);
+  }
+
+  function heuristicMove(b){
+    const empties = emptyCells(b);
+    for(const i of empties){ const nb=clone(b); nb[i]=ai; if(winnerInfo(nb)?.who===ai) return i; }
+    for(const i of empties){ const nb=clone(b); nb[i]=player; if(winnerInfo(nb)?.who===player) return i; }
+    if(!b[4]) return 4;
+    const corners = [0,2,6,8].filter(i=>!b[i]);
+    if(corners.length) return pick(corners);
+    return pick(empties);
+  }
+
+  function aiChooseMove(){
+    const empties = emptyCells(board);
+    if(!empties.length) return null;
+    if(difficulty==="easy") return pick(empties);
+    if(difficulty==="medium") return Math.random()<0.7 ? heuristicMove(board) : pick(empties);
+    if(difficulty==="hard") return Math.random()<0.9 ? minimax(board,ai).idx : heuristicMove(board);
+    return minimax(board,ai).idx;
+  }
+
+  function toast(t){ $("msg").textContent = t; }
+
+  function setTurnUI(){
+    const isPlayerTurn = yourTurn && !gameOver;
+    $("turnDot").style.background = isPlayerTurn ? "var(--pri)" : "var(--ok)";
+    if(gameOver) $("turnText").textContent = "Partida terminada";
+    else if(isPlayerTurn) $("turnText").textContent = `Tu turno (${player})`;
+    else $("turnText").textContent = `Turno Endo IA (${ai})`;
+  }
+
+  function renderBoard(popIndex=null){
+    const boardEl = $("board");
+    boardEl.innerHTML = "";
+    board.forEach((v,i)=>{
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if(v || gameOver || !yourTurn) cell.classList.add("disabled");
+      if(popIndex===i) cell.classList.add("pop");
+      cell.textContent = v || "";
+      if(v==="X") cell.classList.add("badgeX");
+      if(v==="O") cell.classList.add("badgeO");
+      cell.onclick = () => handlePlayerMove(i);
+      boardEl.appendChild(cell);
+    });
+    setTurnUI();
+  }
+
+  function renderKPIs(){
+    $("kpiGames").textContent = stats.games;
+    $("kpiWins").textContent = stats.wins;
+    $("kpiLosses").textContent = stats.losses;
+    $("kpiDraws").textContent = stats.draws;
+    $("streakLabel").textContent = stats.streak;
+    $("bestStreakLabel").textContent = stats.bestStreak;
+    $("hintsUsed").textContent = stats.totals.hints||0;
+    $("undosUsed").textContent = stats.totals.undos||0;
+    $("lastResult").textContent = stats.last||"—";
+  }
+
+  function snapshot(){
+    lastSnapshot = {board:clone(board), yourTurn, gameOver, movesPlayer};
+    $("btnUndo").disabled = false;
+  }
+  function restoreSnapshot(){
+    if(!lastSnapshot) return;
+    board = clone(lastSnapshot.board);
+    yourTurn = lastSnapshot.yourTurn;
+    gameOver = lastSnapshot.gameOver;
+    movesPlayer = lastSnapshot.movesPlayer;
+    lastSnapshot = null;
+    $("btnUndo").disabled = true;
+    stats.totals.undos = (stats.totals.undos||0)+1;
+    saveStats(stats);
+    hideWinLine();
+    toast("Deshacer aplicado");
+    renderBoard();
+    renderKPIs();
+  }
+
+  function endGame(who, combo=null){
+    gameOver = true;
+    stats.games++;
+    const mc = stats.modeCounts[difficulty];
+
+    if(who === player){
+      stats.wins++; stats.streak++; stats.bestStreak = Math.max(stats.bestStreak, stats.streak);
+      stats.last = "Victoria ✅"; mc.wins++;
+      playWin(); toast("¡Victoria!");
+      if(combo) showWinLine(combo);
+    } else if(who === ai){
+      stats.losses++; stats.streak = 0;
+      stats.last = "Derrota ❌"; mc.losses++;
+      playLose(); toast("Derrota");
+      if(combo) showWinLine(combo);
+    } else {
+      stats.draws++; stats.last = "Empate 🤝"; mc.draws++;
+      playDraw(); toast(difficulty==="extreme" ? "Empate (Extremo)" : "Empate");
+      hideWinLine();
+    }
+    saveStats(stats);
+    renderKPIs();
+    setTurnUI();
+    renderAchievements();
+    if(autoStart) setTimeout(()=>newGame(true), 700);
+  }
+
+  function checkAfterMove(){
+    const w = winnerInfo(board);
+    if(w) return endGame(w.who, w.combo);
+    if(isDraw(board)) return endGame("D");
+  }
+
+  async function handlePlayerMove(i){
+    if(gameOver || !yourTurn || board[i]!==null) return;
+    await resumeAudio();
+    snapshot();
+    board[i] = player;
+    movesPlayer++;
+    playClick();
+    renderBoard(i);
+    checkAfterMove();
+    if(gameOver) return;
+
+    yourTurn = false;
+    setTurnUI();
+
+    setTimeout(async ()=>{
+      await resumeAudio();
+      const move = aiChooseMove();
+      if(move===null || gameOver) return;
+      board[move] = ai;
+      playClick();
+      renderBoard(move);
+      yourTurn = true;
+      setTurnUI();
+      checkAfterMove();
+    }, 280);
+  }
+
+  // IMPORTANTE: Si juegas como X, el tablero empieza VACÍO (tú eliges)
+  // Solo si juegas como O, la IA pone la primera ficha
+  function newGame(silent=false){
+    board = Array(9).fill(null);
+    gameOver = false;
+    lastSnapshot = null;
+    movesPlayer = 0;
+    $("btnUndo").disabled = true;
+    hideWinLine();
+
+    if(player === "O"){
+      // IA empieza porque tú eres O
+      yourTurn = false;
+      const m = aiChooseMove();
+      if(m !== null) board[m] = ai;
+      yourTurn = true;
+    } else {
+      // Tú eres X → tablero vacío, tú eliges
+      yourTurn = true;
+    }
+
+    if(!silent) toast("Nueva partida");
+    renderBoard();
+    setTurnUI();
+  }
+
+  async function hint(){
+    if(gameOver) return toast("La partida terminó");
+    if(!yourTurn) return toast("Espera tu turno");
+    await resumeAudio();
+    stats.totals.hints = (stats.totals.hints||0)+1;
+    saveStats(stats); renderKPIs();
+    const best = minimax(board, player);
+    if(best?.idx===undefined) return toast("Sin sugerencia");
+    playClick();
+    toast(`Sugerencia: celda ${best.idx+1}`);
+  }
+
+  function getAchievements(){
+    const mc = stats.modeCounts;
+    return [
+      {title:"Primer paso", desc:"Juega 1 partida", cur:Math.min(stats.games,1), goal:1},
+      {title:"Aprendiz", desc:"Juega 5 partidas", cur:Math.min(stats.games,5), goal:5},
+      {title:"Constante", desc:"Juega 15 partidas", cur:Math.min(stats.games,15), goal:15},
+      {title:"Veterano", desc:"Juega 30 partidas", cur:Math.min(stats.games,30), goal:30},
+      {title:"Maratonista", desc:"Juega 50 partidas", cur:Math.min(stats.games,50), goal:50},
+
+      {title:"Primera victoria", desc:"Gana 1 partida", cur:Math.min(stats.wins,1), goal:1},
+      {title:"En racha", desc:"Gana 5 partidas", cur:Math.min(stats.wins,5), goal:5},
+      {title:"Imparable", desc:"Gana 15 partidas", cur:Math.min(stats.wins,15), goal:15},
+      {title:"Leyenda", desc:"Gana 30 partidas", cur:Math.min(stats.wins,30), goal:30},
+
+      {title:"Racha x3", desc:"Gana 3 seguidas", cur:Math.min(stats.bestStreak,3), goal:3},
+      {title:"Racha x5", desc:"Gana 5 seguidas", cur:Math.min(stats.bestStreak,5), goal:5},
+      {title:"Racha x8", desc:"Gana 8 seguidas", cur:Math.min(stats.bestStreak,8), goal:8},
+
+      {title:"Diplomático", desc:"Consigue 3 empates", cur:Math.min(stats.draws,3), goal:3},
+      {title:"Pacificador", desc:"Consigue 10 empates", cur:Math.min(stats.draws,10), goal:10},
+
+      {title:"Fácil x3", desc:"Gana 3 en Fácil", cur:Math.min(mc.easy.wins,3), goal:3},
+      {title:"Fácil x10", desc:"Gana 10 en Fácil", cur:Math.min(mc.easy.wins,10), goal:10},
+      {title:"Medio x3", desc:"Gana 3 en Medio", cur:Math.min(mc.medium.wins,3), goal:3},
+      {title:"Medio x10", desc:"Gana 10 en Medio", cur:Math.min(mc.medium.wins,10), goal:10},
+      {title:"Difícil x3", desc:"Gana 3 en Difícil", cur:Math.min(mc.hard.wins,3), goal:3},
+      {title:"Difícil x10", desc:"Gana 10 en Difícil", cur:Math.min(mc.hard.wins,10), goal:10},
+
+      {title:"Sobreviviente", desc:"Empata 1 vez en Extremo", cur:Math.min(mc.extreme.draws,1), goal:1},
+      {title:"Tanque Extremo", desc:"Empata 5 veces en Extremo", cur:Math.min(mc.extreme.draws,5), goal:5},
+      {title:"Muro Extremo", desc:"Empata 15 veces en Extremo", cur:Math.min(mc.extreme.draws,15), goal:15},
+    ];
+  }
+
+  function renderAchievements(){
+    const list = $("achList");
+    list.innerHTML = "";
+    const items = getAchievements().map(a=>({
+      ...a, done: a.cur >= a.goal, percent: Math.round((a.cur/a.goal)*100)
+    }));
+    let show = items;
+    if(achTab==="done") show = items.filter(x=>x.done);
+    if(achTab==="progress") show = items.filter(x=>!x.done && x.cur>0);
+    if(achTab==="locked") show = items.filter(x=>!x.done && x.cur===0);
+
+    if(!show.length){
+      list.innerHTML = `<div class="small">Nada aquí todavía.</div>`;
+      return;
+    }
+    show.forEach(it=>{
+      const div = document.createElement("div");
+      div.className = "ach";
+      div.innerHTML = `
+        <div class="medal">${it.done?"✅":"⚪"}</div>
+        <div style="flex:1">
+          <div class="t">${it.title}</div>
+          <div class="d">${it.desc}</div>
+          ${it.done?"":`<div class="prog"><div style="width:${it.percent}%"></div></div>
+          <div class="small" style="margin-top:4px">${it.cur}/${it.goal}</div>`}
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function setDifficulty(diff){
+    difficulty = diff;
+    document.querySelectorAll("[data-diff]").forEach(b=>{
+      b.classList.toggle("active-diff", b.dataset.diff===diff);
+    });
+    $("modeLabel").textContent = {easy:"Fácil",medium:"Medio",hard:"Difícil",extreme:"Extremo"}[diff];
+    newGame(true);
+    toast(`Dificultad: ${$("modeLabel").textContent}`);
+  }
+
+  function modeInitButtons(){
+    $("btnSound").textContent = `Sonido: ${audioEnabled?"ON":"OFF"}`;
+    $("btnMusic").textContent = `Música: ${musicEnabled?"ON":"OFF"}`;
+    $("btnAuto").textContent = `Auto: ${autoStart?"ON":"OFF"}`;
+    $("mSound").textContent = `Sonido: ${audioEnabled?"ON":"OFF"}`;
+    $("mMusic").textContent = `Música: ${musicEnabled?"ON":"OFF"}`;
+    $("mAuto").textContent = `Auto: ${autoStart?"ON":"OFF"}`;
+    $("btnSymbol").textContent = `Jugar como: ${player}`;
+  }
+
+  function init(){
+    renderKPIs();
+    renderAchievements();
+    modeInitButtons();
+    $("btnUndo").disabled = true;
+    newGame(true);
+    toast("Listo. ¡A jugar!");
+
+    document.querySelectorAll("[data-diff]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        await resumeAudio(); playClick();
+        setDifficulty(btn.dataset.diff);
+      };
+    });
+
+    $("btnSymbol").onclick = async ()=>{
+      await resumeAudio(); playClick();
+      if(player==="X"){ player="O"; ai="X"; }
+      else { player="X"; ai="O"; }
+      modeInitButtons();
+      newGame(true);
+      toast(player==="X" ? "Juegas como X (tú empiezas)" : "Juegas como O (IA empieza)");
+    };
+
+    $("btnNew").onclick = async ()=>{ await resumeAudio(); playClick(); newGame(); };
+    $("btnHint").onclick = hint;
+    $("btnUndo").onclick = async ()=>{ await resumeAudio(); playClick(); restoreSnapshot(); };
+
+    $("btnAuto").onclick = async ()=>{
+      await resumeAudio(); playClick();
+      autoStart = !autoStart; modeInitButtons();
+    };
+
+    $("btnSound").onclick = async ()=>{
+      await resumeAudio();
+      audioEnabled = !audioEnabled;
+      if(!audioEnabled){ stopMusic(); musicEnabled=false; }
+      modeInitButtons(); playClick();
+    };
+
+    $("btnMusic").onclick = async ()=>{
+      if(!audioEnabled) return toast("Activa el sonido primero");
+      await resumeAudio();
+      musicEnabled = !musicEnabled;
+      if(musicEnabled) startMusic(); else stopMusic();
+      modeInitButtons(); playClick();
+    };
+
+    $("btnMenu").onclick = async ()=>{
+      await resumeAudio(); playClick();
+      $("drawerBack").classList.add("show");
+      $("drawer").classList.add("show");
+      renderAchievements();
+    };
+    $("drawerBack").onclick = $("btnCloseDrawer").onclick = ()=>{
+      $("drawerBack").classList.remove("show");
+      $("drawer").classList.remove("show");
+    };
+
+    $("mSound").onclick = ()=> $("btnSound").click();
+    $("mMusic").onclick = ()=> $("btnMusic").click();
+    $("mAuto").onclick = ()=> $("btnAuto").click();
+
+    $("btnCredits").onclick = ()=> $("modalCredits").classList.add("show");
+    $("btnCloseCredits").onclick = ()=> $("modalCredits").classList.remove("show");
+    $("modalCredits").onclick = e=>{ if(e.target===$("modalCredits")) $("modalCredits").classList.remove("show"); };
+
+    $("btnReset").onclick = ()=> $("modalReset").classList.add("show");
+    $("btnCancelReset").onclick = ()=> $("modalReset").classList.remove("show");
+    $("btnConfirmReset").onclick = ()=>{
+      stats = structuredClone(defaultStats);
+      saveStats(stats);
+      renderKPIs();
+      renderAchievements();
+      newGame(true);
+      $("modalReset").classList.remove("show");
+      toast("Estadísticas restablecidas");
+    };
+    $("modalReset").onclick = e=>{ if(e.target===$("modalReset")) $("modalReset").classList.remove("show"); };
+
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.onclick = ()=>{
+        document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+        t.classList.add("active");
+        achTab = t.dataset.tab;
+        renderAchievements();
+      };
+    });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
