@@ -1,21 +1,12 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Poppins&size=34&pause=1000&color=3B82F6&center=true&vCenter=true&width=900&lines=%F0%9F%92%99+Powered+By+Sxgura+Inc;El+Mejor+Sistema;Explora+El+Nuevo+Nivel;Tecnolog%C3%ADa%2C+dise%C3%B1o+y+automatizaci%C3%B3n" alt="Sxgura typing banner" />
+<img src="https://readme-typing-svg.demolab.com?font=Poppins&size=36&duration=2800&pause=800&color=3B82F6&center=true&vCenter=true&width=900&lines=%F0%9F%92%99+Powered+By+Sxgura+Inc;El+Mejor+Sistema;Explora+El+Nuevo+Nivel;Tecnolog%C3%ADa+%C2%B7+Dise%C3%B1o+%C2%B7+Automatizaci%C3%B3n" alt="typing" />
 
-<br>
+<br><br>
 
-<img src="https://img.shields.io/badge/Sxgura-Inc-3B82F6?style=for-the-badge&logo=github&logoColor=white" alt="Sxgura Inc" />
-<img src="https://img.shields.io/badge/Estado-Activo-22C55E?style=for-the-badge" alt="Activo" />
-<img src="https://img.shields.io/badge/Actualizaciones-Constantes-06B6D4?style=for-the-badge" alt="Updates" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2200&pause=1000&color=60A5FA&center=true&vCenter=true&width=700&lines=By+Sxgura+Inc;Proyecto+principal;Juegos+%7C+Herramientas+%7C+Descargas;Siempre+en+evoluci%C3%B3n" alt="typing2" />
 
-### By Sxgura Inc
-
-**Proyecto principal desarrollado y mantenido por Sxgura Inc.**
-
-Aquí encontrarás juegos, herramientas, sistema de descargas, funciones útiles  
-y nuevas características que seguirán llegando con futuras actualizaciones.
-
-<br>
+<br><br>
 
 <a href="https://wa.me/254102300454">
   <img src="https://img.shields.io/badge/WhatsApp-Enviar%20Mensaje-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="WhatsApp" />
@@ -24,49 +15,9 @@ y nuevas características que seguirán llegando con futuras actualizaciones.
 <a href="https://t.me/EllSxgura">
   <img src="https://img.shields.io/badge/Telegram-Contactar-229ED9?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
 </a>
-&nbsp;
-<a href="https://t.me/SxgProyect">
-  <img src="https://img.shields.io/badge/Canal-SxgProyect-FF3B3B?style=for-the-badge&logo=telegram&logoColor=white" alt="Canal" />
-</a>
 
-</div>
+<br><br>
 
----
-
-## Características
-
-| Módulo | Descripción |
-|--------|-------------|
-| **Juegos** | Experiencias web interactivas con estilo moderno |
-| **Herramientas** | Utilidades digitales listas para usar |
-| **Descargas** | Sistema organizado de enlaces y recursos |
-| **Actualizaciones** | Mejoras constantes y nuevas funciones |
-
----
-
-## Enfoque
-
-- Diseño limpio y oscuro
-- Experiencia rápida en móvil y PC
-- Tecnología, automatización y estética premium
-- Evolución continua del sistema
-
----
-
-## Contacto
-
-Si quieres soporte, ideas o colaborar:
-
-- WhatsApp: [Enviar mensaje](https://wa.me/254102300454)
-- Telegram: [EllSxgura](https://t.me/EllSxgura)
-- Canal: [SxgProyect](https://t.me/SxgProyect)
-
----
-
-<div align="center">
-
-**Sxgura Network · El comienzo empieza ahora**
-
-`Tecnología · Diseño · Automatización`
+<img src="https://readme-typing-svg.demolab.com?font=Poppins&size=16&duration=3000&pause=1200&color=93C5FD&center=true&vCenter=true&width=600&lines=Sxgura+Network;El+comienzo+empieza+ahora" alt="typing3" />
 
 </div>
