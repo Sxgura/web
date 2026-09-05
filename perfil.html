@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#000;
+    color:#e4e6eb;
+    font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer}
+  a{text-decoration:none;color:inherit}
+
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:#1c1c1e;
+  }
+
+  .cover-wrap{position:relative;height:220px;overflow:hidden}
+  .cover{
+    width:100%;height:100%;
+    background:#6a6b6d center/cover no-repeat;
+    filter:brightness(0.92) contrast(0.96) saturate(0.85);
+  }
+  .cover-gradient{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.05) 45%, rgba(0,0,0,.38) 100%);
+    pointer-events:none;
+  }
+  .cover-actions{
+    position:absolute;
+    top:14px;
+    right:14px;
+    z-index:6;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .cover-btn{
+    width:28px;height:28px;
+    display:flex;align-items:center;justify-content:center;opacity:.96;
+  }
+  .cover-btn svg{
+    width:22px;height:22px;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+  }
+  .cover-btn:active{opacity:.7}
+
+  .like-top svg{
+    width:23px;
+    height:23px;
+    fill:none;
+    stroke:#fff;
+    stroke-width:1.7;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    transition:fill .15s ease, stroke .15s ease, transform .15s ease;
+  }
+  .like-top.liked svg{
+    fill:#fff;
+    stroke:#fff;
+  }
+  .like-top:active svg{transform:scale(.92)}
+
+  .menu{
+    position:absolute;top:48px;right:14px;width:230px;
+    background:#2a2b2d;border:1px solid #3a3b3c;border-radius:14px;
+    box-shadow:0 12px 30px rgba(0,0,0,.45);display:none;overflow:hidden;z-index:10;
+  }
+  .menu.show{display:block}
+  .menu button{
+    width:100%;text-align:left;padding:14px 16px;font-size:15px;color:#e4e6eb;
+    display:flex;align-items:center;gap:12px;
+  }
+  .menu button:hover{background:#3a3b3c}
+  .menu button svg{width:20px;height:20px;flex-shrink:0}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+    background:#2a2b2d;color:#fff;border:1px solid #3a3b3c;
+    padding:10px 14px;border-radius:12px;font-size:13px;
+    opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:50;
+  }
+  .toast.show{opacity:1}
+
+  .sheet{
+    position:relative;margin-top:-34px;background:#1c1c1e;
+    border-radius:18px 18px 0 0;padding:10px 14px 10px;z-index:2;
+  }
+  .identity{display:flex;align-items:center;gap:12px}
+  .avatar-wrap{
+    position:relative;
+    width:98px;
+    height:98px;
+    flex-shrink:0;
+    margin-top:-46px;
+  }
+  .avatar{
+    width:98px;height:98px;border-radius:50%;border:3px solid #1c1c1e;
+    background:#3a3b3c center/cover no-repeat;
+    box-shadow:0 0 0 1px rgba(255,255,255,.04);
+  }
+  .online-dot{
+    position:absolute;
+    right:3px;
+    bottom:3px;
+    width:18px;
+    height:18px;
+    background:#34C759;
+    border:3px solid #1c1c1e;
+    border-radius:50%;
+  }
+  .name-wrap{min-width:0;margin-top:-18px}
+  .name-line{display:flex;align-items:center;gap:6px}
+  .name{
+    font-size:21px;font-weight:700;color:#fff;line-height:1.15;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .verify{
+    width:17px;height:17px;object-fit:contain;flex:0 0 17px;display:block;
+  }
+
+  .bio{
+    margin-top:12px;
+    padding:0 2px;
+    font-size:14px;
+    line-height:1.4;
+    color:#e4e6eb;
+    white-space:pre-line;
+  }
+
+  .tabs{
+    display:flex;gap:8px;margin-top:14px;border-bottom:1px solid #3a3b3c;
+  }
+  .tab{
+    padding:11px 12px;font-size:14px;font-weight:600;color:#b0b3b8;
+    border-bottom:3px solid transparent;cursor:pointer;
+  }
+  .tab.active{color:#0866ff;border-bottom-color:#0866ff}
+
+  .feed{background:#1c1c1e}
+  .post{
+    padding:14px 14px 14px;
+    border-bottom:1px solid #323334;
+  }
+
+  .post-head{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .post-av{
+    width:40px;height:40px;border-radius:50%;
+    background:#3a3b3c center/cover no-repeat;flex-shrink:0;
+  }
+  .post-meta{min-width:0;flex:1}
+  .post-name-line{display:flex;align-items:center;gap:5px}
+  .post-name{
+    font-size:15px;font-weight:600;color:#e4e6eb;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+
+  .post-sub{
+    margin-top:3px;
+    font-size:12px;
+    color:#b0b3b8;
+    display:flex;
+    align-items:center;
+    gap:5px;
+  }
+  .post-sub .pin{
+    width:13px;
+    height:13px;
+    display:block;
+    flex-shrink:0;
+    opacity:.9;
+    transform:rotate(18deg);
+  }
+
+  .post-text{
+    margin-top:10px;
+    font-size:15px;
+    color:#e4e6eb;
+    line-height:1.35;
+  }
+
+  .post-mid{
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .social-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .social-row a{
+    width:24px;height:24px;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .social-row a:hover{transform:scale(1.08);opacity:.9}
+  .social-row a:active{transform:scale(.95)}
+  .social-row img{width:18px;height:18px;display:block}
+
+  .views-bottom{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    color:#b0b3b8;
+    font-size:13px;
+    flex-shrink:0;
+  }
+  .views-bottom svg{
+    width:18px;
+    height:18px;
+    fill:none;
+    stroke:#b0b3b8;
+    stroke-width:1.6;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="cover-wrap">
+    <div class="cover" id="cover"></div>
+    <div class="cover-gradient"></div>
+
+    <div class="cover-actions">
+      <button class="cover-btn like-top" id="likeBtn" type="button" aria-label="Me gusta">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.1 8.64l-.1.1-.11-.11C9.76 6.48 7.24 6.48 5.5 8.22c-1.74 1.74-1.74 4.56 0 6.3L12 21l6.5-6.48c1.74-1.74 1.74-4.56 0-6.3-1.74-1.74-4.26-1.74-6.4.42z"/>
+        </svg>
+      </button>
+
+      <button class="cover-btn" id="btnMore" aria-label="Más opciones" type="button">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2" fill="#fff"/><circle cx="12" cy="12" r="2" fill="#fff"/><circle cx="19" cy="12" r="2" fill="#fff"/></svg>
+      </button>
+    </div>
+
+    <div class="menu" id="moreMenu">
+      <button type="button" id="menuShare">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e4e6eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v10"/><path d="M8.5 6.5L12 3l3.5 3.5"/>
+          <path d="M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12"/>
+        </svg>
+        Compartir
+      </button>
+      <button type="button" id="menuCreate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e4e6eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="4"/>
+          <path d="M12 8v8"/><path d="M8 12h8"/>
+        </svg>
+        Crear un perfil
+      </button>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <div class="identity">
+      <div class="avatar-wrap">
+        <div class="avatar" style="background-image:url('https://i.ibb.co/BK2hbsr9/IMG-20260801-115053.jpg');"></div>
+        <span class="online-dot" title="En línea"></span>
+      </div>
+      <div class="name-wrap">
+        <div class="name-line">
+          <div class="name">S'xgura B'rrokal</div>
+          <img class="verify" src="https://i.ibb.co/Y7mFPHCG/1788579887095.png" alt="Verificado">
+        </div>
+      </div>
+    </div>
+
+    <div class="bio">Ilumina Mis Noches,
+Y Dame Fuerzas Por El Dia. 🙌🏼
+
+        🧙🏼‍♂️📿
+ </div>
+
+    <div class="tabs">
+      <div class="tab active">Principal</div>
+    </div>
+  </div>
+
+  <div class="feed">
+    <div class="post">
+
+      <div class="post-head">
+        <div class="post-av" style="background-image:url('https://i.ibb.co/BK2hbsr9/IMG-20260801-115053.jpg');"></div>
+
+        <div class="post-meta">
+          <div class="post-name-line">
+            <div class="post-name">S'xgura B'rrokal</div>
+            <img class="verify" src="https://i.ibb.co/Y7mFPHCG/1788579887095.png" alt="Verificado" style="width:14px;height:14px;flex-basis:14px">
+          </div>
+
+          <div class="post-sub">
+            <img
+              class="pin"
+              src="https://api.iconify.design/mdi:pin.svg?color=%23b0b3b8"
+              alt="Fijado"
+              width="13"
+              height="13"
+            >
+            <span>Destacada</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-text">Sígueme en mis redes sociales.</div>
+
+      <div class="post-mid">
+        <div class="social-row">
+          <a href="https://wa.me/254102300454" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp">
+          </a>
+          <a href="https://facebook.com/EllSxguraa" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <img src="https://cdn.simpleicons.org/facebook/1877F2" alt="Facebook">
+          </a>
+          <a href="https://instagram.com/sxgurabrrokall" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram">
+          </a>
+          <a href="https://www.tiktok.com/@adamnturkey?_r=1&_t=ZS-99TN5GPwzEu" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <img src="https://cdn.simpleicons.org/tiktok/FFFFFF" alt="TikTok">
+          </a>
+          <a href="https://t.me/SxgProyect" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <img src="https://cdn.simpleicons.org/telegram/26A5E4" alt="Telegram">
+          </a>
+        </div>
+
+        <div class="views-bottom">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2.5 12s3.6-6 9.5-6 9.5 6 9.5 6-3.6 6-9.5 6-9.5-6-9.5-6z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span id="viewCount">0</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Enlace copiado</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyApiO7_x468L0k0u7vheUW_luEWJ41VRUQ",
+    authDomain: "sxgura-web.firebaseapp.com",
+    databaseURL: "https://sxgura-web-default-rtdb.firebaseio.com",
+    projectId: "sxgura-web",
+    storageBucket: "sxgura-web.firebasestorage.app",
+    messagingSenderId: "912354449131",
+    appId: "1:912354449131:web:4df2a48d6eb84223bd10ae"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const viewsRef = db.ref("perfilViews/total");
+  const viewCountEl = document.getElementById("viewCount");
+
+  viewsRef.on("value", (snap) => {
+    viewCountEl.textContent = snap.val() || 0;
+  });
+  viewsRef.transaction((current) => (current || 0) + 1);
+
+  document.getElementById("likeBtn").onclick = function (e) {
+    e.stopPropagation();
+    this.classList.toggle("liked");
+  };
+
+  const menu = document.getElementById("moreMenu");
+  const toast = document.getElementById("toast");
+  const linkToCopy = "sxgura.github.io/perfil/";
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1600);
+  }
+
+  async function copyLink(){
+    try{
+      await navigator.clipboard.writeText(linkToCopy);
+      showToast("Enlace copiado");
+    }catch(e){
+      const t = document.createElement("textarea");
+      t.value = linkToCopy;
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand("copy");
+      document.body.removeChild(t);
+      showToast("Enlace copiado");
+    }
+  }
+
+  document.getElementById("btnMore").onclick = (e) => {
+    e.stopPropagation();
+    menu.classList.toggle("show");
+  };
+
+  document.getElementById("menuShare").onclick = async () => {
+    menu.classList.remove("show");
+    await copyLink();
+  };
+
+  document.getElementById("menuCreate").onclick = () => {
+    menu.classList.remove("show");
+    const msg = "Hola, buenas. Vi el diseño de tu sitio web de perfil y me gustó. Quiero saber cómo puedo hacer para crear uno para mí. Gracias.";
+    const url = "https://wa.me/254102300454?text=" + encodeURIComponent(msg);
+    window.open(url, "_blank");
+  };
+
+  document.addEventListener("click", () => menu.classList.remove("show"));
+</script>
+</body>
+</html>
