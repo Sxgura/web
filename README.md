@@ -23,6 +23,20 @@ Aquí encontrarás juegos, herramientas, sistema de descargas, funciones útiles
 
 <br><br>
 
+## ✦ El proyecto en una mirada
+
+| Área | Implementación |
+|---|---|
+| 🌐 Plataforma | Sxgura Network · sitio oficial con herramientas, servicios y recursos digitales |
+| 🛒 Catálogo | Números virtuales WhatsApp/Telegram, grupos, crecimiento digital y creaciones web |
+| 🤖 Bots | Bots multidevice listos para activación y operación continua |
+| 🎮 Juegos | Galaxy Shooter, Galaga Retro y minijuegos HTML integrados |
+| 🧰 Utilidades | Sistema de descargas, herramientas online y módulos de productividad |
+| 🎨 Personalización web | Diseños tipo perfil de red social, páginas a medida y experiencia visual propia |
+| 💬 Soporte | Formulario de reportes y sugerencias para atención directa al usuario |
+| 🛡️ Confianza | Activación instantánea, pago seguro, soporte 24/7 y cobertura multi-región |
+
+
 <img src="https://readme-typing-svg.demolab.com?font=Poppins&size=16&duration=3000&pause=1200&color=93C5FD&center=true&vCenter=true&width=600&lines=Sxgura+Inc+Empresa" alt="typing3" />
 
 </div>
