@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Forge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            overflow: hidden;
+            background: radial-gradient(circle at center, #001122, #000000);
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        }
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            filter: contrast(130%) brightness(120%) saturate(110%);
+        }
+        #controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 300px;
+            max-height: 90vh;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(20, 30, 50, 0.9), rgba(10, 20, 40, 0.7));
+            border-radius: 15px;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 50, 100, 0.5);
+            backdrop-filter: blur(15px) saturate(200%);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            animation: float 6s ease-in-out infinite;
+            overflow-y: auto;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        #controls.collapsed {
+            max-height: 50px;
+            padding: 8px 15px;
+        }
+        #controls::-webkit-scrollbar {
+            width: 6px;
+        }
+        #controls::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        #controls::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #64a6ff, #ff64a6);
+            border-radius: 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 1.3em;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(100, 150, 255, 0.7);
+        }
+        .toggle-button {
+            background: linear-gradient(45deg, #64a6ff, #ff64a6);
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(100, 150, 255, 0.4);
+        }
+        .toggle-button:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(100, 150, 255, 0.6);
+        }
+        .content {
+            padding-top: 5px;
+        }
+        .section {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        h3 {
+            font-size: 0.95em;
+            color: #64a6ff;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            text-shadow: 0 0 4px rgba(100, 150, 255, 0.5);
+        }
+        .control-row, .color-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+        .control-row label, .color-row label {
+            flex: 1;
+            color: #d0e0ff;
+            font-size: 0.8em;
+            max-width: 50px;
+        }
+        .control-row input[type="range"] {
+            flex: 2;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #64a6ff, #ff64a6);
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(100, 150, 255, 0.3);
+        }
+        .control-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #64a6ff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+        }
+        .slider-value {
+            flex: 0.8;
+            text-align: center;
+            color: white;
+            font-size: 0.8em;
+            background: rgba(100, 150, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .control-row input[type="color"] {
+            flex: 2.8;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .control-row input[type="color"]::-webkit-color-swatch {
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(100, 150, 255, 0.4);
+        }
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            background: linear-gradient(45deg, #64a6ff, #ff64a6);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(100, 150, 255, 0.4);
+        }
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(100, 150, 255, 0.6);
+        }
+        @media (max-width: 480px) {
+            #controls {
+                width: 90vw;
+                margin: 5px auto;
+                right: 0;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="glcanvas"></canvas>
+    <div id="controls">
+        <div class="header">
+            <h2>Star Forge</h2>
+            <button id="toggleBtn" class="toggle-button">▲</button>
+        </div>
+        <div class="content">
+            <div class="section" id="shape-controls">
+                <h3>Structure</h3>
+                <div class="control-row">
+                    <label>Points</label>
+                    <input type="range" id="pointsSlider" min="3" max="16" step="1" value="8">
+                    <span id="pointsValue" class="slider-value">8</span>
+                </div>
+                <div class="control-row">
+                    <label>Inner R</label>
+                    <input type="range" id="innerRadiusSlider" min="0.5" max="4" step="0.05" value="2">
+                    <span id="innerRadiusValue" class="slider-value">2.00</span>
+                </div>
+                <div class="control-row">
+                    <label>Outer R</label>
+                    <input type="range" id="outerRadiusSlider" min="1" max="8" step="0.05" value="4">
+                    <span id="outerRadiusValue" class="slider-value">4.00</span>
+                </div>
+                <div class="control-row">
+                    <label>Density</label>
+                    <input type="range" id="heightSlider" min="0.1" max="2" step="0.05" value="0.2">
+                    <span id="heightValue" class="slider-value">0.20</span>
+                </div>
+            </div>
+            <div class="section" id="effects-controls">
+                <h3>Dynamics</h3>
+                <div class="control-row">
+                    <label>Pulse</label>
+                    <input type="range" id="rotationSpeedSlider" min="0" max="8" step="0.1" value="0.5">
+                    <span id="rotationSpeedValue" class="slider-value">0.50</span>
+                </div>
+                <div class="control-row">
+                    <label>Glow</label>
+                    <input type="range" id="glowIntensitySlider" min="0" max="4" step="0.05" value="0.45">
+                    <span id="glowIntensityValue" class="slider-value">0.45</span>
+                </div>
+                <div class="control-row">
+                    <label>Energy</label>
+                    <input type="range" id="wireframeOpacitySlider" min="0.1" max="1" step="0.01" value="0.8">
+                    <span id="wireframeOpacityValue" class="slider-value">0.80</span>
+                </div>
+            </div>
+            <div class="section" id="colors-controls">
+                <h3>Spectrum</h3>
+                <div class="control-row">
+                    <label>Core</label>
+                    <input type="color" id="colorA" value="#4f6fff">
+                </div>
+                <div class="control-row">
+                    <label>Aura</label>
+                    <input type="color" id="colorB" value="#c462ff">
+                </div>
+                <div class="control-row">
+                    <label>Edge</label>
+                    <input type="color" id="colorC" value="#ff4f7e">
+                </div>
+            </div>
+            <div class="button-row">
+                <button id="randomizeBtn" class="action-btn">Random</button>
+                <button id="resetBtn" class="action-btn">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.162.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.162.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        class StarViz {
+            constructor() {
+                this.params = {
+                    points: 8,
+                    innerRadius: 2,
+                    outerRadius: 4,
+                    height: 0.2,
+                    rotationSpeed: 0.5,
+                    glowIntensity: 0.45,
+                    colorA: '#4f6fff',
+                    colorB: '#c462ff',
+                    colorC: '#ff4f7e',
+                    wireframeOpacity: 0.8
+                };
+                this.init();
+                this.setupUI();
+                this.animate();
+            }
+
+            init() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 8, 0);
+                this.camera.lookAt(0, 0, 0);
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: document.getElementById('glcanvas'),
+                    antialias: true,
+                    alpha: true
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.1;
+                this.controls.autoRotate = true;
+                this.controls.target.set(0, 0, 0);
+                this.controls.update();
+                this.composer = new EffectComposer(this.renderer);
+                this.composer.addPass(new RenderPass(this.scene, this.camera));
+                this.bloomPass = new UnrealBloomPass(
+                    new THREE.Vector2(window.innerWidth, window.innerHeight),
+                    this.params.glowIntensity,
+                    0.6,
+                    0.9
+                );
+                this.composer.addPass(this.bloomPass);
+                this.createStar();
+                this.createLights();
+                this.addBackground();
+                this.clock = new THREE.Clock();
+                window.addEventListener('resize', () => this.onResize());
+            }
+
+            createStarGeometry() {
+                const shape = new THREE.Shape();
+                const points = this.params.points;
+                const innerRadius = this.params.innerRadius;
+                const outerRadius = this.params.outerRadius;
+                for (let i = 0; i < points * 2; i++) {
+                    const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                    const angle = (i * Math.PI) / points;
+                    const x = Math.sin(angle) * radius;
+                    const y = Math.cos(angle) * radius;
+                    i === 0 ? shape.moveTo(x, y) : shape.lineTo(x, y);
+                }
+                shape.closePath();
+                return new THREE.ExtrudeGeometry(shape, {
+                    steps: 4,
+                    depth: this.params.height,
+                    bevelEnabled: true,
+                    bevelThickness: 0.3,
+                    bevelSize: 0.4,
+                    bevelSegments: 8
+                });
+            }
+
+            createStar() {
+                if (this.star) this.scene.remove(this.star);
+                const geometry = this.createStarGeometry();
+                const material = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 },
+                        colorA: { value: new THREE.Color(this.params.colorA) },
+                        colorB: { value: new THREE.Color(this.params.colorB) },
+                        colorC: { value: new THREE.Color(this.params.colorC) },
+                        wireframeOpacity: { value: this.params.wireframeOpacity },
+                        pulseSpeed: { value: this.params.rotationSpeed }
+                    },
+                    vertexShader: `
+                        varying vec2 vUv;
+                        varying vec3 vPosition;
+                        varying vec3 vNormal;
+                        uniform float time;
+                        uniform float pulseSpeed;
+                        void main() {
+                            vUv = uv;
+                            vPosition = position;
+                            vNormal = normal;
+                            float pulse = sin(time * pulseSpeed) * 0.1;
+                            vec3 newPosition = position + normal * pulse;
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform float time;
+                        uniform vec3 colorA;
+                        uniform vec3 colorB;
+                        uniform vec3 colorC;
+                        uniform float wireframeOpacity;
+                        uniform float pulseSpeed;
+                        varying vec2 vUv;
+                        varying vec3 vPosition;
+                        varying vec3 vNormal;
+                        void main() {
+                            float radius = length(vPosition.xz);
+                            float gradient = smoothstep(0.5, 3.0, radius);
+                            float pulse = sin(time * pulseSpeed * 2.0) * 0.3 + 0.7;
+                            vec3 baseColor = mix(colorA, colorB, gradient);
+                            float noise = sin(vPosition.x * 15.0 + time) * cos(vPosition.z * 15.0 + time) * 0.2;
+                            vec3 finalColor = mix(baseColor, colorC, noise);
+                            float fresnel = pow(1.0 - dot(normalize(cameraPosition - vPosition), vNormal), 3.0);
+                            finalColor += vec3(1.0) * fresnel * pulse;
+                            float energyFlow = sin(radius * 10.0 - time * 2.0) * 0.5 + 0.5;
+                            finalColor *= (1.0 + energyFlow * 0.3);
+                            gl_FragColor = vec4(finalColor, wireframeOpacity);
+                        }
+                    `,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    wireframe: true
+                });
+                this.star = new THREE.Mesh(geometry, material);
+                this.star.rotation.x = -Math.PI / 2;
+                this.scene.add(this.star);
+            }
+
+            createLights() {
+                const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+                this.scene.add(ambient);
+                this.lights = [
+                    { color: this.params.colorA, pos: new THREE.Vector3(8, 5, 8) },
+                    { color: this.params.colorB, pos: new THREE.Vector3(-8, 3, -8) },
+                    { color: this.params.colorC, pos: new THREE.Vector3(0, -6, 0) }
+                ].map(data => {
+                    const light = new THREE.PointLight(new THREE.Color(data.color), 2, 20);
+                    light.position.copy(data.pos);
+                    this.scene.add(light);
+                    const sprite = new THREE.Sprite(
+                        new THREE.SpriteMaterial({
+                            map: new THREE.TextureLoader().load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAQBJREFUeF7t1zEOwjAQBmA5QkvwAyR4AxewA3gDH8AF3MCdI3gDH8AF5H+ELVmy3NzZOQDH2LKPWPlJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkqT7P8g/kiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkrR/AXmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJPnQDzQzXjH2mI4mAAAAAElFTkSuQmCC'),
+                            color: new THREE.Color(data.color),
+                            transparent: true,
+                            blending: THREE.AdditiveBlending
+                        })
+                    );
+                    sprite.position.copy(data.pos);
+                    sprite.scale.set(2, 2, 2);
+                    this.scene.add(sprite);
+                    return light;
+                });
+            }
+
+            addBackground() {
+                const starsGeometry = new THREE.BufferGeometry();
+                const starsCount = 2000;
+                const positions = new Float32Array(starsCount * 3);
+                for (let i = 0; i < starsCount * 3; i++) {
+                    positions[i] = (Math.random() - 0.5) * 200;
+                }
+                starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const starsMaterial = new THREE.PointsMaterial({
+                    size: 0.2,
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending
+                });
+                this.stars = new THREE.Points(starsGeometry, starsMaterial);
+                this.scene.add(this.stars);
+            }
+
+            setupUI() {
+                const controls = document.getElementById('controls');
+                document.getElementById('toggleBtn').addEventListener('click', () => {
+                    controls.classList.toggle('collapsed');
+                    this.updateToggleButton();
+                });
+                const sliderConfigs = [
+                    ['points', 'pointsSlider', 'pointsValue', v => parseInt(v)],
+                    ['innerRadius', 'innerRadiusSlider', 'innerRadiusValue'],
+                    ['outerRadius', 'outerRadiusSlider', 'outerRadiusValue'],
+                    ['height', 'heightSlider', 'heightValue'],
+                    ['rotationSpeed', 'rotationSpeedSlider', 'rotationSpeedValue'],
+                    ['glowIntensity', 'glowIntensitySlider', 'glowIntensityValue'],
+                    ['wireframeOpacity', 'wireframeOpacitySlider', 'wireframeOpacityValue']
+                ];
+                sliderConfigs.forEach(([param, sliderId, valueId, parseFunc = parseFloat]) => {
+                    const slider = document.getElementById(sliderId);
+                    const value = document.getElementById(valueId);
+                    slider.addEventListener('input', e => {
+                        this.params[param] = parseFunc(e.target.value);
+                        value.textContent = param === 'points' ? this.params[param] : this.params[param].toFixed(2);
+                        this.updateVisualization(param);
+                    });
+                });
+                ['colorA', 'colorB', 'colorC'].forEach(id => {
+                    document.getElementById(id).addEventListener('input', e => {
+                        this.params[id] = e.target.value;
+                        this.updateColors();
+                    });
+                });
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetParams());
+                document.getElementById('randomizeBtn').addEventListener('click', () => this.randomizeParams());
+            }
+
+            updateToggleButton() {
+                const btn = document.getElementById('toggleBtn');
+                btn.textContent = document.getElementById('controls').classList.contains('collapsed') ? '▼' : '▲';
+            }
+
+            updateVisualization(param) {
+                if (['points', 'innerRadius', 'outerRadius', 'height'].includes(param)) {
+                    this.createStar();
+                }
+                if (param === 'rotationSpeed') {
+                    this.controls.autoRotateSpeed = this.params.rotationSpeed;
+                    this.controls.autoRotate = this.params.rotationSpeed > 0;
+                    this.star.material.uniforms.pulseSpeed.value = this.params.rotationSpeed;
+                }
+                if (param === 'glowIntensity') this.bloomPass.strength = this.params.glowIntensity;
+                if (param === 'wireframeOpacity') {
+                    this.star.material.uniforms.wireframeOpacity.value = this.params.wireframeOpacity;
+                }
+            }
+
+            updateColors() {
+                const uniforms = this.star.material.uniforms;
+                uniforms.colorA.value.set(this.params.colorA);
+                uniforms.colorB.value.set(this.params.colorB);
+                uniforms.colorC.value.set(this.params.colorC);
+                this.lights.forEach((light, i) => {
+                    light.color.set(this.params[`color${String.fromCharCode(65 + i)}`]);
+                });
+            }
+
+            resetParams() {
+                Object.assign(this.params, {
+                    points: 8,
+                    innerRadius: 2,
+                    outerRadius: 4,
+                    height: 0.2,
+                    rotationSpeed: 0.5,
+                    glowIntensity: 0.45,
+                    colorA: '#4f6fff',
+                    colorB: '#c462ff',
+                    colorC: '#ff4f7e',
+                    wireframeOpacity: 0.8
+                });
+                this.updateUIFromParams();
+            }
+
+            randomizeParams() {
+                this.params.points = Math.floor(Math.random() * 14) + 3;
+                this.params.innerRadius = Math.random() * 3.5 + 0.5;
+                this.params.outerRadius = Math.random() * 7 + 1;
+                this.params.height = Math.random() * 1.9 + 0.1;
+                this.params.rotationSpeed = Math.random() * 8;
+                this.params.glowIntensity = Math.random() * 4;
+                this.params.wireframeOpacity = Math.random() * 0.9 + 0.1;
+                const randomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16);
+                this.params.colorA = randomColor();
+                this.params.colorB = randomColor();
+                this.params.colorC = randomColor();
+                this.updateUIFromParams();
+            }
+
+            updateUIFromParams() {
+                const sliderConfigs = [
+                    ['points', 'pointsSlider', 'pointsValue'],
+                    ['innerRadius', 'innerRadiusSlider', 'innerRadiusValue'],
+                    ['outerRadius', 'outerRadiusSlider', 'outerRadiusValue'],
+                    ['height', 'heightSlider', 'heightValue'],
+                    ['rotationSpeed', 'rotationSpeedSlider', 'rotationSpeedValue'],
+                    ['glowIntensity', 'glowIntensitySlider', 'glowIntensityValue'],
+                    ['wireframeOpacity', 'wireframeOpacitySlider', 'wireframeOpacityValue']
+                ];
+                sliderConfigs.forEach(([param, sliderId, valueId]) => {
+                    const slider = document.getElementById(sliderId);
+                    const value = document.getElementById(valueId);
+                    slider.value = this.params[param];
+                    value.textContent = param === 'points' ? this.params[param] : this.params[param].toFixed(2);
+                });
+                document.getElementById('colorA').value = this.params.colorA;
+                document.getElementById('colorB').value = this.params.colorB;
+                document.getElementById('colorC').value = this.params.colorC;
+                this.createStar();
+                this.updateVisualization('rotationSpeed');
+                this.bloomPass.strength = this.params.glowIntensity;
+                this.updateColors();
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                const time = this.clock.getElapsedTime();
+                this.star.material.uniforms.time.value = time;
+                this.star.rotation.y += 0.002 * this.params.rotationSpeed;
+                this.lights.forEach((light, i) => {
+                    light.position.x += Math.sin(time + i) * 0.05;
+                    light.position.z += Math.cos(time + i) * 0.05;
+                });
+                this.controls.update();
+                this.composer.render();
+            }
+
+            onResize() {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                this.camera.aspect = width / height;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(width, height);
+                this.composer.setSize(width, height);
+            }
+        }
+
+        new StarViz();
+    </script>
+</body>
+</html>
