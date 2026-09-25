@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ruleta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  min-height:100vh;background:#000;color:#f5f5f7;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
+  display:flex;justify-content:center;padding:16px;
+}
+.app{width:min(100%,420px)}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.icon-ios{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(180deg,#5ac8fa 0%,#007aff 100%);
+  display:grid;place-items:center;
+  box-shadow:0 8px 20px rgba(0,122,255,.35);
+}
+.icon-ios svg{width:26px;height:26px}
+h1{font-size:22px;font-weight:700;letter-spacing:-.2px}
+.sub{font-size:12px;color:#8e8e93;margin-top:1px}
+.card{background:#1c1c1e;border-radius:16px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:12px;color:#8e8e93;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:8px;align-items:center}
+input[type="number"],textarea{
+  width:100%;background:#2c2c2e;border:none;color:#fff;
+  border-radius:12px;padding:12px;font-size:15px;outline:none;
+}
+textarea{min-height:110px;resize:vertical;line-height:1.45}
+button{
+  border:none;border-radius:12px;padding:12px 14px;font-size:15px;font-weight:600;
+  background:#2c2c2e;color:#fff;cursor:pointer;
+}
+button.blue{background:#0a84ff}
+button:disabled{opacity:.45}
+.counter{
+  margin-top:8px;font-size:13px;color:#8e8e93;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.counter b{color:#fff}
+.counter .ok{color:#30d158}
+.wheel-box{background:#1c1c1e;border-radius:16px;padding:16px 14px 18px}
+.wheel-wrap{position:relative;width:min(100%,320px);margin:0 auto;aspect-ratio:1}
+canvas{width:100%;height:100%;display:block;border-radius:50%}
+.pin{
+  position:absolute;top:-2px;left:50%;z-index:5;
+  width:18px;height:18px;background:#fff;border-radius:50% 50% 50% 0;
+  transform:translateX(-50%) rotate(-45deg);
+  box-shadow:0 2px 6px rgba(0,0,0,.4);
+}
+.spin-btn{
+  position:absolute;inset:0;margin:auto;width:74px;height:74px;border-radius:50%;
+  background:#0a84ff;color:#fff;font-weight:700;font-size:13px;
+  display:grid;place-items:center;z-index:4;
+  box-shadow:0 8px 22px rgba(10,132,255,.4);border:4px solid #1c1c1e;
+}
+.result{text-align:center;margin-top:14px;font-size:17px;font-weight:700;min-height:26px}
+.result.win{color:#30d158}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="icon-ios">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.8"/>
+        <circle cx="12" cy="12" r="2.2" fill="#fff"/>
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Ruleta</h1>
+      <div class="sub">Elige y gira</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>Cantidad de opciones (2 a 30)</label>
+    <div class="row">
+      <input id="count" type="number" min="2" max="30" value="2" inputmode="numeric">
+      <button type="button" id="applyCount">Aplicar</button>
+    </div>
+
+    <label style="margin-top:12px">Escribe las opciones (una por línea)</label>
+    <textarea id="options" placeholder="Opción 1&#10;Opción 2"></textarea>
+
+    <div class="counter">
+      <span>Progreso</span>
+      <span><b id="filled">0</b> de <b id="total">2</b> <span id="statusText"></span></span>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <button class="blue" type="button" id="updateBtn" style="flex:1">Actualizar</button>
+      <button type="button" id="resetBtn">Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="wheel-box">
+    <div class="wheel-wrap">
+      <div class="pin"></div>
+      <canvas id="wheel" width="640" height="640"></canvas>
+      <button class="spin-btn" id="spinBtn" type="button">GIRAR</button>
+    </div>
+    <div class="result" id="result">Listo</div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const optionsEl = document.getElementById('options');
+  const countEl = document.getElementById('count');
+  const filledEl = document.getElementById('filled');
+  const totalEl = document.getElementById('total');
+  const statusText = document.getElementById('statusText');
+  const resultEl = document.getElementById('result');
+  const spinBtn = document.getElementById('spinBtn');
+
+  const COLORS = [
+    '#ff453a','#ff9f0a','#ffd60a','#30d158','#64d2ff',
+    '#0a84ff','#5e5ce6','#bf5af2','#ff375f','#ac8e68',
+    '#ff6482','#32ade6','#66d4cf','#ffd426','#40c8e0'
+  ];
+
+  let targetCount = 2;
+  let items = ['Opción 1','Opción 2'];
+  let rotation = 0;
+  let spinning = false;
+
+  function clampCount(n){
+    n = parseInt(n, 10);
+    if (isNaN(n)) return null;
+    return Math.max(2, Math.min(30, n));
+  }
+
+  function linesFromText(){
+    return optionsEl.value.split('\n').map(s => s.trim());
+  }
+
+  function filledCount(){
+    return linesFromText().filter(Boolean).length;
+  }
+
+  function updateCounter(){
+    const typed = clampCount(countEl.value);
+    const total = typed === null ? targetCount : typed;
+    const filled = Math.min(filledCount(), total);
+    filledEl.textContent = filled;
+    totalEl.textContent = total;
+    if (filled >= total && total >= 2) {
+      statusText.textContent = '✓';
+      statusText.className = 'ok';
+    } else {
+      statusText.textContent = '';
+      statusText.className = '';
+    }
+  }
+
+  function finalizeCountFix(){
+    let n = clampCount(countEl.value);
+    if (n === null) n = 2;
+    targetCount = n;
+    countEl.value = n;
+    updateCounter();
+    return n;
+  }
+
+  function buildItems(){
+    const n = finalizeCountFix();
+    const lines = linesFromText().filter(Boolean);
+    const out = [];
+    for (let i = 0; i < n; i++) out.push(lines[i] || ('Opción ' + (i + 1)));
+    return out;
+  }
+
+  function drawWheel(){
+    const w = canvas.width, h = canvas.height;
+    const cx = w/2, cy = h/2, radius = w * 0.42;
+    const n = Math.max(items.length, 2);
+    const arc = (Math.PI * 2) / n;
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2);
+    ctx.fillStyle = '#000';
+    ctx.fill();
+
+    for (let i = 0; i < n; i++) {
+      const a0 = rotation + i * arc;
+      const a1 = a0 + arc;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, a0, a1);
+      ctx.closePath();
+      ctx.fillStyle = COLORS[i % COLORS.length];
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(a0 + arc / 2);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#fff';
+      ctx.font = `600 ${Math.max(13, Math.min(22, 34 - n * 0.5))}px -apple-system,BlinkMacSystemFont,Arial`;
+      ctx.shadowColor = 'rgba(0,0,0,0.35)';
+      ctx.shadowBlur = 3;
+      let label = items[i] || '';
+      if (label.length > 16) label = label.slice(0, 15) + '…';
+      ctx.fillText(label, radius - 16, 6);
+      ctx.restore();
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = '#2c2c2e';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+    ctx.fillStyle = '#1c1c1e';
+    ctx.fill();
+  }
+
+  function refreshWheel(){
+    if (spinning) return;
+    items = buildItems();
+    resultEl.textContent = 'Listo';
+    resultEl.className = 'result';
+    drawWheel();
+  }
+
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function spin(){
+    if (spinning) return;
+    items = buildItems();
+    if (items.length < 2) return;
+
+    spinning = true;
+    spinBtn.disabled = true;
+    resultEl.textContent = 'Girando...';
+    resultEl.className = 'result';
+
+    const n = items.length;
+    const arc = (Math.PI * 2) / n;
+    const targetIndex = Math.floor(Math.random() * n);
+    const start = rotation;
+
+    // Siempre muchas vueltas (sin importar 2, 10 o 30 opciones)
+    const fullTurns = 12 + Math.floor(Math.random() * 5); // 12 a 16 vueltas
+    const segmentCenter = targetIndex * arc + arc / 2;
+
+    const currentMod = ((start % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    const targetMod = ((-Math.PI / 2 - segmentCenter) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    let extra = targetMod - currentMod;
+    if (extra < 0) extra += Math.PI * 2;
+
+    const delta = fullTurns * Math.PI * 2 + extra;
+    const duration = 3200;
+    const t0 = performance.now();
+
+    function frame(now){
+      const t = Math.min(1, (now - t0) / duration);
+      rotation = start + delta * easeOutCubic(t);
+      drawWheel();
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        rotation = start + delta;
+        let ang = (-Math.PI / 2 - rotation) % (Math.PI * 2);
+        if (ang < 0) ang += Math.PI * 2;
+        const idx = Math.floor(ang / arc) % n;
+        resultEl.textContent = items[idx];
+        resultEl.className = 'result win';
+        spinning = false;
+        spinBtn.disabled = false;
+        drawWheel();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  optionsEl.addEventListener('input', updateCounter);
+  countEl.addEventListener('input', updateCounter);
+
+  countEl.addEventListener('blur', () => {
+    let n = clampCount(countEl.value);
+    if (n === null) n = 2;
+    targetCount = n;
+    countEl.value = n;
+    updateCounter();
+  });
+
+  document.getElementById('applyCount').onclick = () => {
+    if (spinning) return;
+    refreshWheel();
+  };
+  document.getElementById('updateBtn').onclick = refreshWheel;
+  document.getElementById('resetBtn').onclick = () => {
+    if (spinning) return;
+    targetCount = 2;
+    countEl.value = 2;
+    optionsEl.value = 'Opción 1\nOpción 2';
+    items = ['Opción 1', 'Opción 2'];
+    updateCounter();
+    resultEl.textContent = 'Listo';
+    resultEl.className = 'result';
+    drawWheel();
+  };
+  spinBtn.onclick = spin;
+
+  optionsEl.value = 'Opción 1\nOpción 2';
+  updateCounter();
+  drawWheel();
+})();
+</script>
+</body>
+</html>
