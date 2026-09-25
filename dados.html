@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dados</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  min-height:100vh;background:#000;color:#f5f5f7;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
+  display:flex;justify-content:center;padding:16px;
+}
+.app{width:min(100%,420px)}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.icon-ios{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(180deg,#5ac8fa,#007aff);
+  display:grid;place-items:center;
+  box-shadow:0 8px 20px rgba(0,122,255,.35);
+}
+.icon-ios svg{width:24px;height:24px}
+h1{font-size:22px;font-weight:700}
+.sub{font-size:12px;color:#8e8e93;margin-top:1px}
+.card{background:#1c1c1e;border-radius:16px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:12px;color:#8e8e93;margin-bottom:10px;font-weight:600}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode{
+  border:none;border-radius:12px;padding:12px;
+  background:#2c2c2e;color:#fff;font-size:14px;font-weight:600;cursor:pointer;
+}
+.mode.active{background:#0a84ff}
+.stage{
+  background:#1c1c1e;border-radius:16px;padding:30px 14px 20px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.scene{
+  display:flex;gap:30px;justify-content:center;align-items:center;
+  min-height:160px;perspective:900px;
+}
+.die-wrap{width:110px;height:110px;transform-style:preserve-3d}
+.die-wrap.hide{display:none}
+.die{
+  width:110px;height:110px;position:relative;
+  transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.15,.85,.25,1);
+}
+.die.rolling{animation:tumble .14s linear infinite}
+@keyframes tumble{
+  0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0)}
+  20%{transform:rotateX(80deg) rotateY(45deg) rotateZ(15deg) translateY(-18px)}
+  40%{transform:rotateX(170deg) rotateY(130deg) rotateZ(-20deg) translateY(4px)}
+  60%{transform:rotateX(260deg) rotateY(220deg) rotateZ(18deg) translateY(-12px)}
+  80%{transform:rotateX(320deg) rotateY(300deg) rotateZ(-10deg) translateY(2px)}
+  100%{transform:rotateX(360deg) rotateY(360deg) rotateZ(0deg) translateY(0)}
+}
+.face{
+  position:absolute;width:110px;height:110px;border-radius:20px;
+  display:grid;place-items:center;
+  /* gris característico del dado */
+  background:linear-gradient(145deg,#f3f3f5,#d4d4d8);
+  border:2px solid rgba(0,0,0,.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -4px 10px rgba(0,0,0,.1);
+  backface-visibility:hidden;
+}
+.grid{
+  width:72%;height:72%;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  place-items:center;
+}
+.pip{
+  width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#3a3a3c,#111);
+  box-shadow:0 1px 2px rgba(0,0,0,.35);
+}
+.face-1{transform:rotateY(0deg) translateZ(55px)}
+.face-2{transform:rotateY(90deg) translateZ(55px)}
+.face-3{transform:rotateX(90deg) translateZ(55px)}
+.face-4{transform:rotateX(-90deg) translateZ(55px)}
+.face-5{transform:rotateY(-90deg) translateZ(55px)}
+.face-6{transform:rotateY(180deg) translateZ(55px)}
+
+.result{margin-top:20px;text-align:center;font-size:20px;font-weight:700;min-height:30px}
+.result.win{color:#30d158}
+button.main{
+  margin-top:16px;border:none;border-radius:14px;padding:14px 26px;min-width:180px;
+  background:#0a84ff;color:#fff;font-size:16px;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 22px rgba(10,132,255,.35);
+}
+button.main:disabled{opacity:.5}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="icon-ios">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="#fff" stroke-width="1.8"/>
+        <circle cx="8.5" cy="8.5" r="1.3" fill="#fff"/>
+        <circle cx="12" cy="12" r="1.3" fill="#fff"/>
+        <circle cx="15.5" cy="15.5" r="1.3" fill="#fff"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Dados</h1>
+      <div class="sub">1 o 2 dados</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>Elige cuántos dados</label>
+    <div class="modes">
+      <button class="mode active" type="button" data-n="1">1 dado</button>
+      <button class="mode" type="button" data-n="2">2 dados</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="scene">
+      <div class="die-wrap" id="wrap1"><div class="die" id="die1"></div></div>
+      <div class="die-wrap hide" id="wrap2"><div class="die" id="die2"></div></div>
+    </div>
+    <div class="result" id="result">Listo</div>
+    <button class="main" id="rollBtn" type="button">Tirar</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const die1 = document.getElementById('die1');
+  const die2 = document.getElementById('die2');
+  const wrap2 = document.getElementById('wrap2');
+  const resultEl = document.getElementById('result');
+  const rollBtn = document.getElementById('rollBtn');
+  const modes = Array.from(document.querySelectorAll('.mode'));
+
+  let count = 1;
+  let rolling = false;
+
+  const PIP_MAP = {
+    1: [5],
+    2: [1, 9],
+    3: [1, 5, 9],
+    4: [1, 3, 7, 9],
+    5: [1, 3, 5, 7, 9],
+    6: [1, 3, 4, 6, 7, 9]
+  };
+
+  const ROT = {
+    1: [0, 0],
+    2: [0, -90],
+    3: [-90, 0],
+    4: [90, 0],
+    5: [0, 90],
+    6: [0, 180]
+  };
+
+  function buildDie(el) {
+    el.innerHTML = '';
+    for (let n = 1; n <= 6; n++) {
+      const face = document.createElement('div');
+      face.className = 'face face-' + n;
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      for (let i = 1; i <= 9; i++) {
+        const cell = document.createElement('div');
+        if (PIP_MAP[n].indexOf(i) !== -1) {
+          const pip = document.createElement('div');
+          pip.className = 'pip';
+          cell.appendChild(pip);
+        }
+        grid.appendChild(cell);
+      }
+      face.appendChild(grid);
+      el.appendChild(face);
+    }
+    el.style.transform = 'rotateX(0deg) rotateY(0deg)';
+  }
+
+  buildDie(die1);
+  buildDie(die2);
+
+  modes.forEach(function (btn) {
+    btn.onclick = function () {
+      if (rolling) return;
+      modes.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      count = Number(btn.getAttribute('data-n'));
+      if (count === 1) wrap2.classList.add('hide');
+      else wrap2.classList.remove('hide');
+      resultEl.textContent = 'Listo';
+      resultEl.className = 'result';
+    };
+  });
+
+  function rand() { return 1 + Math.floor(Math.random() * 6); }
+
+  var audioCtx = null;
+  function beep() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      var t = audioCtx.currentTime;
+      for (var i = 0; i < 4; i++) {
+        var o = audioCtx.createOscillator();
+        var g = audioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.value = 150 + Math.random() * 120;
+        g.gain.setValueAtTime(0.0001, t + i * 0.03);
+        g.gain.exponentialRampToValueAtTime(0.07, t + i * 0.03 + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.03 + 0.05);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(t + i * 0.03);
+        o.stop(t + i * 0.03 + 0.06);
+      }
+    } catch (e) {}
+  }
+
+  function showFace(el, n) {
+    var base = ROT[n];
+    var extraX = 360 * (3 + Math.floor(Math.random() * 2));
+    var extraY = 360 * (3 + Math.floor(Math.random() * 2));
+    el.style.transform = 'rotateX(' + (base[0] + extraX) + 'deg) rotateY(' + (base[1] + extraY) + 'deg)';
+  }
+
+  rollBtn.onclick = function () {
+    if (rolling) return;
+    rolling = true;
+    rollBtn.disabled = true;
+    resultEl.textContent = 'Tirando...';
+    resultEl.className = 'result';
+
+    die1.classList.add('rolling');
+    if (count === 2) die2.classList.add('rolling');
+    beep();
+
+    var ticks = 0;
+    var iv = setInterval(function () {
+      beep();
+      ticks++;
+      if (ticks >= 14) {
+        clearInterval(iv);
+        die1.classList.remove('rolling');
+        die2.classList.remove('rolling');
+
+        var a = rand();
+        var b = rand();
+        showFace(die1, a);
+        if (count === 2) showFace(die2, b);
+
+        setTimeout(function () {
+          if (count === 1) resultEl.textContent = 'Salió: ' + a;
+          else resultEl.textContent = a + ' + ' + b + ' = ' + (a + b);
+          resultEl.className = 'result win';
+          rolling = false;
+          rollBtn.disabled = false;
+        }, 620);
+      }
+    }, 80);
+  };
+})();
+</script>
+</body>
+</html>
