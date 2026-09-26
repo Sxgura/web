@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Downloader Cyber PRO</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+ background:#000;
+animation:none;
+  color:#fff;
+
+  /* 🔥 FIX SCROLL */
+  display:block;
+  min-height:100vh;
+  overflow-y:auto;
+}
+
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+
+/* caja */
+.box{
+  width:260px;
+  padding:20px;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 0 20px rgba(100,100,255,0.2);
+  animation:fadeIn 1s ease, glow 3s infinite alternate;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1;}
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 15px #3a6cff;}
+  to{box-shadow:0 0 30px #7b3cff;}
+}
+
+/* input */
+.input-box{position:relative;}
+
+input{
+  width:100%;
+  padding:12px 45px 12px 12px;
+  border:none;
+  border-radius:10px;
+  background:#0a0f2c;
+  color:#fff;
+  box-sizing:border-box;
+  border:1px solid transparent;
+  transition:border-color .25s ease, box-shadow .25s ease;
+}
+
+input:focus{
+  outline:none;
+  border-color:#7b3cff;
+  box-shadow:0 0 10px rgba(123,60,255,0.5);
+}
+
+.clear-btn{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  opacity:.7;
+}
+.clear-btn:hover{opacity:1;}
+
+/* estado (detectando / buscando) */
+.status{
+  margin-top:8px;
+  font-size:11px;
+  min-height:14px;
+  color:#9aa8ff;
+  letter-spacing:.3px;
+}
+
+/* spinner de búsqueda */
+.spinner{
+  width:26px;
+  height:26px;
+  margin:14px auto 0;
+  border:3px solid rgba(123,60,255,0.25);
+  border-top-color:#7b3cff;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* aviso (sin resultados / pega el enlace) */
+.aviso{
+  margin-top:12px;
+  padding:8px;
+  font-size:12px;
+  color:#c9cfff;
+  background:rgba(123,60,255,0.12);
+  border-radius:8px;
+}
+
+/* video */
+video{
+  width:180px;
+  margin-top:15px;
+  border-radius:12px;
+  animation:fadeIn 0.6s ease;
+}
+
+/* link */
+a{
+  display:block;
+  margin-top:10px;
+  padding:8px;
+  background:#3a6cff;
+  color:#fff;
+  border-radius:8px;
+  text-decoration:none;
+}
+
+/* footer */
+.footer{
+  margin-top:20px;
+  font-size:11px;
+  color:#888;
+  opacity:0.7;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="box">
+    <h2>Instagram Downloader</h2>
+
+    <div class="input-box">
+      <input id="link" placeholder="Ej: instagram.com/reel/...">
+      <span class="clear-btn" onclick="limpiar()">✖</span>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div id="resultado"></div>
+
+    <div class="footer">Sxgura Inc</div>
+  </div>
+</div>
+
+
+<script>
+const input = document.getElementById("link");
+const statusEl = document.getElementById("status");
+const resDiv = document.getElementById("resultado");
+
+let debounceTimer = null;
+let avisoTimer = null;
+let statusTimer = null;
+let ultimoLinkProcesado = "";
+
+function esLinkInstagram(texto){
+  return /https?:\/\/(www\.)?instagram\.com\/(p|reel|reels|tv|stories)\//i.test(texto.trim());
+}
+
+// Muestra un mensaje temporal (se borra solo a los 3 segundos)
+function mostrarAviso(mensaje){
+  clearTimeout(avisoTimer);
+  resDiv.innerHTML = `<div class="aviso">${mensaje}</div>`;
+  avisoTimer = setTimeout(() => { resDiv.innerHTML=""; }, 3000);
+}
+
+// Muestra el estado (buscando/listo) y lo vuelve a la normalidad a los 3 segundos
+function mostrarEstado(mensaje){
+  clearTimeout(statusTimer);
+  statusEl.textContent = mensaje;
+  if(mensaje){
+    statusTimer = setTimeout(() => { statusEl.textContent=""; }, 3000);
+  }
+}
+
+function limpiar(){
+  input.value="";
+  resDiv.innerHTML="";
+  statusEl.textContent="";
+  clearTimeout(avisoTimer);
+  clearTimeout(statusTimer);
+  ultimoLinkProcesado="";
+}
+
+// Descarga inteligente: al pegar/escribir un enlace válido, se busca solo
+input.addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+  const valor = input.value.trim();
+
+  if(!valor){
+    statusEl.textContent="";
+    resDiv.innerHTML="";
+    ultimoLinkProcesado="";
+    return;
+  }
+
+  if(esLinkInstagram(valor)){
+    statusEl.textContent="Enlace detectado, buscando...";
+    debounceTimer = setTimeout(() => {
+      if(valor !== ultimoLinkProcesado){
+        ultimoLinkProcesado = valor;
+        descargar();
+      }
+    }, 600);
+  }else{
+    statusEl.textContent="";
+  }
+});
+
+input.addEventListener("keydown", (e) => {
+  if(e.key === "Enter"){
+    clearTimeout(debounceTimer);
+    descargar();
+  }
+});
+
+async function descargar(){
+  const link=document.getElementById("link").value;
+
+  if(!link){
+    mostrarAviso("Pega el enlace y listo");
+    return;
+  }
+
+  clearTimeout(avisoTimer);
+  statusEl.textContent = "Buscando...";
+  resDiv.innerHTML=`<div class="spinner"></div>`;
+
+  try{
+    const api="https://api.deline.web.id/downloader/ig?url="+encodeURIComponent(link);
+    const res=await fetch(api);
+    const data=await res.json();
+
+    let video=data?.result?.media?.videos?.[0];
+
+    if(video){
+      resDiv.innerHTML=`
+        <video controls src="${video}"></video>
+        <a href="${video}" download>Guardar</a>
+      `;
+      mostrarEstado("Listo ✔");
+    }else{
+      mostrarAviso("Enlace incorrecto o sin resultados");
+      statusEl.textContent="";
+    }
+
+  }catch{
+    mostrarAviso("No se pudo conectar. Intenta de nuevo");
+    statusEl.textContent="";
+  }
+}
+</script>
+
+</body>
+</html>
