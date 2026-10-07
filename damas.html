@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Damas · Contra IA</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{
+    min-height:100vh;background:#0b0f14;color:#e8eef7;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    display:flex;justify-content:center;align-items:center;padding:16px;
+  }
+  .card{
+    width:min(100%,380px);
+    background:linear-gradient(180deg,#1a2332,#141c28);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:22px;
+    padding:16px;
+    box-shadow:0 18px 50px rgba(0,0,0,.45);
+  }
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+  .title{font-size:22px;font-weight:800;letter-spacing:.6px}
+  .sub{font-size:11px;color:#8b9bb0;margin-top:3px;letter-spacing:.4px;text-transform:uppercase}
+  .turn{
+    font-size:12px;font-weight:800;color:#f5c542;letter-spacing:.4px;
+    white-space:nowrap;padding-top:4px;
+  }
+  .turn.ai{color:#7dd3fc}
+  .turn.over{color:#f87171}
+
+  .board-wrap{
+    background:#0f1620;
+    border-radius:16px;
+    padding:10px;
+    border:1px solid rgba(255,255,255,.04);
+  }
+  .board{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    width:100%;
+    aspect-ratio:1;
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .cell{
+    position:relative;
+    aspect-ratio:1;
+  }
+  .cell.light{background:#c5ceda}
+  .cell.dark{background:#3d4d63}
+  .cell.mark::after{
+    content:"";
+    position:absolute;inset:28%;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,.85);
+    background:rgba(255,255,255,.14);
+  }
+  .cell.mark.capture::after{
+    border-color:#fbbf24;
+    background:rgba(251,191,36,.18);
+  }
+  .cell.sel{box-shadow:inset 0 0 0 3px #f5c542}
+
+  .piece{
+    position:absolute;inset:12%;
+    border-radius:50%;
+    cursor:pointer;
+    box-shadow:0 3px 8px rgba(0,0,0,.35), inset 0 2px 3px rgba(255,255,255,.25);
+  }
+  .piece.white{
+    background:radial-gradient(circle at 35% 30%,#fff,#d9dee7 55%,#b7c0cc);
+  }
+  .piece.black{
+    background:radial-gradient(circle at 35% 30%,#5b6778,#2a3340 60%,#1a212b);
+  }
+  .piece.king::before{
+    content:"";
+    position:absolute;left:50%;top:50%;
+    width:34%;height:34%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    border:2px solid rgba(255,215,0,.9);
+    box-shadow:0 0 0 2px rgba(0,0,0,.2);
+  }
+
+  .btn{
+    width:100%;
+    margin-top:12px;
+    border:none;
+    border-radius:14px;
+    padding:14px;
+    background:#243246;
+    color:#e8eef7;
+    font-weight:800;
+    letter-spacing:.8px;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .btn:active{transform:scale(.98)}
+  .help{
+    margin-top:10px;
+    font-size:12px;
+    color:#8b9bb0;
+    line-height:1.45;
+    text-align:center;
+  }
+  .foot{
+    margin-top:10px;
+    text-align:center;
+    font-size:10px;
+    color:#5d6b7c;
+    letter-spacing:.5px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top">
+    <div>
+      <div class="title">DAMAS</div>
+      <div class="sub">Tablero táctil contra IA</div>
+    </div>
+    <div class="turn" id="turn">TU TURNO</div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <button class="btn" id="reset" type="button">NUEVA PARTIDA</button>
+  <div class="help">Tú juegas con blancas y avanzas hacia arriba.</div>
+  <div class="foot">By Sxgura Inc.</div>
+</div>
+
+<script>
+(function(){
+  const SIZE=8;
+  // 0 vacío, 1 blanca, 2 blanca dama, 3 negra, 4 negra dama
+  let board=[];
+  let selected=null;
+  let moves=[];
+  let playerTurn=true;
+  let gameOver=false;
+
+  const boardEl=document.getElementById('board');
+  const turnEl=document.getElementById('turn');
+
+  function inB(r,c){return r>=0&&r<SIZE&&c>=0&&c<SIZE}
+  function isP(v){return v===1||v===2}
+  function isA(v){return v===3||v===4}
+  function isK(v){return v===2||v===4}
+
+  function start(){
+    board=Array.from({length:SIZE},()=>Array(SIZE).fill(0));
+    for(let r=0;r<3;r++){
+      for(let c=0;c<SIZE;c++){
+        if((r+c)%2===1) board[r][c]=3;
+      }
+    }
+    for(let r=5;r<8;r++){
+      for(let c=0;c<SIZE;c++){
+        if((r+c)%2===1) board[r][c]=1;
+      }
+    }
+    selected=null; moves=[]; playerTurn=true; gameOver=false;
+    setTurn();
+    render();
+  }
+
+  function setTurn(){
+    if(gameOver) return;
+    turnEl.textContent=playerTurn?'TU TURNO':'TURNO IA';
+    turnEl.className='turn'+(playerTurn?'':' ai');
+  }
+
+  function dirs(piece){
+    if(piece===1) return [[-1,-1],[-1,1]];          // blanca sube
+    if(piece===3) return [[1,-1],[1,1]];            // negra baja
+    return [[-1,-1],[-1,1],[1,-1],[1,1]];           // damas
+  }
+
+  function pieceMoves(r,c){
+    const p=board[r][c];
+    if(!p) return [];
+    const mine=isP(p);
+    if(mine!==playerTurn && playerTurn) return [];
+    // si no es turno del dueño de la ficha
+    if(playerTurn && !isP(p)) return [];
+    if(!playerTurn && !isA(p)) return [];
+
+    const res=[];
+    const d=dirs(p);
+
+    // capturas
+    for(const [dr,dc] of d){
+      const mr=r+dr, mc=c+dc;
+      const lr=r+2*dr, lc=c+2*dc;
+      if(!inB(mr,mc)||!inB(lr,lc)) continue;
+      const mid=board[mr][mc];
+      if(!mid||board[lr][lc]!==0) continue;
+      if(isP(p)&&isA(mid) || isA(p)&&isP(mid)){
+        res.push({r:lr,c:lc,capture:true,mr,mc});
+      }
+    }
+    // si hay captura obligatoria en todo el tablero, solo capturas de esta ficha
+    // movimientos simples si no hay captura en esta ficha (regla simple: captura no forzada global para jugabilidad)
+    if(res.length) return res;
+
+    for(const [dr,dc] of d){
+      const nr=r+dr,nc=c+dc;
+      if(inB(nr,nc)&&board[nr][nc]===0){
+        res.push({r:nr,c:nc,capture:false});
+      }
+    }
+    return res;
+  }
+
+  function anyMoves(forPlayer){
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE;c++){
+        const p=board[r][c];
+        if(!p) continue;
+        if(forPlayer&&!isP(p)) continue;
+        if(!forPlayer&&!isA(p)) continue;
+        const old=playerTurn;
+        playerTurn=forPlayer;
+        const m=pieceMoves(r,c);
+        playerTurn=old;
+        if(m.length) return true;
+      }
+    }
+    return false;
+  }
+
+  function promote(r,c){
+    if(board[r][c]===1&&r===0) board[r][c]=2;
+    if(board[r][c]===3&&r===7) board[r][c]=4;
+  }
+
+  function applyMove(fr,fc,mv){
+    const p=board[fr][fc];
+    board[fr][fc]=0;
+    board[mv.r][mv.c]=p;
+    if(mv.capture) board[mv.mr][mv.mc]=0;
+    promote(mv.r,mv.c);
+  }
+
+  function checkEnd(){
+    let pw=0,pb=0;
+    for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){
+      if(isP(board[r][c])) pw++;
+      if(isA(board[r][c])) pb++;
+    }
+    if(pb===0){ end('¡GANASTE!'); return true; }
+    if(pw===0){ end('GANÓ LA IA'); return true; }
+    if(playerTurn&&!anyMoves(true)){ end('GANÓ LA IA'); return true; }
+    if(!playerTurn&&!anyMoves(false)){ end('¡GANASTE!'); return true; }
+    return false;
+  }
+
+  function end(msg){
+    gameOver=true;
+    turnEl.textContent=msg;
+    turnEl.className='turn over';
+  }
+
+  function render(){
+    boardEl.innerHTML='';
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE;c++){
+        const cell=document.createElement('div');
+        cell.className='cell '+((r+c)%2===0?'light':'dark');
+        if(selected&&selected.r===r&&selected.c===c) cell.classList.add('sel');
+        const mv=moves.find(m=>m.r===r&&m.c===c);
+        if(mv){
+          cell.classList.add('mark');
+          if(mv.capture) cell.classList.add('capture');
+        }
+        const p=board[r][c];
+        if(p){
+          const el=document.createElement('div');
+          el.className='piece '+(isP(p)?'white':'black')+(isK(p)?' king':'');
+          cell.appendChild(el);
+        }
+        cell.onclick=()=>onCell(r,c);
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function onCell(r,c){
+    if(gameOver||!playerTurn) return;
+    const p=board[r][c];
+
+    // elegir destino
+    if(selected){
+      const mv=moves.find(m=>m.r===r&&m.c===c);
+      if(mv){
+        applyMove(selected.r,selected.c,mv);
+        selected=null; moves=[];
+        render();
+        if(checkEnd()) return;
+        playerTurn=false; setTurn();
+        setTimeout(aiMove,280);
+        return;
+      }
+    }
+
+    // elegir ficha propia
+    if(isP(p)){
+      selected={r,c};
+      moves=pieceMoves(r,c);
+      render();
+      return;
+    }
+
+    selected=null; moves=[]; render();
+  }
+
+  // IA simple: prioriza capturas, si no movimiento al azar
+  function aiMove(){
+    if(gameOver) return;
+    const options=[];
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE;c++){
+        if(!isA(board[r][c])) continue;
+        const ms=pieceMoves(r,c);
+        ms.forEach(m=>options.push({r,c,m}));
+      }
+    }
+    if(!options.length){
+      checkEnd();
+      return;
+    }
+    const captures=options.filter(o=>o.m.capture);
+    const pool=captures.length?captures:options;
+    // prefiere acercarse / coronar
+    pool.sort((a,b)=>{
+      const sa=(a.m.r===7?50:0)+(a.m.capture?20:0)+Math.random();
+      const sb=(b.m.r===7?50:0)+(b.m.capture?20:0)+Math.random();
+      return sb-sa;
+    });
+    const pick=pool[0];
+    applyMove(pick.r,pick.c,pick.m);
+    render();
+    if(checkEnd()) return;
+    playerTurn=true; setTurn();
+    render();
+  }
+
+  document.getElementById('reset').onclick=start;
+  start();
+})();
+</script>
+</body>
+</html>
