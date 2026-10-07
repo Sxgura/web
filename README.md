@@ -30,7 +30,7 @@ Aquí encontrarás juegos, herramientas, sistema de descargas, funciones útiles
 | 🌐 Plataforma | Sxgura Network · sitio oficial con herramientas, servicios y recursos digitales |
 | 🛒 Catálogo | Números virtuales WhatsApp/Telegram, grupos, crecimiento digital y creaciones web |
 | 🤖 Bots | Bots multidevice listos para activación y operación continua |
-| 🎮 Juegos | Galaxy Shooter, Hormiga y Tres En Rayas. |
+| 🎮 Juegos | Galaxy Shooter, Ajedrez, Damas, Hormiga y Tres En Rayas. |
 | 🧰 Utilidades | Sistema de descargas, animaciones, herramientas online y módulos de productividad |
 | 🎨 Personalización web | Diseños tipo perfil de red social, páginas a medida y experiencia visual propia |
 | 💬 Soporte | Formulario de reportes y sugerencias para atención directa al usuario |
