@@ -3,164 +3,248 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notificaciones | S'xgura B'rrokal</title>
+<title>Aviso · Sxgura Inc</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-background:#000;
-color:#fff;
-min-height:100vh;
-display:flex;
-flex-direction:column;
+  min-height:100vh;
+  background:#000;
+  color:#f5f5f7;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+.wrap{
+  width:min(100%,420px);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  animation:in .45s ease;
+}
+@keyframes in{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:none}
 }
 
-/* NAVBAR */
-.navbar{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:14px 18px;
-background:#000;
-border-bottom:1px solid #151515;
-position:sticky;
-top:0;
-z-index:100;
+/* NAV */
+.nav{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:4px 2px;
+}
+.back{
+  width:36px;height:36px;border-radius:50%;
+  background:#1c1c1e;border:1px solid #2c2c2e;
+  display:grid;place-items:center;color:#fff;
+  text-decoration:none;font-size:14px;
+}
+.nav h1{font-size:18px;font-weight:700}
+
+/* HERO CARD */
+.hero{
+  background:linear-gradient(160deg,#1c1c1e 0%,#121214 100%);
+  border:1px solid #2a2a2e;
+  border-radius:22px;
+  padding:22px 18px 18px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:-40% -20% auto auto;
+  width:180px;height:180px;
+  background:radial-gradient(circle,rgba(10,132,255,.22),transparent 70%);
+  pointer-events:none;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:999px;
+  background:rgba(10,132,255,.12);
+  border:1px solid rgba(10,132,255,.28);
+  color:#64b5ff;font-size:11px;font-weight:700;
+  letter-spacing:.3px;margin-bottom:14px;
+}
+.badge i{font-size:11px}
+.hero h2{
+  font-size:22px;font-weight:800;letter-spacing:-.3px;
+  line-height:1.25;margin-bottom:8px;
+}
+.hero .lead{
+  font-size:14px;color:#a1a1a6;line-height:1.55;
 }
 
-.navbar-left{
-display:flex;
-align-items:center;
-gap:14px;
+/* PROGRESS */
+.progress-box{
+  margin-top:18px;
+  background:#0c0c0e;
+  border:1px solid #242428;
+  border-radius:16px;
+  padding:14px;
+}
+.progress-top{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;
+}
+.progress-top span{font-size:12px;color:#8e8e93;font-weight:600}
+.progress-top b{font-size:18px;color:#0a84ff;font-weight:800}
+.bar{
+  height:10px;border-radius:999px;background:#2c2c2e;overflow:hidden;
+}
+.fill{
+  height:100%;width:90%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0a84ff,#5e5ce6,#bf5af2);
+  box-shadow:0 0 16px rgba(10,132,255,.35);
+  animation:load 1.2s ease;
+}
+@keyframes load{from{width:0}}
+
+/* FEATURES */
+.card{
+  background:#1c1c1e;
+  border:1px solid #2a2a2e;
+  border-radius:20px;
+  padding:16px;
+}
+.card h3{
+  font-size:14px;font-weight:700;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.card h3 i{color:#0a84ff;font-size:13px}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.item{
+  background:#111113;
+  border:1px solid #26262a;
+  border-radius:14px;
+  padding:12px 10px;
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;color:#ddd;
+}
+.item i{
+  width:28px;height:28px;border-radius:9px;
+  display:grid;place-items:center;font-size:12px;flex-shrink:0;
+}
+.i1{background:rgba(10,132,255,.15);color:#0a84ff}
+.i2{background:rgba(48,209,88,.12);color:#30d158}
+.i3{background:rgba(255,159,10,.12);color:#ff9f0a}
+.i4{background:rgba(191,90,242,.12);color:#bf5af2}
+.i5{background:rgba(100,210,255,.12);color:#64d2ff}
+.i6{background:rgba(255,69,58,.12);color:#ff453a}
+
+/* TEXT BLOCKS */
+.text-card p{
+  font-size:13.5px;color:#b0b0b5;line-height:1.65;
+  margin-bottom:12px;
+}
+.text-card p:last-child{margin-bottom:0}
+.text-card strong{color:#fff;font-weight:700}
+
+/* CTA */
+.cta{
+  background:linear-gradient(135deg,rgba(10,132,255,.12),rgba(94,92,230,.1));
+  border:1px solid rgba(10,132,255,.22);
+  border-radius:18px;
+  padding:16px;
+  text-align:center;
+}
+.cta p{font-size:13px;color:#a1a1a6;line-height:1.55;margin-bottom:12px}
+.cta a{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 16px;border-radius:12px;
+  background:#0a84ff;color:#fff;text-decoration:none;
+  font-size:13px;font-weight:700;
+  box-shadow:0 8px 20px rgba(10,132,255,.28);
 }
 
-.back-btn{
-font-size:22px;
-color:#fff;
-cursor:pointer;
-opacity:0.8;
-transition:.25s;
+/* FOOTER */
+.footer{
+  text-align:center;
+  padding:8px 4px 18px;
+  font-size:12px;color:#6c6c70;line-height:1.5;
 }
-
-.back-btn:hover{
-opacity:1;
-transform:translateX(-3px);
-}
-
-.navbar-title{
-font-size:18px;
-font-weight:700;
-color:#fff;
-}
-
-/* CONTENIDO */
-.container{
-flex:1;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-padding:40px 20px;
-text-align:center;
-}
-
-.icon-box{
-width:90px;
-height:90px;
-border-radius:50%;
-background:rgba(0,140,255,0.08);
-border:1px solid rgba(0,140,255,0.25);
-display:flex;
-align-items:center;
-justify-content:center;
-margin-bottom:25px;
-}
-
-.icon-box i{
-font-size:36px;
-color:#008cff;
-}
-
-.container h1{
-font-size:22px;
-font-weight:700;
-margin-bottom:12px;
-color:#fff;
-}
-
-.container p{
-font-size:14px;
-color:#888;
-line-height:1.6;
-max-width:300px;
-margin-bottom:30px;
-}
-
-.status-badge{
-display:inline-block;
-padding:8px 16px;
-border-radius:30px;
-background:rgba(0,140,255,0.08);
-border:1px solid rgba(0,140,255,0.25);
-font-size:12px;
-color:#008cff;
-letter-spacing:0.5px;
-font-weight:600;
-}
-
-footer{
-text-align:center;
-padding:20px;
-font-size:12px;
-color:#555;
-border-top:1px solid #111;
-}
+.footer b{color:#d1d1d6;font-weight:700}
 </style>
 </head>
-
 <body>
+<div class="wrap">
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="navbar-left">
-    <div class="back-btn" onclick="history.back()">
+  <div class="nav">
+    <a class="back" href="javascript:history.back()" aria-label="Volver">
       <i class="fas fa-arrow-left"></i>
+    </a>
+    <h1>Notificación</h1>
+  </div>
+
+  <div class="hero">
+    <div class="badge">
+      <i class="fas fa-bullhorn"></i>
+      AVISO OFICIAL
     </div>
-    <div class="navbar-title">Notificaciones</div>
+    <h2>Querida comunidad</h2>
+    <p class="lead">
+      Nuestra página web ya se encuentra en un <strong style="color:#fff">90%</strong>
+      y próximamente llegará a su <strong style="color:#fff">100%</strong>.
+    </p>
+
+    <div class="progress-box">
+      <div class="progress-top">
+        <span>Progreso del proyecto</span>
+        <b>90%</b>
+      </div>
+      <div class="bar"><div class="fill"></div></div>
+    </div>
   </div>
+
+  <div class="card">
+    <h3><i class="fas fa-layer-group"></i> Ya disponible</h3>
+    <div class="grid">
+      <div class="item"><i class="fas fa-gamepad i1"></i> Minijuegos HTML</div>
+      <div class="item"><i class="fas fa-download i2"></i> Sistema de descarga</div>
+      <div class="item"><i class="fas fa-wrench i3"></i> Herramientas</div>
+      <div class="item"><i class="fas fa-toolbox i4"></i> Utilidades</div>
+      <div class="item"><i class="fas fa-sparkles i5"></i> Animaciones</div>
+      <div class="item"><i class="fas fa-concierge-bell i6"></i> Servicios</div>
+    </div>
+  </div>
+
+  <div class="card text-card">
+    <p>
+      Actualmente ya nos estamos quedando sin ideas de implementación.
+      La página está <strong>funcionando correctamente</strong> bajo la versión más reciente
+      y sigue recibiendo pequeñas actualizaciones de eficiencia, corrección de errores y mejoras.
+    </p>
+    <p>
+      Estaremos haciendo unos <strong>últimos retoques</strong> y terminando algunos detalles
+      que aún faltan para dar a <strong>Sxgura Inc Web</strong> su versión
+      <strong>oficialmente completada</strong>.
+    </p>
+    <p>
+      Si en el futuro surgen nuevas ideas, serán implementadas y mejoradas con el mismo cuidado.
+    </p>
+  </div>
+
+  <div class="cta">
+    <p>
+      ¿Tienes alguna sugerencia de algo que te gustaría ver implementado?
+      Puedes comunicarte con nosotros por los medios oficiales.
+    </p>
+    <a href="https://wa.me/254102300454" target="_blank" rel="noopener">
+      <i class="fab fa-whatsapp"></i> Contactar
+    </a>
+  </div>
+
+  <div class="footer">
+    Gracias por acompañarnos.<br>
+    <b>Atentamente, Sxgura Inc.</b>
+  </div>
+
 </div>
-
-<!-- CONTENIDO -->
-<div class="container">
-
-  <div class="icon-box">
-    <i class="fas fa-bell"></i>
-  </div>
-
-  <h1>Nueva versión muy pronto</h1>
-
-  <p>
-    Próximamente lanzaremos una nueva versión con más funciones,
-    nuevos juegos, un diseño renovado y herramientas adicionales
-    para mejorar tu experiencia.
-  </p>
-
-  <div class="status-badge">
-    Actualización en camino
-  </div>
-
-</div>
-
-<footer>
-  © 2026 Sxgura Inc. Todos los derechos reservados.
-</footer>
-
 </body>
 </html>
