@@ -20,6 +20,14 @@
 [data-theme=gold]{--bg:#120e04;--g1:rgba(255,200,60,.18);--g2:rgba(255,240,170,.08);--g3:rgba(180,120,20,.16);--x:#ffd25e;--o:#fff1c2;--acc:#e0a82e;--card:rgba(30,24,8,.88)}
 [data-theme=cyber]{--bg:#02080a;--g1:rgba(0,255,200,.14);--g2:rgba(255,0,120,.12);--g3:rgba(0,120,255,.14);--x:#00ffd0;--o:#ff3d9a;--acc:#00c2ff;--card:rgba(4,18,22,.88)}
 [data-theme=rainbow]{--bg:#0b0b1a;--g1:rgba(255,80,120,.16);--g2:rgba(80,200,255,.14);--g3:rgba(160,255,120,.12);--x:#ff6b9d;--o:#5ee7ff;--acc:#ffd166;--card:rgba(18,18,40,.88)}
+[data-theme=amoled]{--bg:#000;--g1:rgba(110,160,255,.07);--g2:rgba(94,234,212,.05);--g3:transparent;--x:#7aa2ff;--o:#5eead4;--acc:#7aa2ff;--card:rgba(10,10,12,.94)}
+[data-theme=midnight]{--bg:#030818;--g1:rgba(70,110,255,.18);--g2:rgba(255,184,107,.07);--g3:rgba(60,80,200,.16);--x:#5b8cff;--o:#ffb86b;--acc:#4f7bff;--card:rgba(6,14,38,.9)}
+[data-theme=carbon]{--bg:#09090b;--g1:rgba(255,159,67,.10);--g2:rgba(154,208,255,.07);--g3:rgba(90,90,100,.12);--x:#ff9f43;--o:#9ad0ff;--acc:#ff9f43;--card:rgba(20,20,24,.92)}
+[data-theme=obsidian]{--bg:#06030c;--g1:rgba(168,85,247,.16);--g2:rgba(240,171,252,.08);--g3:rgba(80,40,140,.18);--x:#c084fc;--o:#f0abfc;--acc:#a855f7;--card:rgba(16,8,30,.9)}
+[data-theme=crimson]{--bg:#0f0308;--g1:rgba(255,50,90,.18);--g2:rgba(255,179,193,.07);--g3:rgba(160,20,50,.18);--x:#ff4d6d;--o:#ffb3c1;--acc:#e11d48;--card:rgba(30,8,16,.9)}
+[data-theme=abyss]{--bg:#010a0c;--g1:rgba(45,212,191,.14);--g2:rgba(103,232,249,.08);--g3:rgba(10,90,100,.18);--x:#2dd4bf;--o:#67e8f9;--acc:#0d9488;--card:rgba(3,22,26,.9)}
+[data-theme=eclipse]{--bg:#080503;--g1:rgba(251,191,36,.14);--g2:rgba(251,113,133,.09);--g3:rgba(120,60,20,.18);--x:#fbbf24;--o:#fb7185;--acc:#f59e0b;--card:rgba(24,14,8,.9)}
+.timebig{font-size:22px;font-weight:800;letter-spacing:.2px;margin:2px 0 6px;font-variant-numeric:tabular-nums;color:var(--acc)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -377,14 +385,18 @@ html[data-anim=off] .frame::before,html[data-anim=baja] .frame::before{animation
     </div>
     <div class="sec"><h3>Paquete de sonidos</h3><div class="chips" id="packs" style="margin-top:0"></div><div class="small" style="margin-top:8px">Cambia el timbre de fichas y botones.</div></div>
     <div class="sec"><h3>Efectos (cada uno con su on/off y volumen)</h3><div id="chList"></div></div>
+    <div class="sec"><button class="btn" id="btnResetAudio" data-nosnd="1" style="width:100%"><i data-i="repeat"></i>Restablecer configuración de sonido</button><div class="small" style="margin-top:8px">Vuelve todos los volúmenes, interruptores, música y paquete de sonidos a sus valores originales.</div></div>
   </div>
   <div id="tab-visual" class="hidden">
     <div class="sec"><h3>Temas</h3><div class="tgrid" id="themes"></div><div class="small" style="margin-top:8px">Sube de nivel para desbloquear temas nuevos. Se conservan aunque bajes de nivel.</div></div>
+    <div class="sec"><h3>Sugerir combinación</h3><button class="btn pri" id="btnSuggest" data-nosnd="1" style="width:100%"><i data-i="sparkles"></i>Sugerir combinación</button><div class="small" style="margin:8px 0">Cada combinación mezcla tema, fichas, brillo, sonidos y música. Las bloqueadas se abren al subir de nivel.</div><div class="tgrid" id="combos"></div></div>
     <div class="sec"><h3>Estilo de fichas</h3><div class="chips" id="pstyles" style="margin-top:0"></div></div>
     <div class="sec"><h3>Animaciones</h3><div class="chips" id="anims" style="margin-top:0"></div><div class="small" style="margin-top:8px">Ultra añade fondo animado, inclinación 3D y más efectos. Baja y Apagadas ahorran batería.</div></div>
     <div class="sec"><h3>Brillo de efectos</h3><div class="chips" id="glows" style="margin-top:0"></div></div>
   </div>
   <div id="tab-game" class="hidden">
+    <div class="sec"><h3>Idioma / Language</h3><div class="chips" id="langs" style="margin-top:0"></div><div class="small" style="margin-top:8px">Traduce todo el juego al instante. No afecta tu partida ni tus datos.</div></div>
+    <div class="sec"><h3>Cronómetro de juego</h3><div class="timebig" id="playTime">0 s</div><div class="small">Tiempo total acumulado jugando. Sigue sumando cada vez que abres el juego.</div><div class="small" style="margin-top:6px">Esta sesión: <b id="sessTime">0 s</b></div></div>
     <div class="sec"><h3>Juego</h3>
       <div class="row"><label>Vibración</label><button class="sw" id="swVib" aria-pressed="true" aria-label="Vibración"></button></div>
       <div class="row"><label>Auto-continuar partida</label><button class="sw" id="swAuto" aria-pressed="false" aria-label="Auto-continuar"></button></div>
@@ -453,7 +465,7 @@ const debounce=(f,ms)=>{let t=0;return(...a)=>{clearTimeout(t);t=setTimeout(()=>
 const SKEY='sxgura_ttt_settings_v3',SKEY2='sxgura_ttt_settings_v2',TKEY='sxgura_ttt_stats_v3',TKEY2='sxgura_ttt_stats_v2',OLDKEY='sxgura_ttt_v66';
 const CH=[['place','Fichas','close'],['ui','Botones y menús','sliders'],['help','Pistas, deshacer y errores','bulb'],['win','Victoria','trophy'],['lose','Derrota','trenddown'],['draw','Empate','scale'],['ach','Logros','medal'],['level','Nivel y rango','star'],['streak','Rachas','flame']];
 const DEFSET={snd:{master:{on:true,vol:.85},music:{on:false,vol:.7},place:{on:true,vol:.8},ui:{on:true,vol:.6},help:{on:true,vol:.7},win:{on:true,vol:.8},lose:{on:true,vol:.8},draw:{on:true,vol:.8},ach:{on:true,vol:.8},level:{on:true,vol:.8},streak:{on:true,vol:.7}},
-  pack:'suave',mauto:false,vib:true,auto:false,theme:'neon',diff:'medium',mode:'ai',me:'X',track:0,anim:'media',animUser:false,glow:.8,pstyle:'auto'};
+  pack:'suave',mauto:false,vib:true,auto:false,theme:'neon',diff:'medium',mode:'ai',me:'X',track:0,anim:'media',animUser:false,glow:.8,pstyle:'auto',lang:'es'};
 const rawS=store.get(SKEY);
 const set=merge(JSON.parse(JSON.stringify(DEFSET)),rawS);
 if(!rawS){
@@ -473,6 +485,7 @@ if(!['ultra','media','baja','off'].includes(set.anim))set.anim='media';
 if(!['auto','neon','solid','glass','letters'].includes(set.pstyle))set.pstyle='auto';
 if(!['suave','arcade','cristal','madera'].includes(set.pack))set.pack='suave';
 set.glow=clamp(+set.glow||0,0,1.5);
+if(set.lang!=='en')set.lang='es';
 const saveSetNow=()=>store.set(SKEY,set),saveSet=debounce(saveSetNow,200);
 
 /* ===== estadísticas ===== */
@@ -480,7 +493,7 @@ const DEFSTATS=()=>({v:3,games:0,wins:0,losses:0,draws:0,streak:0,bestStreak:0,h
   mc:{easy:{w:0,d:0,l:0},medium:{w:0,d:0,l:0},hard:{w:0,d:0,l:0},extreme:{w:0,d:0,l:0}},
   asOWins:0,fastWins:0,rowWins:0,colWins:0,diagWins:0,bounce:0,bigBounce:0,lossStreak:0,lastOutcome:'',
   openCenter:0,openCorner:0,lastMoveWins:0,noHelpWins:0,fastHard:0,pvp:0,seriesPlayed:0,seriesWon:0,sweeps:0,seriesComeback:0,
-  days:[],dayStreak:0,bestDayStreak:0,lastDayNum:0,early:0,night:0,weekend:0,playMs:0,moves:0,
+  days:[],dayStreak:0,bestDayStreak:0,lastDayNum:0,early:0,night:0,weekend:0,playMs:0,moves:0,timeMs:0,
   tracks:[],themesUsed:['neon'],tweaks:[],themeChanged:0,musicOn:0,last:'—',ach:{}});
 function loadStats(){
   let cur=store.get(TKEY);if(cur&&cur.v===3)return merge(DEFSTATS(),cur);
@@ -701,6 +714,183 @@ const Au=(()=>{
     preview(ch){const m={master:['click'],place:['place','X'],ui:['click'],help:['hint'],win:['win'],lose:['lose'],draw:['draw'],ach:['ach','g'],level:['level'],streak:['streak',3]}[ch];if(m)play(m[0],m[1]);}};
 })();
 const vibe=p=>{if(set.vib&&navigator.vibrate){try{navigator.vibrate(p);}catch(e){}}};
+/* ===== i18n: español (original) <-> inglés =====
+   El texto del juego está escrito en español. Para inglés se traduce en vivo:
+   reglas con regex para frases con orden distinto + glosario de frases y palabras. */
+const RX=[
+  [/¡Gana ([XO])!/g,'$1 wins!'],[/Gana ([XO]) \(2J\)/g,'$1 wins (2P)'],[/Turno de ([XO])/g,"$1's turn"],[/Tu turno \(([XO])\)/g,'Your turn ($1)'],
+  [/Jugar como: ([XO])/g,'Play as: $1'],[/Empieza X\. ¡Suerte!/g,'X starts. Good luck!'],[/Sugerencia: casilla (\d)/g,'Hint: cell $1'],
+  [/Casilla (\d): vacía/g,'Cell $1: empty'],[/Casilla (\d): ([XO])/g,'Cell $1: $2'],[/Racha de (\d+)/g,'$1-win streak'],
+  [/Bajaste a nivel (\d+)/g,'You dropped to level $1'],[/Bajaste a (.+)$/g,'You dropped to $1'],[/Nuevo rango: (.+)$/g,'New rank: $1'],
+  [/Llega al nivel (\d+) para desbloquear (.+)$/g,'Reach level $1 to unlock $2'],[/Desde nivel (\d+)/g,'From level $1'],
+  [/Nivel (\d+) · (\d+) PR/g,'Level $1 · $2 PR'],[/(\d+) PR para el nivel (\d+)/g,'$1 PR to level $2'],[/Próximo rango: (.+?) \(nv\. (\d+)\)/g,'Next rank: $1 (lv. $2)'],
+  [/Serie al mejor de 3 · Tú (\d+) – (\d+) IA/g,'Best-of-3 series · You $1 – $2 AI'],[/Marcador final: /g,'Final score: '],
+  [/Animaciones en (Media|Baja)/g,'Animations set to $1'],[/(\d+)V · (\d+)E · (\d+)D/g,'$1W · $2D · $3L'],
+  [/Completado · \+(\d+) PR/g,'Completed · +$1 PR'],[/(\d+) \/ (\d+)/g,'$1 / $2'],[/Ganas PR al vencer a Endo IA/g,'You earn PR by beating Endo AI'],
+  [/Nivel (\d+)/g,'Level $1'],[/Estilo original/g,'Original style'],
+];
+const GL={
+/* interfaz */
+'TRES EN RAYA':'TIC TAC TOE','ENDO IA · BY SXGURA INC':'ENDO AI · BY SXGURA INC','Preparando el tablero…':'Setting up the board…','Tres en Raya':'Tic Tac Toe',
+'Creador:':'Creator:','· Asociación:':'· Association:','vs IA':'vs AI','2 Jug.':'2P','Serie':'Series','Fácil':'Easy','Medio':'Medium','Difícil':'Hard','Extremo':'Extreme',
+'Tú':'You','Empates':'Draws','Tu turno':'Your turn','Listo para jugar':'Ready to play','Nueva':'New','Sugerencia':'Hint','Deshacer':'Undo','Ver rangos y puntos':'View ranks & points',
+'Estadísticas':'Statistics','Partidas':'Games','Victorias':'Wins','Derrotas':'Losses','Racha':'Streak','Mejor':'Best','% Vict.':'% Wins','Por dificultad':'By difficulty',
+'Próximos logros':'Next achievements','Ver todos los logros':'See all achievements','Ajustes':'Settings','Cerrar':'Close','Audio':'Audio','Visual':'Visual','Juego':'Game','Info':'Info',
+'Música de fondo':'Background music','Música':'Music','Cambiar de pista automáticamente':'Switch track automatically','Paquete de sonidos':'Sound pack',
+'Cambia el timbre de fichas y botones.':'Changes the tone of pieces and buttons.','Efectos (cada uno con su on/off y volumen)':'Effects (each with its own on/off and volume)',
+'Restablecer configuración de sonido':'Reset sound settings','Vuelve todos los volúmenes, interruptores, música y paquete de sonidos a sus valores originales.':'Returns every volume, switch, music and sound pack to its original values.',
+'Temas':'Themes','Sube de nivel para desbloquear temas nuevos. Se conservan aunque bajes de nivel.':'Level up to unlock new themes. You keep them even if you drop a level.',
+'Sugerir combinación':'Suggest a combo','Cada combinación mezcla tema, fichas, brillo, sonidos y música. Las bloqueadas se abren al subir de nivel.':'Each combo mixes theme, pieces, glow, sounds and music. Locked ones open as you level up.',
+'Estilo de fichas':'Piece style','Animaciones':'Animations','Ultra añade fondo animado, inclinación 3D y más efectos. Baja y Apagadas ahorran batería.':'Ultra adds an animated background, 3D tilt and more effects. Low and Off save battery.',
+'Brillo de efectos':'Effects glow','Vibración':'Vibration','Auto-continuar partida':'Auto-continue game','Auto-continuar':'Auto-continue','Datos':'Data','Restablecer estadísticas':'Reset statistics',
+'Idioma / Language':'Language / Idioma','Traduce todo el juego al instante. No afecta tu partida ni tus datos.':'Translates the whole game instantly. It does not affect your game or your data.',
+'Cronómetro de juego':'Play timer','Tiempo total acumulado jugando. Sigue sumando cada vez que abres el juego.':'Total time spent playing. It keeps adding up every time you open the game.','Esta sesión:':'This session:',
+'Créditos':'Credits','Sitio web oficial':'Official website','Versión':'Version','Logros':'Achievements','Todos':'All','Todas':'All','Hechos':'Done','En curso':'In progress','Pendientes':'Pending',
+'Efectos de sonido':'Sound effects','Pista automática':'Auto track','Asociación':'Association','Creador':'Creator',
+/* consejos */
+'Consejo: el centro es la mejor casilla para abrir.':'Tip: the center is the best cell to open with.','Consejo: usa la sugerencia si te atascas.':'Tip: use the hint if you get stuck.',
+'Sube de nivel para desbloquear temas nuevos.':'Level up to unlock new themes.','Ajusta cada sonido por separado en Ajustes.':'Tune each sound separately in Settings.','Ultra activa fondo animado e inclinación 3D.':'Ultra turns on the animated background and 3D tilt.',
+/* canales */
+'Fichas':'Pieces','Botones y menús':'Buttons & menus','Pistas, deshacer y errores':'Hints, undo & errors','Victoria':'Victory','Derrota':'Defeat','Empate':'Draw','Nivel y rango':'Level & rank','Rachas':'Streaks','Volumen general':'Master volume',
+'Volumen: ':'Volume: ',
+/* música */
+'Neón Chill':'Neon Chill','Arcade Pulse':'Arcade Pulse','Espacio Profundo':'Deep Space','Lluvia Lo-Fi':'Lo-Fi Rain','Synthwave Drive':'Synthwave Drive','Zen Jardín':'Zen Garden','Cyber Funk':'Cyber Funk','Épica Aventura':'Epic Adventure',
+'Suave':'Soft','Arcade':'Arcade','Cristal':'Crystal','Madera':'Wood',
+/* rangos */
+'Novato':'Novice','Aprendiz':'Apprentice','Bronce':'Bronze','Plata':'Silver','Oro Real':'Royal Gold','Oro':'Gold','Platino':'Platinum','Diamante':'Diamond','Maestro':'Master','Gran Maestro':'Grandmaster','Leyenda':'Legend','Campeón':'Champion','Élite':'Elite','Mítico':'Mythic',
+/* temas y fichas */
+'Clásico':'Classic','Neón':'Neon','Océano':'Ocean','Atardecer':'Sunset','Bosque':'Forest','Galaxia':'Galaxy','Hielo':'Ice','Arcoíris':'Rainbow','Negro AMOLED':'AMOLED Black','Medianoche':'Midnight','Carbón':'Carbon','Obsidiana':'Obsidian','Carmesí':'Crimson','Abismo':'Abyss',
+'Automático':'Automatic','Sólido':'Solid','Letras':'Letters','Sin brillo':'No glow','Intenso':'Intense','Normal':'Normal','Ultra':'Ultra','Media':'Medium','Baja':'Low','Apagadas':'Off',
+'Desbloqueado':'Unlocked','Tema bloqueado':'Theme locked','Tema desbloqueado':'Theme unlocked',
+/* combos */
+'Clásico puro':'Pure Classic','Neón nocturno':'Night Neon','AMOLED ahorro':'AMOLED Saver','Medianoche zen':'Zen Midnight','Carbón urbano':'Urban Carbon','Océano relajante':'Relaxing Ocean','Aurora soñadora':'Dreamy Aurora',
+'Atardecer retro':'Retro Sunset','Bosque sereno':'Calm Forest','Obsidiana mística':'Mystic Obsidian','Galaxia épica':'Epic Galaxy','Sakura zen':'Zen Sakura','Carmesí intenso':'Intense Crimson','Lava volcánica':'Volcanic Lava',
+'Hielo cristalino':'Crystal Ice','Abismo profundo':'Deep Abyss','Eclipse dorado':'Golden Eclipse','Cyberpunk':'Cyberpunk','Arcoíris festivo':'Festive Rainbow',
+'Letras sobrias, brillo suave y madera: el estilo de siempre.':'Plain letters, soft glow and wood: the original look.','Neón brillante con música chill.':'Bright neon with chill music.',
+'Negro puro: ahorra batería en pantallas OLED.':'Pure black: saves battery on OLED screens.','Azul profundo, cristal y lo-fi para relajarte.':'Deep blue, glass and lo-fi to relax.',
+'Gris carbón con acentos naranja y funk.':'Charcoal gray with orange accents and funk.','Azules marinos y burbujas con lluvia lo-fi.':'Ocean blues and bubbles with lo-fi rain.','Colores vivos con ambiente espacial.':'Vivid colors with a spacey mood.',
+'Synthwave bajo un cielo naranja.':'Synthwave under an orange sky.','Verdes tranquilos y música zen.':'Calm greens and zen music.','Violeta oscuro, brillo alto y misterio.':'Dark violet, high glow and mystery.',
+'Pura épica entre estrellas.':'Pure epic among the stars.','Pétalos rosados y calma.':'Pink petals and calm.','Rojo profundo con funk cibernético.':'Deep red with cyber funk.','Brasas, fuego y aventura.':'Embers, fire and adventure.',
+'Blanco helado, cristal y lo-fi.':'Icy white, glass and lo-fi.','Verde azulado oscuro bajo el mar.':'Dark teal under the sea.','Oro brillante y música épica.':'Shining gold and epic music.','Oscuro con destellos dorados.':'Dark with golden flashes.',
+'Luces de neón y ritmo cyber.':'Neon lights and a cyber beat.','Colores en fiesta con música arcade.':'Colors on party mode with arcade music.',
+'Combinación aplicada':'Combo applied','Te sugerimos':'We suggest','Sonido restablecido':'Sound reset','Valores originales de audio restaurados':'Original audio values restored','¿Restablecer configuración de sonido?':'Reset sound settings?',
+'Se restaurarán volúmenes, interruptores, música y paquete de sonidos a sus valores originales. Tus demás ajustes no cambian.':'Volumes, switches, music and sound pack will return to their original values. Your other settings stay as they are.',
+'Restablecer':'Reset','Cancelar':'Cancel','Aplicar':'Apply','Sugerir':'Suggest',
+/* juego */
+'Nivel':'Level','Sigue así':'Keep it up','Bajaste a':'You dropped to','Recupera puntos ganando partidas':'Win games to recover points','Logro desbloqueado':'Achievement unlocked',
+'Casilla':'Cell','vacía':'empty','Empiezas tú. ¡Buena suerte!':'You start. Good luck!','Endo IA empieza esta ronda':'Endo AI starts this round','No hay jugadas para deshacer':'No moves to undo','Jugada deshecha':'Move undone',
+'La partida ya terminó':'The game is already over','Espera tu turno':'Wait for your turn','¡Victoria!':'Victory!','¡Le ganaste a Endo IA!':'You beat Endo AI!','¡Jugada maestra!':'Masterstroke!','¡Brutal, sigue así!':'Brutal, keep it up!',
+'Endo IA gana esta vez':'Endo AI wins this time','Casi… ¡pide revancha!':'So close… ask for a rematch!','Perder también enseña':'Losing teaches too','La IA no perdona':'The AI shows no mercy',
+'Empate: tablero blindado':'Draw: bulletproof board','Nadie cedió. ¡Empate!':'Nobody gave in. Draw!','Empate bien peleado':'A hard-fought draw','de bonus':'bonus','Siguiente ronda…':'Next round…',
+'¡Serie ganada!':'Series won!','Serie perdida':'Series lost','Serie empatada':'Series tied','Revancha':'Rematch','Fin de la ronda':'Round over','Endo IA piensa…':'Endo AI is thinking…','Jugador':'Player',
+'+30 PR de bonus. ¡Gran serie!':'+30 PR bonus. Great series!','−12 PR. Pide la revancha.':'−12 PR. Ask for a rematch.','Nadie pudo con nadie.':'Nobody could beat anybody.',
+'Rendimiento ajustado':'Performance adjusted','para que todo fluya':'to keep everything smooth','¡Lo tienes todo!':'You have them all!','Nada por aquí todavía':'Nothing here yet',
+'Rangos y puntos':'Ranks & points','(más en dificultades altas)':'(more on higher difficulties)','y bonus por racha.':'and streak bonuses.','Si pierdes, restas PR':'If you lose, you lose PR','y puedes bajar de nivel o de rango.':'and you can drop a level or a rank.',
+'Los temas que desbloqueaste se conservan.':'The themes you unlocked are kept.','Victoria:':'Victory:','Derrota:':'Defeat:','Empate:':'Draw:','Ganas PR':'You earn PR','Actual':'Current','actual':'current',
+'+4 a +20 según dificultad':'+4 to +20 depending on difficulty','¿Restablecer estadísticas?':'Reset statistics?','Se borrarán puntos, nivel, logros y estadísticas. Los ajustes se conservan.':'Points, level, achievements and statistics will be erased. Settings are kept. Your play timer is kept too.',
+'Estadísticas restablecidas':'Statistics reset','Hecho en Colombia con cariño.':'Made in Colombia with love.','Colombia':'Colombia','Sxgura Inc':'Sxgura Inc',
+'de bonus':'bonus','PR de bonus':'PR bonus','Sin dificultad':'',
+/* logros: categorías */
+'Dificultad':'Difficulty','Habilidad':'Skill','Modos':'Modes','Ayudas':'Helps','Constancia':'Consistency','Tiempo':'Time','Estilo':'Style','Colección':'Collection',
+/* logros: títulos */
+'Primer paso':'First step','Calentando':'Warming up','Constante':'Steady','Veterano':'Veteran','Maratonista':'Marathoner','Incansable':'Tireless','Leyenda del 3R':'Legend of 3R','Adicto al tablero':'Board addict','Sin descanso':'No rest','Mil batallas':'A thousand battles',
+'Primera victoria':'First victory','Tomando ritmo':'Getting the rhythm','Cazador de bots':'Bot hunter','Imparable':'Unstoppable','Maestro del tablero':'Board master','Dominador':'Dominator','Titán':'Titan','Inmortal':'Immortal','Mil victorias':'A thousand wins',
+'Doble':'Double','Triple':'Triple','Cinco seguidas':'Five in a row','Ocho seguidas':'Eight in a row','Racha eterna':'Eternal streak','Fuera de serie':'Out of this world','Veinte sin caer':'Twenty without falling','Invencible':'Invincible',
+'Diplomático':'Diplomat','Pacificador':'Peacemaker','Muro de contención':'Containment wall','Maestro zen':'Zen master','Equilibrio perfecto':'Perfect balance','Gran estratega de tablas':'Grand draw strategist',
+'Paseo fácil':'Easy stroll','Dominio fácil':'Easy dominance','Rey de lo fácil':'King of easy','Sin sudar':'No sweat','Maestro de lo sencillo':'Master of the simple',
+'Nivel medio':'Medium level','Guerrero medio':'Medium warrior','Señor del medio':'Lord of the middle','Veterano medio':'Medium veteran','Leyenda media':'Medium legend',
+'Mente fría':'Cold mind','Duro de roer':'Tough nut','Domador de IA':'AI tamer','Pesadilla de bots':'Bot nightmare','Aniquilador':'Annihilator','Sin piedad':'No mercy',
+'Sobreviviente':'Survivor','Tanque extremo':'Extreme tank','Muro extremo':'Extreme wall','Fortaleza':'Fortress','Inquebrantable':'Unbreakable','Imposible de vencer':'Impossible to beat',
+'Relámpago':'Lightning','Velocista':'Sprinter','Rayo':'Bolt','Tormenta':'Storm','Veloz como el viento':'Fast as the wind',
+'En fila':'In a row','Rey de las filas':'King of rows','Horizontal total':'Total horizontal','En columna':'In a column','Rey de las columnas':'King of columns','Vertical total':'Total vertical',
+'En diagonal':'Diagonally','Rey de las diagonales':'King of diagonals','Diagonal total':'Total diagonal','Todo terreno':'All-terrain','Cambio de bando':'Switching sides','Doble cero':'Double zero',
+'Maestro del círculo':'Master of the circle','Redondo':'Well-rounded','Remontada':'Comeback','Nunca te rindes':'Never give up','Fénix':'Phoenix','Eterno resurgir':'Eternal rebirth',
+'Salir del pozo':'Out of the pit','Regreso triunfal':'Triumphant return','Centro de mando':'Command center','Rey del centro':'King of the center','Ojo del tablero':'Eye of the board',
+'Esquinero':'Corner player','Francotirador de esquinas':'Corner sniper','Cuatro esquinas':'Four corners','Por los pelos':'By a hair','Final de fotografía':'Photo finish','Nervios de acero':'Nerves of steel',
+'Sin ayuda':'No help','Autodidacta':'Self-taught','Pura mente':'Pure mind','Veloz y letal':'Fast and lethal','Duelo':'Duel','Amigos':'Friends','Rival eterno':'Eternal rival',
+'Clásico de barrio':'Neighborhood classic','Torneo familiar':'Family tournament','Leyenda del sofá':'Couch legend','Serie terminada':'Series finished','Serie tras serie':'Series after series',
+'Maratón de series':'Series marathon','Rey del formato':'King of the format','Serie ganada':'Series won','Rey de las series':'King of series','Campeón de series':'Series champion','Dinastía':'Dynasty',
+'Barrida':'Sweep','Aplanadora':'Steamroller','Perfección en serie':'Perfection in series','Giro épico':'Epic turn','Maestro del giro':'Master of the turn',
+'Una pista':'A hint','Estudiando':'Studying','Aprendiz curioso':'Curious apprentice','Consultor':'Consultant','Asesor oficial':'Official advisor','Rebobinar':'Rewind','Corrector':'Corrector','Editor':'Editor',
+'Viajero del tiempo':'Time traveler','Señor del tiempo':'Lord of time','Aprender perdiendo':'Learning by losing','Experiencia':'Experience','Curtido':'Seasoned','Cicatrices de guerra':'War scars',
+'Corazón de acero':'Heart of steel','Resiliencia total':'Total resilience','Tropezón':'Stumble','Caída libre':'Free fall','Montaña rusa':'Roller coaster',
+'Fiel':'Loyal','Habitual':'Regular','De la casa':'One of the house','Residente':'Resident','Inquilino eterno':'Eternal tenant','Centenario':'Centenarian','Dos días seguidos':'Two days in a row',
+'Tres en línea':'Three in a line','Semana completa':'Full week','Quincena perfecta':'Perfect fortnight','Mes imparable':'Unstoppable month','Madrugador':'Early bird','Alma matutina':'Morning soul',
+'Noctámbulo':'Night owl','Búho nocturno':'Night owl','Fin de semana':'Weekend','Rey del finde':'King of the weekend','Entrando en calor':'Warming up','Media hora':'Half an hour',
+'Una hora de gloria':'An hour of glory','Tres horas':'Three hours','Diez horas de leyenda':'Ten hours of legend','Primeras fichas':'First pieces','Mano firme':'Steady hand','Mil jugadas':'A thousand moves',
+'Cinco mil jugadas':'Five thousand moves','DJ':'DJ','Melómano':'Music lover','Coleccionista de ritmos':'Rhythm collector','Oído absoluto':'Perfect pitch','Estilista':'Stylist','Diseñador':'Designer',
+'Interiorista':'Interior designer','Artista':'Artist','Maestro del color':'Color master','Curioso':'Curious','Ajustador':'Tweaker','Ingeniero':'Engineer','Maestro de ajustes':'Settings master',
+'Subiendo':'Climbing','Doble dígito':'Double digits','Quince':'Fifteen','Veinte':'Twenty','Treinta':'Thirty','Cuarenta':'Forty','Cincuenta':'Fifty','Leyenda viva':'Living legend','Coleccionista':'Collector',
+'Cazador de logros':'Achievement hunter','Medio centenar':'Half a century','Centurión':'Centurion','Obsesivo':'Obsessive',
+/* logros: descripciones (orden: frases largas primero lo resuelve el motor) */
+'Gana # partidas contra Endo IA':'','Gana con fila, columna y diagonal':'Win with a row, a column and a diagonal','Gana tras':'Win after','o más derrotas seguidas':'or more losses in a row',
+'partidas seguidas':'games in a row','partidas contra Endo IA':'games against Endo AI','partidas sin sugerencia ni deshacer':'games without hints or undo','partidas de':'games with','Jugadores':'Players',
+'Juega entre las':'Play between','y las':'and','a. m.':'a.m.','Juega en fin de semana':'Play on weekends','Juega en':'Play on','días distintos':'different days','días seguidos':'days in a row',
+'Gana en solo':'Win in just','jugadas en Difícil':'moves on Hard','jugadas':'moves','veces en Extremo':'times on Extreme','Gana en':'Win in','en Fácil':'on Easy','en Medio':'on Medium','en Difícil':'on Hard','en Extremo':'on Extreme',
+'Gana con línea horizontal':'Win with a horizontal line','Gana con línea vertical':'Win with a vertical line','Gana con diagonal':'Win with a diagonal','Gana jugando como':'Win playing as',
+'Gana justo después de perder':'Win right after losing','Gana con la última casilla libre':'Win with the last free cell','Abre en el centro':'Open in the center','Abre en una esquina':'Open in a corner',
+'Gana':'Win','Juega':'Play','Consigue':'Get','Empata':'Draw','Termina':'Finish','Usa':'Use','Pierde':'Lose','Baja de nivel':'Drop a level','Acumula':'Accumulate','minutos de juego':'minutes of play',
+'Coloca':'Place','fichas':'pieces','Activa la música':'Turn on the music','Escucha':'Listen to','pistas distintas':'different tracks','Cambia el tema':'Change the theme','temas distintos':'different themes',
+'Personaliza':'Customize','opciones distintas':'different options','audio, brillo, animaciones, fichas…':'audio, glow, animations, pieces…','Alcanza el nivel':'Reach level','Desbloquea':'Unlock',
+'tras perder la primera ronda':'after losing the first round','sugerencias':'hints','partidas':'games','empates':'draws','series':'series','veces':'times','logros':'achievements','Veces':'Times',
+'Más':'More','más':'more','contra':'against','sin':'without','ni':'nor','minutos':'minutes',
+/* varios */
+'Estilo original':'Original style','Ganas':'You earn','al vencer a':'by beating','por racha':'for streaks','Hecho':'Made','dificultades':'difficulties','Marcador final':'Final score',
+'Tu':'Your','tu':'your','Endo IA':'Endo AI','IA':'AI','Jug.':'Pl.','Torneo':'Tournament',
+'Bajaste':'You dropped','Nuevo rango':'New rank','Próximo rango':'Next rank','Llega':'Reach',
+'Listo':'Ready','Copiado':'Copied','Error':'Error','Error al iniciar':'Startup error','Info.':'Info.','Sitio':'Site','Telegram':'Telegram','WhatsApp':'WhatsApp','Sxgura':'Sxgura','Inc':'Inc',
+};
+delete GL['Gana # partidas contra Endo IA'];delete GL['Sin dificultad'];
+const GKEYS=Object.keys(GL).sort((a,b)=>b.length-a.length);
+const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const GRX=new RegExp('(?<![A-Za-zÁ-úñÑ])(?:'+GKEYS.map(esc).join('|')+')(?![A-Za-zÁ-úñÑ])','g');
+const trCache=new Map();
+function tr(s){
+  if(set.lang!=='en'||!s||typeof s!=='string')return s;
+  let c=trCache.get(s);if(c!==undefined)return c;
+  let r=s;for(const x of RX)r=r.replace(x[0],x[1]);
+  r=r.replace(GRX,m=>GL[m]);r=r.replace(/[¡¿]/g,'').replace(/\b1 (different )?(game|time|hint|day|piece|achievement|draw|move|track|theme|option|minute)s\b/g,'1 $1$2');
+  if(trCache.size>3000)trCache.clear();trCache.set(s,r);return r;
+}
+const L=(es,en)=>set.lang==='en'?en:es;
+/* traducción viva del DOM */
+const tnode=new WeakMap(),tattr=new WeakMap();
+function procText(n,force){
+  const v=n.nodeValue,rec=tnode.get(n);if(!force&&rec&&v===rec.out)return;
+  const out=set.lang==='en'?tr(v):v;tnode.set(n,{src:v,out});if(out!==v)n.nodeValue=out;
+}
+function procAttrs(el,force){
+  for(const a of ['aria-label','title']){
+    if(!el.hasAttribute||!el.hasAttribute(a))continue;const v=el.getAttribute(a);let m=tattr.get(el);if(!m){m={};tattr.set(el,m);}
+    const rec=m[a];if(!force&&rec&&v===rec.out)continue;const out=set.lang==='en'?tr(v):v;m[a]={src:v,out};if(out!==v)el.setAttribute(a,out);
+  }
+}
+function walkDom(node,force){
+  if(node.nodeType===3){if(node.parentNode&&/^(SCRIPT|STYLE)$/.test(node.parentNode.nodeName))return;procText(node,force);return;}
+  if(node.nodeType!==1||/^(SCRIPT|STYLE|SVG|svg)$/.test(node.nodeName))return;
+  procAttrs(node,force);for(let c=node.firstChild;c;c=c.nextSibling)walkDom(c,force);
+}
+function restoreDom(node){
+  if(node.nodeType===3){const r=tnode.get(node);if(r&&node.nodeValue===r.out){node.nodeValue=r.src;tnode.set(node,{src:r.src,out:r.src});}return;}
+  if(node.nodeType!==1||/^(SCRIPT|STYLE|SVG|svg)$/.test(node.nodeName))return;
+  const m=tattr.get(node);if(m)for(const a in m){const r=m[a];if(node.getAttribute(a)===r.out){node.setAttribute(a,r.src);m[a]={src:r.src,out:r.src};}}
+  for(let c=node.firstChild;c;c=c.nextSibling)restoreDom(c);
+}
+const trObs=new MutationObserver(ms=>{
+  for(const m of ms){
+    if(m.type==='characterData')procText(m.target);
+    else if(m.type==='attributes')procAttrs(m.target);
+    else m.addedNodes.forEach(n=>walkDom(n));
+  }
+});
+function setLang(l,noSave){
+  set.lang=l==='en'?'en':'es';if(!noSave)saveSet();
+  document.documentElement.lang=set.lang;
+  if(set.lang==='en'){walkDom(document.body,true);}else restoreDom(document.body);
+  document.title=set.lang==='en'?'Tic Tac Toe • Endo AI • Sxgura':'Tres en Raya • Endo IA • Sxgura';
+}
+trObs.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['aria-label','title']});
+if(set.lang==='en')setLang('en',true);
 /* ===== animaciones: nivel y multiplicador ===== */
 const FXM=()=>({ultra:1.7,media:1,baja:.35,off:0})[set.anim];
 let COL={x:'#6ea8ff',o:'#3ee6a6',acc:'#8b7bff',gold:'#ffd166'};
@@ -849,8 +1039,13 @@ const THEMES=[
   {id:'galaxy',n:'Galaxia',lv:14,c:['#a78bff','#5ee7ff'],amb:'galaxy'},{id:'sakura',n:'Sakura',lv:18,c:['#ff8fb8','#ffe3a8'],amb:'petals'},
   {id:'lava',n:'Lava',lv:22,c:['#ff6a3d','#ffc247'],amb:'embers'},{id:'ice',n:'Hielo',lv:26,c:['#9fe3ff','#d6c8ff'],amb:'snow'},
   {id:'gold',n:'Oro Real',lv:30,c:['#ffd25e','#fff1c2'],amb:'sparkle'},{id:'cyber',n:'Cyber',lv:36,c:['#00ffd0','#ff3d9a'],amb:'streaks'},
-  {id:'rainbow',n:'Arcoíris',lv:45,c:['#ff6b9d','#5ee7ff'],amb:'rainbow'}
+  {id:'rainbow',n:'Arcoíris',lv:45,c:['#ff6b9d','#5ee7ff'],amb:'rainbow'},
+  {id:'amoled',n:'Negro AMOLED',lv:2,c:['#7aa2ff','#5eead4'],amb:'none',dark:1},{id:'midnight',n:'Medianoche',lv:4,c:['#5b8cff','#ffb86b'],amb:'orbs',dark:1},
+  {id:'carbon',n:'Carbón',lv:7,c:['#ff9f43','#9ad0ff'],amb:'sparkle',dark:1},{id:'obsidian',n:'Obsidiana',lv:10,c:['#c084fc','#f0abfc'],amb:'galaxy',dark:1},
+  {id:'crimson',n:'Carmesí',lv:16,c:['#ff4d6d','#ffb3c1'],amb:'embers',dark:1},{id:'abyss',n:'Abismo',lv:20,c:['#2dd4bf','#67e8f9'],amb:'bubbles',dark:1},
+  {id:'eclipse',n:'Eclipse',lv:33,c:['#fbbf24','#fb7185'],amb:'sparkle',dark:1}
 ];
+THEMES.sort((a,b)=>a.lv-b.lv);
 if(!THEMES.some(t=>t.id===set.theme))set.theme='neon';
 
 /* ===== logros (~185) ===== */
@@ -1248,7 +1443,7 @@ function renderThemes(){
     b.innerHTML='<i style="background:linear-gradient(135deg,'+t.c[0]+','+t.c[1]+')"></i>'+t.n+'<small>'+(ok?(t.id==='classic'?'Estilo original':'Desbloqueado'):I('lock')+' Nivel '+t.lv)+'</small>';
     b.onclick=()=>{
       if(!ok){Au.play('err');vibe(15);toast({icon:I('lock'),title:'Tema bloqueado',text:'Llega al nivel '+t.lv+' para desbloquear '+t.n,color:'#ff9a4d',ms:2400});return;}
-      set.theme=t.id;saveSet();applyTheme();renderThemes();bumpTheme(t.id);Au.play('on');
+      set.theme=t.id;saveSet();applyTheme();renderThemes();renderCombos();bumpTheme(t.id);Au.play('on');
     };
     host.appendChild(b);
   });
@@ -1286,13 +1481,82 @@ function openRanks(){
     '<div class="small" style="margin-bottom:8px">Victoria: Fácil +12 · Medio +20 · Difícil +35 · Extremo +50<br>Derrota: Fácil −14 · Medio −10 · Difícil −7 · Extremo −5<br>Empate: +4 a +20 según dificultad</div>'+rows,[{label:'Cerrar',cls:'pri'}]);
 }
 
+
+/* ===== restablecer sonido ===== */
+function resetAudio(){
+  Object.keys(DEFSET.snd).forEach(k=>Object.assign(set.snd[k],DEFSET.snd[k]));
+  set.pack=DEFSET.pack;set.mauto=DEFSET.mauto;saveSetNow();Au.setTrack(DEFSET.track);Au.refresh();
+  $('btnMusic').setAttribute('aria-pressed',set.snd.music.on);renderSfxBtn();buildAudio();Au.play('on');
+  toast({icon:I('repeat'),title:'Sonido restablecido',text:'Valores originales de audio restaurados',color:'#3ee6a6',ms:2400});tweak('resetAudio');
+}
+/* ===== combinaciones sugeridas ===== */
+const COMBOS=[
+ {n:'Clásico puro',t:'classic',p:'letters',g:.4,k:'madera',m:5,d:'Letras sobrias, brillo suave y madera: el estilo de siempre.'},
+ {n:'Neón nocturno',t:'neon',p:'neon',g:.8,k:'suave',m:0,d:'Neón brillante con música chill.',dark:1},
+ {n:'AMOLED ahorro',t:'amoled',p:'solid',g:.4,k:'suave',m:3,d:'Negro puro: ahorra batería en pantallas OLED.',dark:1},
+ {n:'Medianoche zen',t:'midnight',p:'glass',g:.8,k:'cristal',m:3,d:'Azul profundo, cristal y lo-fi para relajarte.',dark:1},
+ {n:'Carbón urbano',t:'carbon',p:'solid',g:.8,k:'madera',m:6,d:'Gris carbón con acentos naranja y funk.',dark:1},
+ {n:'Océano relajante',t:'ocean',p:'glass',g:.8,k:'cristal',m:3,d:'Azules marinos y burbujas con lluvia lo-fi.'},
+ {n:'Aurora soñadora',t:'aurora',p:'glass',g:1.2,k:'cristal',m:2,d:'Colores vivos con ambiente espacial.'},
+ {n:'Atardecer retro',t:'sunset',p:'neon',g:.8,k:'arcade',m:4,d:'Synthwave bajo un cielo naranja.'},
+ {n:'Obsidiana mística',t:'obsidian',p:'glass',g:1.2,k:'cristal',m:2,d:'Violeta oscuro, brillo alto y misterio.',dark:1},
+ {n:'Bosque sereno',t:'forest',p:'solid',g:.4,k:'madera',m:5,d:'Verdes tranquilos y música zen.'},
+ {n:'Galaxia épica',t:'galaxy',p:'neon',g:1.2,k:'suave',m:7,d:'Pura épica entre estrellas.',dark:1},
+ {n:'Sakura zen',t:'sakura',p:'glass',g:.8,k:'cristal',m:5,d:'Pétalos rosados y calma.'},
+ {n:'Carmesí intenso',t:'crimson',p:'neon',g:1.2,k:'arcade',m:6,d:'Rojo profundo con funk cibernético.',dark:1},
+ {n:'Abismo profundo',t:'abyss',p:'glass',g:.8,k:'suave',m:2,d:'Verde azulado oscuro bajo el mar.',dark:1},
+ {n:'Lava volcánica',t:'lava',p:'solid',g:1.2,k:'arcade',m:7,d:'Brasas, fuego y aventura.'},
+ {n:'Hielo cristalino',t:'ice',p:'glass',g:.8,k:'cristal',m:3,d:'Blanco helado, cristal y lo-fi.'},
+ {n:'Oro real',t:'gold',p:'solid',g:1.2,k:'cristal',m:7,d:'Oro brillante y música épica.'},
+ {n:'Eclipse dorado',t:'eclipse',p:'neon',g:1.2,k:'suave',m:7,d:'Oscuro con destellos dorados.',dark:1},
+ {n:'Cyberpunk',t:'cyber',p:'neon',g:1.2,k:'arcade',m:4,d:'Luces de neón y ritmo cyber.',dark:1},
+ {n:'Arcoíris festivo',t:'rainbow',p:'neon',g:1.2,k:'arcade',m:1,d:'Colores en fiesta con música arcade.'}
+];
+const maxLv=()=>Math.max(stats.maxLevel,levelInfo(stats.xp).lvl);
+const comboLv=c=>(THEMES.find(t=>t.id===c.t)||{lv:99}).lv;
+function renderCombos(){
+  const host=$('combos');host.innerHTML='';const lv=maxLv();
+  COMBOS.slice().sort((a,b)=>{const ua=comboLv(a)<=lv,ub=comboLv(b)<=lv;return ua!==ub?(ua?-1:1):comboLv(a)-comboLv(b);}).forEach(c=>{
+    const th=THEMES.find(t=>t.id===c.t),ok=comboLv(c)<=lv,b=document.createElement('button');
+    b.className='tcard'+(set.theme===c.t&&set.pstyle===c.p&&set.pack===c.k&&set.glow===c.g?' on':'')+(ok?'':' lock');b.dataset.nosnd='1';
+    b.innerHTML='<i style="background:linear-gradient(135deg,'+th.c[0]+','+th.c[1]+')"></i>'+c.n+'<small>'+(ok?c.d:I('lock')+' Nivel '+comboLv(c))+'</small>';
+    b.onclick=()=>{if(!ok){Au.play('err');vibe(15);toast({icon:I('lock'),title:'Tema bloqueado',text:'Llega al nivel '+comboLv(c)+' para desbloquear '+th.n,color:'#ff9a4d',ms:2400});return;}applyCombo(c,'Combinación aplicada');};
+    host.appendChild(b);
+  });
+}
+function applyCombo(c,title){
+  set.theme=c.t;set.pstyle=c.p;set.glow=c.g;set.pack=c.k;saveSet();Au.setTrack(c.m);
+  applyTheme();applyGlow();resetShown();syncBoard();renderThemes();renderPStyles();renderGlows();renderPacks();renderTracks();renderCombos();bumpTheme(c.t);tweak('combo');
+  Au.play('unlock');toast({icon:I('sparkles'),title:title,text:c.n,color:(THEMES.find(t=>t.id===c.t)||THEMES[1]).c[0],ms:2600});
+}
+function suggestCombo(){
+  const lv=maxLv(),hr=new Date().getHours(),night=hr>=19||hr<6;
+  let pool=COMBOS.filter(c=>comboLv(c)<=lv&&!(set.theme===c.t&&set.pstyle===c.p&&set.pack===c.k));
+  if(!pool.length)pool=COMBOS.filter(c=>comboLv(c)<=lv);
+  if(night){const d=pool.filter(c=>c.dark);if(d.length&&Math.random()<.75)pool=d;}
+  applyCombo(pick(pool),'Te sugerimos');
+}
+/* ===== idioma ===== */
+function renderLangs(){chips($('langs'),[{v:'es',l:'Español'},{v:'en',l:'English'}],set.lang,v=>{if(v!==set.lang){setLang(v);renderLangs();tweak('lang');}Au.play('click');});}
+/* ===== cronómetro de juego ===== */
+function fmtT(ms){
+  const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;
+  return (d?d+' d ':'')+(d||h?h+' h ':'')+(d||h||m?m+' min ':'')+x+' s';
+}
+let tLast=performance.now(),tSess=0,tAcc=0;
+function updTime(){if(!$('drawer').classList.contains('open'))return;$('playTime').textContent=fmtT(stats.timeMs);$('sessTime').textContent=fmtT(tSess);}
+setInterval(()=>{const n=performance.now(),d=Math.min(n-tLast,2500);tLast=n;if(document.hidden)return;stats.timeMs+=d;tSess+=d;tAcc+=d;if(tAcc>=10000){tAcc=0;saveStats();}updTime();},1000);
+document.addEventListener('visibilitychange',()=>{tLast=performance.now();if(document.hidden)saveStats();});
+$('btnResetAudio').onclick=()=>modal('¿Restablecer configuración de sonido?','Se restaurarán volúmenes, interruptores, música y paquete de sonidos a sus valores originales. Tus demás ajustes no cambian.',[{label:'Cancelar'},{label:'Restablecer',cls:'pri',fn:resetAudio}]);
+$('btnSuggest').onclick=suggestCombo;
+
 /* ===== eventos ===== */
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&!b.dataset.nosnd&&!b.classList.contains('cell'))Au.play('click');},true);
 document.addEventListener('pointerdown',()=>Au.unlock(),{once:true,passive:true});
 $('btnSfx').onclick=()=>{set.snd.master.on=!set.snd.master.on;saveSet();Au.refresh();renderSfxBtn();buildAudio();if(set.snd.master.on)Au.play('on');tweak('snd');};
 $('btnMusic').onclick=()=>{set.snd.music.on=!set.snd.music.on;saveSet();Au.unlock();Au.refresh();$('btnMusic').setAttribute('aria-pressed',set.snd.music.on);if(set.snd.music.on){stats.musicOn++;checkAch();saveStats();}buildAudio();};
 $('btnAch').onclick=openAch;$('btnAch2').onclick=openAch;$('btnRanks').onclick=openRanks;
-$('btnMenu').onclick=()=>{buildAudio();renderThemes();openPanel($('drawer'));};
+$('btnMenu').onclick=()=>{buildAudio();renderThemes();renderCombos();updTime();openPanel($('drawer'));};
 $('btnCloseDrawer').onclick=closeAll;$('btnCloseSheet').onclick=closeAll;$('scrim').onclick=closeAll;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
 qa('#dtabs button').forEach(b=>b.onclick=()=>{qa('#dtabs button').forEach(x=>x.classList.toggle('on',x===b));['audio','visual','game','info'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==b.dataset.tab));});
@@ -1303,7 +1567,7 @@ $('modes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');
 $('diffs').addEventListener('click',e=>{const b=e.target.closest('[data-diff]');if(!b||b.dataset.diff===set.diff)return;set.diff=b.dataset.diff;saveSet();newGame(false);});
 $('btnSym').onclick=()=>{set.me=set.me==='X'?'O':'X';saveSet();newGame(false);};
 $('btnNew').onclick=()=>newGame(false);$('btnHint').onclick=hint;$('btnUndo').onclick=undo;
-$('btnReset').onclick=()=>modal('¿Restablecer estadísticas?','Se borrarán puntos, nivel, logros y estadísticas. Los ajustes se conservan.',[{label:'Cancelar'},{label:'Restablecer',cls:'danger',fn:()=>{Object.keys(stats).forEach(k=>delete stats[k]);Object.assign(stats,DEFSTATS());G.sess={l:0,d:0,r:0};saveStats();if(set.theme!=='classic'&&set.theme!=='neon'){set.theme='neon';saveSet();applyTheme();}renderThemes();newGame(false);toast({icon:I('check'),title:'Estadísticas restablecidas',color:'#3ee6a6'});}}]);
+$('btnReset').onclick=()=>modal('¿Restablecer estadísticas?','Se borrarán puntos, nivel, logros y estadísticas. Los ajustes se conservan.',[{label:'Cancelar'},{label:'Restablecer',cls:'danger',fn:()=>{const keepT=stats.timeMs;Object.keys(stats).forEach(k=>delete stats[k]);Object.assign(stats,DEFSTATS());stats.timeMs=keepT;G.sess={l:0,d:0,r:0};saveStats();if(set.theme!=='classic'&&set.theme!=='neon'){set.theme='neon';saveSet();applyTheme();}renderThemes();newGame(false);toast({icon:I('check'),title:'Estadísticas restablecidas',color:'#3ee6a6'});}}]);
 $('btnCredits').onclick=()=>modal('Créditos','<b style="color:var(--text)">Tres en Raya · Endo IA</b><br>Versión 12.1.6<br><br>Creador: <b style="color:var(--text)">Sxgura</b><br>Asociación: <b style="color:var(--text)">Sxgura Inc</b><br><br>Hecho en Colombia con cariño.',[{label:'Cerrar',cls:'pri'}]);
 /* inclinación 3D (solo Ultra con ratón) y foco de casilla */
 const bw=$('bwrap');
@@ -1319,7 +1583,7 @@ Au.onTrack=n=>{trackSeen(n);renderTracks();};
 /* ===== arranque ===== */
 root.setAttribute('data-anim',set.anim);applyGlow();applyTheme(true);renderSfxBtn();
 $('btnMusic').setAttribute('aria-pressed',set.snd.music.on);
-renderThemes();renderPStyles();renderAnims();renderGlows();buildAudio();
+renderThemes();renderPStyles();renderAnims();renderGlows();buildAudio();renderCombos();renderLangs();
 checkAch(true);newGame(false,true);say('Listo para jugar');
 if(set.snd.music.on)Au.refresh();
 window.addEventListener('beforeunload',()=>{saveSetNow();saveStats();});
