@@ -28,6 +28,8 @@
 [data-theme=abyss]{--bg:#010a0c;--g1:rgba(45,212,191,.14);--g2:rgba(103,232,249,.08);--g3:rgba(10,90,100,.18);--x:#2dd4bf;--o:#67e8f9;--acc:#0d9488;--card:rgba(3,22,26,.9)}
 [data-theme=eclipse]{--bg:#080503;--g1:rgba(251,191,36,.14);--g2:rgba(251,113,133,.09);--g3:rgba(120,60,20,.18);--x:#fbbf24;--o:#fb7185;--acc:#f59e0b;--card:rgba(24,14,8,.9)}
 .timebig{font-size:22px;font-weight:800;letter-spacing:.2px;margin:2px 0 6px;font-variant-numeric:tabular-nums;color:var(--acc)}
+input[type=range]:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}.verif{width:1.15em;height:1.15em;vertical-align:-.2em;margin-left:5px;display:inline-block;filter:drop-shadow(0 0 6px rgba(120,130,255,.55))}
+.flashfx{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:0;animation:flashfx .75s ease-out}@keyframes flashfx{0%{opacity:0}18%{opacity:var(--fo,.3)}100%{opacity:0}}html[data-anim=off] .flashfx{display:none}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -289,7 +291,7 @@ html[data-anim=off] .frame::before,html[data-anim=baja] .frame::before{animation
   <header class="top">
     <div class="brand">
       <div class="logo">3R</div>
-      <div><h1>Tres en Raya • <span class="hl">Endo IA</span></h1><p class="sub">Creador: <b>Sxgura</b> · Asociación: Sxgura Inc</p></div>
+      <div><h1>Tres en Raya • <span class="hl">Endo IA</span></h1><p class="sub">Creador: <b>Sxgura</b></p></div>
     </div>
     <div class="tools">
       <button class="ibtn" id="btnSfx" data-nosnd="1" aria-pressed="true" aria-label="Efectos de sonido"></button>
@@ -391,6 +393,7 @@ html[data-anim=off] .frame::before,html[data-anim=baja] .frame::before{animation
     <div class="sec"><h3>Temas</h3><div class="tgrid" id="themes"></div><div class="small" style="margin-top:8px">Sube de nivel para desbloquear temas nuevos. Se conservan aunque bajes de nivel.</div></div>
     <div class="sec"><h3>Sugerir combinación</h3><button class="btn pri" id="btnSuggest" data-nosnd="1" style="width:100%"><i data-i="sparkles"></i>Sugerir combinación</button><div class="small" style="margin:8px 0">Cada combinación mezcla tema, fichas, brillo, sonidos y música. Las bloqueadas se abren al subir de nivel.</div><div class="tgrid" id="combos"></div></div>
     <div class="sec"><h3>Estilo de fichas</h3><div class="chips" id="pstyles" style="margin-top:0"></div></div>
+    <div class="sec"><h3>Efectos de resultado</h3><div id="fxList"></div><div class="small">Activa o apaga el destello, confeti, lluvia y chispas al ganar, perder o empatar, y ajusta su intensidad. Con el interruptor apagado, el control se bloquea.</div></div>
     <div class="sec"><h3>Animaciones</h3><div class="chips" id="anims" style="margin-top:0"></div><div class="small" style="margin-top:8px">Ultra añade fondo animado, inclinación 3D y más efectos. Baja y Apagadas ahorran batería.</div></div>
     <div class="sec"><h3>Brillo de efectos</h3><div class="chips" id="glows" style="margin-top:0"></div></div>
   </div>
@@ -465,7 +468,7 @@ const debounce=(f,ms)=>{let t=0;return(...a)=>{clearTimeout(t);t=setTimeout(()=>
 const SKEY='sxgura_ttt_settings_v3',SKEY2='sxgura_ttt_settings_v2',TKEY='sxgura_ttt_stats_v3',TKEY2='sxgura_ttt_stats_v2',OLDKEY='sxgura_ttt_v66';
 const CH=[['place','Fichas','close'],['ui','Botones y menús','sliders'],['help','Pistas, deshacer y errores','bulb'],['win','Victoria','trophy'],['lose','Derrota','trenddown'],['draw','Empate','scale'],['ach','Logros','medal'],['level','Nivel y rango','star'],['streak','Rachas','flame']];
 const DEFSET={snd:{master:{on:true,vol:.85},music:{on:false,vol:.7},place:{on:true,vol:.8},ui:{on:true,vol:.6},help:{on:true,vol:.7},win:{on:true,vol:.8},lose:{on:true,vol:.8},draw:{on:true,vol:.8},ach:{on:true,vol:.8},level:{on:true,vol:.8},streak:{on:true,vol:.7}},
-  pack:'suave',mauto:false,vib:true,auto:false,theme:'neon',diff:'medium',mode:'ai',me:'X',track:0,anim:'media',animUser:false,glow:.8,pstyle:'auto',lang:'es'};
+  pack:'suave',mauto:false,vib:true,auto:false,theme:'neon',diff:'medium',mode:'ai',me:'X',track:0,anim:'media',animUser:false,glow:.8,pstyle:'auto',lang:'es',fx:{win:{on:true,lvl:1},lose:{on:true,lvl:1},draw:{on:true,lvl:1}}};
 const rawS=store.get(SKEY);
 const set=merge(JSON.parse(JSON.stringify(DEFSET)),rawS);
 if(!rawS){
@@ -724,7 +727,7 @@ const RX=[
   [/Bajaste a nivel (\d+)/g,'You dropped to level $1'],[/Bajaste a (.+)$/g,'You dropped to $1'],[/Nuevo rango: (.+)$/g,'New rank: $1'],
   [/Llega al nivel (\d+) para desbloquear (.+)$/g,'Reach level $1 to unlock $2'],[/Desde nivel (\d+)/g,'From level $1'],
   [/Nivel (\d+) · (\d+) PR/g,'Level $1 · $2 PR'],[/(\d+) PR para el nivel (\d+)/g,'$1 PR to level $2'],[/Próximo rango: (.+?) \(nv\. (\d+)\)/g,'Next rank: $1 (lv. $2)'],
-  [/Serie al mejor de 3 · Tú (\d+) – (\d+) IA/g,'Best-of-3 series · You $1 – $2 AI'],[/Marcador final: /g,'Final score: '],
+  [/Serie al mejor de 5 · Tú (\d+) – (\d+) IA/g,'Best-of-5 series · You $1 – $2 AI'],[/Marcador final: /g,'Final score: '],
   [/Animaciones en (Media|Baja)/g,'Animations set to $1'],[/(\d+)V · (\d+)E · (\d+)D/g,'$1W · $2D · $3L'],
   [/Completado · \+(\d+) PR/g,'Completed · +$1 PR'],[/(\d+) \/ (\d+)/g,'$1 / $2'],[/Ganas PR al vencer a Endo IA/g,'You earn PR by beating Endo AI'],
   [/Nivel (\d+)/g,'Level $1'],[/Estilo original/g,'Original style'],
@@ -732,7 +735,7 @@ const RX=[
 const GL={
 /* interfaz */
 'TRES EN RAYA':'TIC TAC TOE','ENDO IA · BY SXGURA INC':'ENDO AI · BY SXGURA INC','Preparando el tablero…':'Setting up the board…','Tres en Raya':'Tic Tac Toe',
-'Creador:':'Creator:','· Asociación:':'· Association:','vs IA':'vs AI','2 Jug.':'2P','Serie':'Series','Fácil':'Easy','Medio':'Medium','Difícil':'Hard','Extremo':'Extreme',
+'Creador:':'Creator:','· Asociación:':'· Association:','vs IA':'vs AI','2 Jug.':'2P','Serie':'Series','Serie al mejor de 5':'Best-of-5 series','Fácil':'Easy','Medio':'Medium','Difícil':'Hard','Extremo':'Extreme',
 'Tú':'You','Empates':'Draws','Tu turno':'Your turn','Listo para jugar':'Ready to play','Nueva':'New','Sugerencia':'Hint','Deshacer':'Undo','Ver rangos y puntos':'View ranks & points',
 'Estadísticas':'Statistics','Partidas':'Games','Victorias':'Wins','Derrotas':'Losses','Racha':'Streak','Mejor':'Best','% Vict.':'% Wins','Por dificultad':'By difficulty',
 'Próximos logros':'Next achievements','Ver todos los logros':'See all achievements','Ajustes':'Settings','Cerrar':'Close','Audio':'Audio','Visual':'Visual','Juego':'Game','Info':'Info',
@@ -746,7 +749,7 @@ const GL={
 'Idioma / Language':'Language / Idioma','Traduce todo el juego al instante. No afecta tu partida ni tus datos.':'Translates the whole game instantly. It does not affect your game or your data.',
 'Cronómetro de juego':'Play timer','Tiempo total acumulado jugando. Sigue sumando cada vez que abres el juego.':'Total time spent playing. It keeps adding up every time you open the game.','Esta sesión:':'This session:',
 'Créditos':'Credits','Sitio web oficial':'Official website','Versión':'Version','Logros':'Achievements','Todos':'All','Todas':'All','Hechos':'Done','En curso':'In progress','Pendientes':'Pending',
-'Efectos de sonido':'Sound effects','Pista automática':'Auto track','Asociación':'Association','Creador':'Creator',
+'Efectos de sonido':'Sound effects','Asistencia':'Assistance','Efectos de resultado':'Result effects','Efecto de victoria (confeti y destello)':'Victory effect (confetti & flash)','Efecto de derrota (lluvia y sacudida)':'Defeat effect (rain & shake)','Efecto de empate (chispas)':'Draw effect (sparks)','Intensidad: ':'Intensity: ','Verificado':'Verified','Activa o apaga el destello, confeti, lluvia y chispas al ganar, perder o empatar, y ajusta su intensidad. Con el interruptor apagado, el control se bloquea.':'Turn the flash, confetti, rain and sparks on or off when you win, lose or draw, and adjust their intensity. With the switch off, the control is locked.','Pista automática':'Auto track','Asociación':'Association','Creador':'Creator',
 /* consejos */
 'Consejo: el centro es la mejor casilla para abrir.':'Tip: the center is the best cell to open with.','Consejo: usa la sugerencia si te atascas.':'Tip: use the hint if you get stuck.',
 'Sube de nivel para desbloquear temas nuevos.':'Level up to unlock new themes.','Ajusta cada sonido por separado en Ajustes.':'Tune each sound separately in Settings.','Ultra activa fondo animado e inclinación 3D.':'Ultra turns on the animated background and 3D tilt.',
@@ -1080,7 +1083,7 @@ S('fh','Habilidad','bolt',s=>s.fastHard,n=>'Gana en 3 jugadas en Difícil',[[1,'
 S('p','Modos','users',s=>s.pvp,n=>'Juega '+n+' partidas de 2 Jugadores',[[1,'Duelo'],[10,'Amigos'],[30,'Rival eterno'],[60,'Clásico de barrio'],[100,'Torneo familiar'],[200,'Leyenda del sofá']]);
 S('sp','Modos','flag',s=>s.seriesPlayed,n=>'Termina '+n+' series',[[1,'Serie terminada'],[5,'Serie tras serie'],[15,'Maratón de series'],[40,'Rey del formato']]);
 S('sw','Modos','trophy',s=>s.seriesWon,n=>'Gana '+n+' series',[[1,'Serie ganada'],[5,'Rey de las series'],[15,'Campeón de series'],[30,'Dinastía']]);
-S('sx','Modos','shield',s=>s.sweeps,n=>'Gana '+n+' series 2-0',[[1,'Barrida'],[5,'Aplanadora'],[15,'Perfección en serie']]);
+S('sx','Modos','shield',s=>s.sweeps,n=>'Gana '+n+' series 3-0',[[1,'Barrida'],[5,'Aplanadora'],[15,'Perfección en serie']]);
 S('sc','Modos','repeat',s=>s.seriesComeback,n=>'Gana '+n+' series tras perder la primera ronda',[[1,'Giro épico'],[5,'Maestro del giro']]);
 S('a','Ayudas','bulb',s=>s.hints,n=>'Usa '+n+' sugerencias',[[1,'Una pista'],[10,'Estudiando'],[30,'Aprendiz curioso'],[75,'Consultor'],[150,'Asesor oficial']]);
 S('u','Ayudas','undo',s=>s.undos,n=>'Usa Deshacer '+n+' veces',[[1,'Rebobinar'],[10,'Corrector'],[30,'Editor'],[75,'Viajero del tiempo'],[150,'Señor del tiempo']]);
@@ -1268,6 +1271,25 @@ function hint(){
 const XPW={easy:12,medium:20,hard:35,extreme:50},XPD={easy:4,medium:7,hard:12,extreme:20},LOSS={easy:14,medium:10,hard:7,extreme:5};
 const MSG={win:['¡Victoria!','¡Le ganaste a Endo IA!','¡Jugada maestra!','¡Brutal, sigue así!'],loss:['Endo IA gana esta vez','Casi… ¡pide revancha!','Perder también enseña','La IA no perdona'],draw:['Empate: tablero blindado','Nadie cedió. ¡Empate!','Empate bien peleado']};
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
+/* efectos de resultado (destello, confeti, lluvia): cada uno con on/off e intensidad */
+function flashFx(color,k){
+  if(k<=0||set.anim==='off')return;const e=document.createElement('div');e.className='flashfx';
+  e.style.background='radial-gradient(circle at 50% 45%,'+color+',transparent 68%)';e.style.setProperty('--fo',Math.min(.6,.3*k).toFixed(2));
+  document.body.appendChild(e);setTimeout(()=>e.remove(),800);
+}
+function runFx(kind,preview){
+  const f=set.fx[kind];if(!f||!f.on||f.lvl<=0)return;const k=f.lvl,n=v=>Math.max(1,Math.round(v*k));
+  const bb=boardEl.getBoundingClientRect(),cxp=bb.left+bb.width/2,cyp=bb.top+bb.height/2,cols=[COL.x,COL.o,COL.acc,COL.gold,'#ffffff'];
+  if(kind==='win'){
+    FX.cannon(0,FX.H,-1.05,.8,n(60),cols);FX.cannon(FX.W,FX.H,-2.09,.8,n(60),cols);FX.cannon(cxp,cyp,-1.57,3.4,n(45),cols,{speed:520*Math.min(1.3,.6+k*.4)});
+    FX.cannon(0,FX.H,-1.0,.8,n(40),cols,{d:.4});FX.cannon(FX.W,FX.H,-2.14,.8,n(40),cols,{d:.4});
+    if(k>=.5){boardEl.classList.remove('celebrate');void boardEl.offsetWidth;boardEl.classList.add('celebrate');}flashFx(COL.gold,k);
+  }else if(kind==='lose'){
+    FX.rain(n(70),'rgba(150,175,255,.6)');if(k>=.5){boardEl.classList.remove('shake');void boardEl.offsetWidth;boardEl.classList.add('shake');}flashFx('rgba(255,70,110,.9)',k*.8);
+  }else{
+    FX.cannon(cxp,cyp,0,6.283,n(26),[COL.gold,'#ffffff',COL.acc],{speed:260,g:150,life:1.1,type:'spark',drag:.95});flashFx(COL.acc,k*.6);
+  }
+}
 function finishRound(res,line){
   G.over=true;G.overAt=Date.now();G.thinking=false;G.gen++;G.line=line;G.res=res;tiltReset();
   const mode=set.mode,diff=set.diff,now=new Date();
@@ -1301,15 +1323,10 @@ function finishRound(res,line){
     cells.forEach((c,i)=>{if(!line.includes(i))c.classList.add('dim');});
     setTimeout(()=>{if(G.over&&G.line===line)drawWinLine(true);},380);
   }
-  const bb=boardEl.getBoundingClientRect(),cxp=bb.left+bb.width/2,cyp=bb.top+bb.height/2,cols=[COL.x,COL.o,COL.acc,COL.gold,'#ffffff'];
-  const celebrate=()=>{
-    FX.cannon(0,FX.H,-1.05,.8,60,cols);FX.cannon(FX.W,FX.H,-2.09,.8,60,cols);FX.cannon(cxp,cyp,-1.57,3.4,45,cols,{speed:520});
-    FX.cannon(0,FX.H,-1.0,.8,40,cols,{d:.4});FX.cannon(FX.W,FX.H,-2.14,.8,40,cols,{d:.4});boardEl.classList.add('celebrate');
-  };
   let text;
-  if(outcome==='win'||outcome==='pvpwin'){Au.play('win');celebrate();vibe([30,40,30,40,90]);text=outcome==='win'?pick(MSG.win):'¡Gana '+res+'!';}
-  else if(outcome==='loss'){Au.play('lose');FX.rain(70,'rgba(150,175,255,.6)');boardEl.classList.add('shake');vibe([220]);text=pick(MSG.loss);}
-  else{Au.play('draw');FX.cannon(cxp,cyp,0,6.283,26,[COL.gold,'#ffffff',COL.acc],{speed:260,g:150,life:1.1,type:'spark',drag:.95});vibe(60);text=pick(MSG.draw);}
+  if(outcome==='win'||outcome==='pvpwin'){Au.play('win');runFx('win');vibe([30,40,30,40,90]);text=outcome==='win'?pick(MSG.win):'¡Gana '+res+'!';}
+  else if(outcome==='loss'){Au.play('lose');runFx('lose');vibe([220]);text=pick(MSG.loss);}
+  else{Au.play('draw');runFx('draw');vibe(60);text=pick(MSG.draw);}
   text+=' · '+(delta>=0?'+':'−')+Math.abs(delta)+' PR';
   say(text);addXp(delta);popPts(delta);
   if(delta<0)setTimeout(()=>Au.play('ptsLoss'),1300);
@@ -1318,16 +1335,16 @@ function finishRound(res,line){
   if(mode==='series'&&G.series){
     const sr=G.series;sr.rounds.push(outcome==='win'?'w':outcome==='loss'?'l':'d');
     if(outcome==='win')sr.w++;else if(outcome==='loss')sr.l++;
-    if(sr.w>=2||sr.l>=2||sr.rounds.length>=5){
+    if(sr.w>=3||sr.l>=3||sr.rounds.length>=5){
       sr.done=true;seriesEnded=true;stats.seriesPlayed++;
       const sres=sr.w>sr.l?'win':sr.l>sr.w?'loss':'draw';
-      if(sres==='win'){stats.seriesWon++;if(sr.w===2&&sr.l===0)stats.sweeps++;if(sr.rounds[0]==='l')stats.seriesComeback++;addXp(30);}else if(sres==='loss')addXp(-12);
+      if(sres==='win'){stats.seriesWon++;if(sr.w===3&&sr.l===0)stats.sweeps++;if(sr.rounds[0]==='l')stats.seriesComeback++;addXp(30);}else if(sres==='loss')addXp(-12);
       setTimeout(()=>{
         Au.play(sres==='win'?'seriesWin':sres==='loss'?'seriesLose':'draw');
         modal(sres==='win'?'¡Serie ganada!':sres==='loss'?'Serie perdida':'Serie empatada',
           'Marcador final: <b>Tú '+sr.w+' – '+sr.l+' Endo IA</b><br>'+(sres==='win'?'+30 PR de bonus. ¡Gran serie!':sres==='loss'?'−12 PR. Pide la revancha.':'Nadie pudo con nadie.'),
           [{label:'Cerrar'},{label:'Revancha',cls:'pri',fn:()=>newGame(false)}]);
-        if(sres==='win')FX.cannon(FX.W/2,FX.H,-1.57,1.6,90,cols,{speed:780});
+        if(sres==='win'&&set.fx.win.on)FX.cannon(FX.W/2,FX.H,-1.57,1.6,Math.round(90*set.fx.win.lvl),[COL.x,COL.o,COL.acc,COL.gold,'#ffffff'],{speed:780});
         checkAch();saveStats();renderSide();
       },1500);
     }
@@ -1362,7 +1379,7 @@ function renderScore(){
   $('nL').textContent=pvp?'Jugador X':'Tú';$('nR').textContent=pvp?'Jugador O':'Endo IA';
   $('vL').textContent=G.sess.l;$('vM').textContent=G.sess.d;$('vR').textContent=G.sess.r;
   const sb=$('serieBar');
-  if(set.mode==='series'&&G.series){sb.classList.remove('hidden');sb.textContent='Serie al mejor de 3 · Tú '+G.series.w+' – '+G.series.l+' IA';}
+  if(set.mode==='series'&&G.series){sb.classList.remove('hidden');sb.textContent='Serie al mejor de 5 · Tú '+G.series.w+' – '+G.series.l+' IA';}
   else sb.classList.add('hidden');
 }
 function renderSide(){
@@ -1418,8 +1435,8 @@ function chRow(key,label,icon,host){
   const d=document.createElement('div');d.className='chrow'+(set.snd[key].on?'':' off');
   d.innerHTML='<div class="chh">'+I(icon)+'<label>'+label+'</label><span class="pct"></span><button class="sw" data-nosnd="1" aria-pressed="'+set.snd[key].on+'" aria-label="'+label+'"></button></div><input type="range" min="0" max="100" step="1" aria-label="Volumen: '+label+'">';
   const sw=d.querySelector('.sw'),rg=d.querySelector('input'),pc=d.querySelector('.pct');
-  rg.value=Math.round(set.snd[key].vol*100);pc.textContent=pct(set.snd[key].vol);
-  sw.onclick=()=>{set.snd[key].on=!set.snd[key].on;sw.setAttribute('aria-pressed',set.snd[key].on);d.classList.toggle('off',!set.snd[key].on);saveSet();Au.refresh();
+  rg.value=Math.round(set.snd[key].vol*100);pc.textContent=pct(set.snd[key].vol);rg.disabled=!set.snd[key].on;
+  sw.onclick=()=>{set.snd[key].on=!set.snd[key].on;sw.setAttribute('aria-pressed',set.snd[key].on);d.classList.toggle('off',!set.snd[key].on);rg.disabled=!set.snd[key].on;saveSet();Au.refresh();
     if(key==='music'){$('btnMusic').setAttribute('aria-pressed',set.snd.music.on);if(set.snd.music.on)stats.musicOn++;checkAch();saveStats();}
     if(key==='master')renderSfxBtn();
     if(set.snd[key].on){Au.unlock();Au.preview(key);}tweak('snd');};
@@ -1454,6 +1471,23 @@ function buildAudio(){
   $('swMauto').setAttribute('aria-pressed',set.mauto);renderTracks();renderPacks();
 }
 function sw(id,key,fn){const b=$(id);b.setAttribute('aria-pressed',set[key]);b.onclick=()=>{set[key]=!set[key];b.setAttribute('aria-pressed',set[key]);saveSet();Au.play('click');if(fn)fn();};}
+
+
+/* ===== efectos de resultado ===== */
+const FXROWS=[['win','Efecto de victoria (confeti y destello)','trophy'],['lose','Efecto de derrota (lluvia y sacudida)','trenddown'],['draw','Efecto de empate (chispas)','scale']];
+function buildFx(){
+  const host=$('fxList');host.innerHTML='';
+  FXROWS.forEach(([k,label,icon])=>{
+    const d=document.createElement('div');d.className='chrow'+(set.fx[k].on?'':' off');
+    d.innerHTML='<div class="chh">'+I(icon)+'<label>'+label+'</label><span class="pct"></span><button class="sw" data-nosnd="1" aria-pressed="'+set.fx[k].on+'" aria-label="'+label+'"></button></div><input type="range" min="10" max="200" step="10" aria-label="Intensidad: '+label+'">';
+    const sw=d.querySelector('.sw'),rg=d.querySelector('input'),pc=d.querySelector('.pct');
+    rg.value=Math.round(set.fx[k].lvl*100);pc.textContent=pct(set.fx[k].lvl);rg.disabled=!set.fx[k].on;
+    sw.onclick=()=>{set.fx[k].on=!set.fx[k].on;sw.setAttribute('aria-pressed',set.fx[k].on);d.classList.toggle('off',!set.fx[k].on);rg.disabled=!set.fx[k].on;saveSet();Au.play('click');if(set.fx[k].on)runFx(k,true);tweak('fx');};
+    rg.oninput=()=>{set.fx[k].lvl=rg.value/100;pc.textContent=pct(set.fx[k].lvl);saveSet();};
+    rg.onchange=()=>{runFx(k,true);tweak('fx');};
+    host.appendChild(d);
+  });
+}
 
 /* ===== logros (hoja) ===== */
 let achF='all',achC='Todas';
@@ -1568,7 +1602,8 @@ $('diffs').addEventListener('click',e=>{const b=e.target.closest('[data-diff]');
 $('btnSym').onclick=()=>{set.me=set.me==='X'?'O':'X';saveSet();newGame(false);};
 $('btnNew').onclick=()=>newGame(false);$('btnHint').onclick=hint;$('btnUndo').onclick=undo;
 $('btnReset').onclick=()=>modal('¿Restablecer estadísticas?','Se borrarán puntos, nivel, logros y estadísticas. Los ajustes se conservan.',[{label:'Cancelar'},{label:'Restablecer',cls:'danger',fn:()=>{const keepT=stats.timeMs;Object.keys(stats).forEach(k=>delete stats[k]);Object.assign(stats,DEFSTATS());stats.timeMs=keepT;G.sess={l:0,d:0,r:0};saveStats();if(set.theme!=='classic'&&set.theme!=='neon'){set.theme='neon';saveSet();applyTheme();}renderThemes();newGame(false);toast({icon:I('check'),title:'Estadísticas restablecidas',color:'#3ee6a6'});}}]);
-$('btnCredits').onclick=()=>modal('Créditos','<b style="color:var(--text)">Tres en Raya · Endo IA</b><br>Versión 12.1.6<br><br>Creador: <b style="color:var(--text)">Sxgura</b><br>Asociación: <b style="color:var(--text)">Sxgura Inc</b><br><br>Hecho en Colombia con cariño.',[{label:'Cerrar',cls:'pri'}]);
+const VERIF='<svg class="verif" viewBox="0 0 24 24" aria-label="Verificado" role="img"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4da3ff"/><stop offset="1" stop-color="#8b5cff"/></linearGradient></defs><path fill="url(#vg)" d="M12 1.6l2.5 1.9 3.1-.2 1.2 2.9 2.7 1.6-.7 3 1.2 2.8-2.2 2.2-.5 3.1-3.1.6L12 22.4l-2.5-1.9-3.1.2-1.2-2.9-2.7-1.6.7-3L2 10.4l2.2-2.2.5-3.1 3.1-.6z"/><path fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M8 12.4l2.8 2.8L16.2 9.6"/></svg>';
+$('btnCredits').onclick=()=>modal('Créditos','<b style="color:var(--text)">Tres en Raya · Endo IA</b><br>Versión 12.1.6<br><br>Creador: <b style="color:var(--text)">Sxgura</b>'+VERIF+'<br>Asociación: <b style="color:var(--text)">Sxgura Inc</b><br>Asistencia: <b style="color:var(--text)">Endo IA</b><br><br>Hecho en Colombia con cariño.',[{label:'Cerrar',cls:'pri'}]);
 /* inclinación 3D (solo Ultra con ratón) y foco de casilla */
 const bw=$('bwrap');
 bw.addEventListener('pointermove',e=>{
@@ -1583,7 +1618,7 @@ Au.onTrack=n=>{trackSeen(n);renderTracks();};
 /* ===== arranque ===== */
 root.setAttribute('data-anim',set.anim);applyGlow();applyTheme(true);renderSfxBtn();
 $('btnMusic').setAttribute('aria-pressed',set.snd.music.on);
-renderThemes();renderPStyles();renderAnims();renderGlows();buildAudio();renderCombos();renderLangs();
+renderThemes();renderPStyles();renderAnims();renderGlows();buildAudio();renderCombos();renderLangs();buildFx();
 checkAch(true);newGame(false,true);say('Listo para jugar');
 if(set.snd.music.on)Au.refresh();
 window.addEventListener('beforeunload',()=>{saveSetNow();saveStats();});
