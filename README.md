@@ -18,7 +18,7 @@ Aquí encontrarás juegos, herramientas, sistema de descargas, funciones útiles
 <img src="https://img.shields.io/badge/Telegram-Contactar-229ED9?style=for-the-badge&logo=telegram&logoColor=white">
 </a>
 
-[![Version](https://img.shields.io/badge/version-12.6.1-7c3aed?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-18.5.7-7c3aed?style=for-the-badge)](#)
 </a>
 
 <br><br>
