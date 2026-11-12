@@ -104,7 +104,7 @@ html[data-pieces=plano] .pc svg{filter:none}html[data-pieces=plano] .pc svg.w{fi
 .promo .t{position:absolute;top:14%;font-weight:800;letter-spacing:2px;font-size:12px;color:#bcd0f5}
 .status{text-align:center;font-size:14px;font-weight:700;color:#dbe7ff;min-height:22px;margin-top:8px}
 .status.win{color:var(--good)}.status.lose{color:var(--bad)}.status.check{color:var(--warn)}
-.acts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
 .act{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 2px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:11px;font-weight:700;color:#cfe0ff;transition:transform .12s,background .2s}
 .act:active{transform:scale(.95)}.act:hover:not(:disabled){background:#1b2740}.act:disabled{opacity:.4;cursor:not-allowed}
 .act.pri{background:linear-gradient(135deg,#3b82f6,#4f46e5);border-color:transparent;color:#fff}
@@ -139,6 +139,8 @@ input[type=range]{width:150px;accent-color:var(--acc);height:28px}input[type=ran
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:800;font-size:14px;background:#1a2a48;border:1px solid #2f4468}
 .btn.pri{background:linear-gradient(135deg,#3b82f6,#4f46e5);border-color:transparent;color:#fff;box-shadow:0 10px 26px rgba(79,70,229,.4)}
 .btn.danger{background:#4c1428;border-color:#7f1d3a;color:#fecdd3}.btn.block{width:100%}
+.tt{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:10px 12px;border-radius:12px;background:#0d1526;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--muted)}.tt b{color:var(--text,#fff);font-size:15px;font-variant-numeric:tabular-nums}
+.lang{font-size:12px;font-weight:900;letter-spacing:.5px}
 .bts{display:flex;gap:10px;margin-top:16px}.bts .btn{flex:1}
 .themes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .th{border-radius:12px;padding:6px;background:#16223d;border:2px solid transparent;font-size:11px;font-weight:700;color:#b8c8e8}.th.on{border-color:#60a5fa;color:#fff}
@@ -203,6 +205,7 @@ input[type=range]{width:150px;accent-color:var(--acc);height:28px}input[type=ran
 <header class="top">
  <div class="brand"><div class="ico"><svg viewBox="0 0 100 100"><use href="#p-6"/></svg></div><div><h1>Ajedrez</h1><small>Tú vs Endo</small></div></div>
  <div class="tbtns">
+  <button class="ib lang" id="bLang" aria-label="Idioma">ES</button>
   <button class="ib" id="bSound" aria-label="Sonido"><svg class="ic"><use href="#i-vol"/></svg></button>
   <button class="ib" id="bAch" aria-label="Logros"><svg class="ic"><use href="#i-trophy"/></svg><i class="dot hidden" id="achDot"></i></button>
   <button class="ib" id="bSet" aria-label="Ajustes"><svg class="ic"><use href="#i-gear"/></svg></button>
@@ -218,23 +221,22 @@ input[type=range]{width:150px;accent-color:var(--acc);height:28px}input[type=ran
   <div class="status" id="status">Tu turno</div>
   <div class="acts">
    <button class="act pri" id="aNew"><svg class="ic"><use href="#i-plus"/></svg>Nueva</button>
-   <button class="act" id="aUndo"><svg class="ic"><use href="#i-undo"/></svg>Deshacer</button>
    <button class="act" id="aHint"><svg class="ic"><use href="#i-bulb"/></svg>Pista</button>
    <button class="act" id="aFlip"><svg class="ic"><use href="#i-flip"/></svg>Girar</button>
    <button class="act" id="aRes"><svg class="ic"><use href="#i-flag"/></svg>Rendirse</button>
   </div>
  </section>
  <aside class="side">
-  <div class="card"><h3>Jugadas</h3><div class="moves" id="moves"></div>
-   <div class="bts" style="margin-top:10px"><button class="btn" id="bPgn"><svg class="ic"><use href="#i-copy"/></svg>Copiar PGN</button><button class="btn" id="bFen"><svg class="ic"><use href="#i-copy"/></svg>Copiar FEN</button></div></div>
-  <div class="card"><h3>Tu nivel</h3>
+  <div class="card"><h3>Jugadas</h3><div class="moves" id="moves"></div></div>
+  <div class="card"><h3>Tus puntos</h3>
    <div class="rate"><div><div class="elo" id="elo">800</div><small id="eloName">Aficionado</small></div><div style="text-align:right"><small>Mejor racha</small><div style="font-size:20px;font-weight:900" id="bestStreak">0</div></div></div>
    <div class="kpis"><div class="kpi"><b id="kG">0</b><span>Partidas</span></div><div class="kpi"><b id="kW" style="color:var(--good)">0</b><span>Victorias</span></div><div class="kpi"><b id="kD">0</b><span>Tablas</span></div><div class="kpi"><b id="kL" style="color:var(--bad)">0</b><span>Derrotas</span></div></div>
+   <div class="tt"><span>Tiempo jugado</span><b id="playT">0s</b></div>
    <div style="margin-top:10px;display:flex;gap:8px"><button class="btn block" id="bAch2"><svg class="ic"><use href="#i-trophy"/></svg>Logros <span id="achMini"></span></button></div>
   </div>
  </aside>
 </main>
-<div class="foot">AJEDREZ v2.0 · BY SXGURA INC</div>
+<div class="foot">AJEDREZ v2.1 · BY SXGURA INC</div>
 </div>
 
 <div class="ov" id="ovNew"><div class="panel"><h2>Nueva partida<button class="ib" data-close aria-label="Cerrar"><svg class="ic"><use href="#i-close"/></svg></button></h2><div class="sub">Elige cómo quieres jugar contra Endo.</div>
@@ -245,6 +247,7 @@ input[type=range]{width:150px;accent-color:var(--acc);height:28px}input[type=ran
 <div class="ov" id="ovSet"><div class="panel"><h2>Ajustes<button class="ib" data-close aria-label="Cerrar"><svg class="ic"><use href="#i-close"/></svg></button></h2><div class="sub">Personaliza el tablero, las piezas y los sonidos.</div>
  <div class="sec"><h4>Tablero</h4><div class="themes" id="sBoards"></div></div>
  <div class="sec"><h4>Estilo de piezas</h4><div class="chips" id="sPieces"></div></div>
+ <div class="sec"><h4>Idioma</h4><div class="chips" id="sLang"></div></div>
  <div class="sec"><h4>Sonido y vibración</h4>
   <div class="row"><label>Sonidos<small>Movimientos, jaque, victoria…</small></label><button class="sw" id="swSnd" aria-label="Sonidos"></button></div>
   <div class="row"><label>Volumen</label><input type="range" id="rgVol" min="0" max="100"></div>
@@ -592,7 +595,7 @@ function main(){
 const createEngine=new Function($('engineSrc').textContent+';return createEngine;')();
 const E=createEngine();
 /* ===== ajustes y estadísticas ===== */
-const DEFSET={sound:true,vol:.7,vib:true,board:'azul',pieces:'solid',legal:true,last:true,coords:true,anim:true,auto:false,color:'w',level:3,clock:'0'};
+const DEFSET={sound:true,vol:.7,vib:true,board:'azul',pieces:'solid',legal:true,last:true,coords:true,anim:true,auto:false,color:'w',level:3,clock:'0',lang:'es'};
 const set=merge(JSON.parse(JSON.stringify(DEFSET)),store.get('sx_chess_v2_set'));
 let _st=0;const saveSet=()=>{clearTimeout(_st);_st=setTimeout(()=>store.set('sx_chess_v2_set',set),200);};
 const DEFSTATS=()=>({games:0,wins:0,losses:0,draws:0,wl:{1:[0,0,0],2:[0,0,0],3:[0,0,0],4:[0,0,0],5:[0,0,0]},streak:0,bestStreak:0,mates:0,myMates:0,timeWins:0,blackWins:0,moves:0,captures:0,checks:0,castles:0,ep:0,promos:0,under:0,hints:0,undos:0,flips:0,fastWin:0,longGame:0,noHelpWins:0,comebacks:0,stalemates:0,reps:0,rating:800,maxRating:800,playMs:0,dayStreak:0,bestDay:0,lastDay:0,ach:{},timed:0,themes:[],resWins:0});
@@ -743,8 +746,7 @@ function updateStatus(){
   else setStatus(me?'Tu turno':'Turno de Endo');
 }
 function updateButtons(){
-  const canUndo=!G.over&&G.started&&(E.side===G.human?G.mv.length>=2:G.mv.length>=1);
-  $('aUndo').disabled=!canUndo;$('aHint').disabled=G.over||G.thinking||E.side!==G.human;$('aRes').disabled=G.over||!G.started||G.mv.length<1;
+  $('aHint').disabled=G.over||G.thinking||E.side!==G.human;$('aRes').disabled=G.over||!G.started||G.mv.length<1;
 }
 function updateAll(){paintSquares();updateBars();updateMoves();updateStatus();updateButtons();renderStats();}
 /* ===== flechas / pista ===== */
@@ -897,34 +899,19 @@ function finish(type,winner){
   saveStats();
   setTimeout(()=>{
     const cls=res==='w'?'w':res==='l'?'l':'d',icn=res==='w'?'crown':res==='l'?'flag':'target';
-    msg('<div class="res '+cls+'"><div class="big">'+ic(icn)+'</div><h2>'+(res==='w'?'¡Victoria!':res==='l'?'Derrota':'Tablas')+'</h2><p>'+txt+'</p><p>'+Math.ceil(plies/2)+' jugadas · Nivel '+LVN[G.level-1]+'</p><div class="delta" style="color:'+(delta>0?'var(--good)':delta<0?'var(--bad)':'var(--muted)')+'">Elo '+before+' → '+stats.rating+' ('+(delta>=0?'+':'')+delta+')</div></div>',
-      [{label:'Cerrar'},{label:ic('repeat'.length?'undo':'undo')+'Revancha',cls:'pri',fn:()=>startGame({human:-G.human,level:G.level,b:G.cfg.b,i:G.cfg.i,k:G.cfg.k})},{label:'Nueva',fn:openNew}]);
+    msg('<div class="res '+cls+'"><div class="big">'+ic(icn)+'</div><h2>'+(res==='w'?'¡Victoria!':res==='l'?'Derrota':'¡Tablas!')+'</h2><p>'+txt+'</p><p>'+Math.ceil(plies/2)+(Math.ceil(plies/2)===1?' jugada':' jugadas')+' · Nivel '+LVN[G.level-1]+'</p><div class="delta" style="color:'+(delta>0?'var(--good)':delta<0?'var(--bad)':'var(--muted)')+'">Puntos '+before+' → '+stats.rating+' ('+(delta>=0?'+':'')+delta+')</div></div>',
+      [{label:'Cerrar'},{label:ic('undo')+'Revancha',cls:'pri',fn:()=>startGame({human:-G.human,level:G.level,b:G.cfg.b,i:G.cfg.i,k:G.cfg.k})},{label:'Nueva',fn:openNew}]);
   },res==='w'?900:700);
   checkAch();
 }
 /* ===== acciones ===== */
-function undo(){
-  if($('aUndo').disabled)return;const n=E.side===G.human?2:1;if(G.mv.length<n)return;
-  G.token++;G.thinking=false;for(let i=0;i<n;i++){G.mv.pop();G.sans.pop();G.snap.pop();}
-  E.load(G.mv);G.last=G.mv[G.mv.length-1]||0;
-  if(G.cfg.b){const s=G.snap[G.snap.length-1];G.clocks=s?s.slice():[G.cfg.b*1000,G.cfg.b*1000];}
-  G.tickAt=performance.now();G.undos++;stats.undos++;G.sel=-1;G.targets=null;clearHint();
-  renderPieces();updateAll();snd('move');saveGame();checkAch();
-}
 let hintBusy=false;
 function hint(){
   if(G.over||G.thinking||E.side!==G.human||hintBusy)return;hintBusy=true;stats.hints++;G.hints++;$('aHint').disabled=true;setStatus('Pensando una pista…');const len=G.mv.length;
   askEngine({depth:5,ms:1100},r=>{hintBusy=false;if(G.over||G.mv.length!==len)return;if(r&&r.move){G.hintMove=r.move;drawArrow(r.move);snd('hint');}updateStatus();updateButtons();checkAch();saveStats();});
 }
 function flip(){G.flipped=!G.flipped;stats.flips++;buildSquares();renderPieces();drawArrow(G.hintMove);updateBars();saveGame();checkAch();}
-function resign(){msg('<h2>¿Rendirte?</h2><div class="sub">Contará como derrota y bajará tu Elo.</div>',[{label:'Seguir jugando'},{label:ic('flag')+'Rendirme',cls:'danger',fn:()=>finish('resign',-G.human)}]);}
-async function copyText(t,ok){try{await navigator.clipboard.writeText(t);}catch(e){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');}catch(_){}a.remove();}toast({icon:ic('check'),title:ok,color:'#22c55e',ms:1800});}
-function pgn(){
-  const r=G.res&&G.res.done?(G.res.winner===0?'1/2-1/2':G.res.winner===1?'1-0':'0-1'):'*';
-  let t='[Event "Partida contra Endo"]\n[Site "Ajedrez · Sxgura Inc"]\n[Date "'+new Date().toISOString().slice(0,10).replace(/-/g,'.')+'"]\n[White "'+(G.human===1?'Tú':'Endo ('+LVN[G.level-1]+')')+'"]\n[Black "'+(G.human===-1?'Tú':'Endo ('+LVN[G.level-1]+')')+'"]\n[Result "'+r+'"]\n\n';
-  for(let i=0;i<G.sans.length;i++){if(i%2===0)t+=(i/2+1)+'. ';t+=G.sans[i]+' ';}
-  return t+r;
-}
+function resign(){msg('<h2>¿Rendirte?</h2><div class="sub">Contará como derrota y bajarán tus puntos.</div>',[{label:'Seguir jugando'},{label:ic('flag')+'Rendirme',cls:'danger',fn:()=>finish('resign',-G.human)}]);}
 /* ===== nueva partida (menú) ===== */
 let nsel={color:set.color,level:set.level,clock:set.clock};
 function renderCfg(){
@@ -959,7 +946,7 @@ function buildSettings(){
   const tg=(id,key,fn)=>$(id).onclick=()=>{set[key]=!set[key];saveSet();applySet();if(key==='sound'&&set.sound)snd('sel');if(fn)fn();};
   tg('swSnd','sound');tg('swVib','vib',()=>vibe(30));tg('swLegal','legal');tg('swLast','last');tg('swCoord','coords',buildSquares);tg('swAnim','anim');tg('swAuto','auto');
   $('rgVol').oninput=e=>{set.vol=e.target.value/100;saveSet();};$('rgVol').onchange=()=>snd('move');
-  $('bReset').onclick=()=>msg('<h2>¿Restablecer estadísticas?</h2><div class="sub">Se borrarán tu Elo, estadísticas y logros. Los ajustes se conservan.</div>',[{label:'Cancelar'},{label:'Restablecer',cls:'danger',fn:()=>{Object.keys(stats).forEach(k=>delete stats[k]);Object.assign(stats,DEFSTATS());saveStats();renderStats();toast({icon:ic('check'),title:'Estadísticas restablecidas',color:'#22c55e'});}}]);
+  $('bReset').onclick=()=>msg('<h2>¿Restablecer estadísticas?</h2><div class="sub">Se borrarán tus puntos, estadísticas y logros. Los ajustes se conservan.</div>',[{label:'Cancelar'},{label:'Restablecer',cls:'danger',fn:()=>{Object.keys(stats).forEach(k=>delete stats[k]);Object.assign(stats,DEFSTATS());saveStats();renderStats();toast({icon:ic('check'),title:'Estadísticas restablecidas',color:'#22c55e'});}}]);
 }
 $('bSet').onclick=()=>openOv('ovSet');
 $('bSound').onclick=()=>{set.sound=!set.sound;saveSet();applySet();if(set.sound){actx();snd('sel');}};
@@ -985,13 +972,13 @@ ach('x50','Cazador','Captura 50 piezas','target','b',50,s=>s.captures);ach('x200
 ach('k25','Jaquea que algo queda','Da jaque 25 veces','bolt','b',25,s=>s.checks);ach('k100','Acosador','Da jaque 100 veces','bolt','s',100,s=>s.checks);
 ach('bl','Del lado oscuro','Gana con negras','user','b',1,s=>s.blackWins);
 ach('fw','Relámpago','Gana en 20 jugadas o menos','bolt','g',1,s=>s.fastWin&&s.fastWin<=40?1:0);
-ach('nh','Sin ayuda','Gana en nivel Medio o más sin pistas ni deshacer','check','s',1,s=>s.noHelpWins);ach('nh5','Mente propia','Haz eso 5 veces','check','g',5,s=>s.noHelpWins);
+ach('nh','Sin ayuda','Gana en nivel Medio o más sin pistas','check','s',1,s=>s.noHelpWins);ach('nh5','Mente propia','Haz eso 5 veces','check','g',5,s=>s.noHelpWins);
 ach('cb','Remontada','Gana tras ir perdiendo 5 puntos de material','fire','g',1,s=>s.comebacks);
 ach('tw','Ganó el reloj','Gana por tiempo','clock','s',1,s=>s.timeWins);ach('tg','Contra el reloj','Juega 5 partidas con reloj','clock','b',5,s=>s.timed);
 ach('st','Ahogado','Termina una partida en tablas por ahogado','flag','s',1,s=>s.stalemates);ach('rp','Déjà vu','Tablas por triple repetición','flag','s',1,s=>s.reps);
 ach('lg','Maratón','Juega una partida de 50 jugadas o más','book','g',1,s=>s.longGame>=100?1:0);
-ach('h10','Con ayuda','Usa 10 pistas','bulb','b',10,s=>s.hints);ach('u10','Arrepentido','Deshaz 10 jugadas','undo','b',10,s=>s.undos);ach('fl5','Cambio de perspectiva','Gira el tablero 5 veces','flip','b',5,s=>s.flips);
-[[1000,'Subiendo','b'],[1300,'Jugador de club','s'],[1600,'Avanzado','g'],[1900,'Experto','p']].forEach(([n,t,k])=>ach('r'+n,t,'Alcanza Elo '+n,'star',k,n,s=>s.maxRating));
+ach('h10','Con ayuda','Usa 10 pistas','bulb','b',10,s=>s.hints);ach('fl5','Cambio de perspectiva','Gira el tablero 5 veces','flip','b',5,s=>s.flips);
+[[1000,'Subiendo','b'],[1300,'Jugador de club','s'],[1600,'Avanzado','g'],[1900,'Experto','p']].forEach(([n,t,k])=>ach('r'+n,t,'Alcanza '+n+' puntos','star',k,n,s=>s.maxRating));
 ach('t1','Una hora','Juega 1 hora en total','clock','s',60,s=>Math.floor(s.playMs/60000),'min');ach('t10','Diez horas','Juega 10 horas en total','clock','g',600,s=>Math.floor(s.playMs/60000),'min');
 ach('d3','Fiel','Juega 3 días seguidos','fire','s',3,s=>s.bestDay);ach('d7','Semana completa','Juega 7 días seguidos','fire','g',7,s=>s.bestDay);
 ach('th3','Decorador','Prueba 3 tableros distintos','gear','b',3,s=>s.themes.length);ach('th8','Interiorista','Prueba los 8 tableros','gear','s',8,s=>s.themes.length);
@@ -1008,8 +995,7 @@ function renderAch(){
 function openAch(){renderAch();$('achDot').classList.add('hidden');openOv('ovAch');}
 $('bAch').onclick=openAch;$('bAch2').onclick=openAch;
 /* ===== botones ===== */
-$('aNew').onclick=openNew;$('aUndo').onclick=undo;$('aHint').onclick=hint;$('aFlip').onclick=flip;$('aRes').onclick=resign;
-$('bPgn').onclick=()=>copyText(pgn(),'PGN copiado');$('bFen').onclick=()=>copyText(E.fen(),'FEN copiado');
+$('aNew').onclick=openNew;$('aHint').onclick=hint;$('aFlip').onclick=flip;$('aRes').onclick=resign;
 addEventListener('beforeunload',()=>{saveStats();store.set('sx_chess_v2_set',set);});
 setInterval(()=>{if(!document.hidden)saveStats();},15000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveStats();G.tickAt=performance.now();});
@@ -1019,6 +1005,93 @@ const sv=store.get(SAVE);
 if(sv&&sv.mv&&sv.mv.length&&sv.human){try{restoreGame(sv);toast({icon:ic('undo'),title:'Partida recuperada',text:'Seguimos donde lo dejaste',color:'#3b82f6',ms:2400});}catch(e){store.del(SAVE);startNew0();}}
 else startNew0();
 function startNew0(){const c=CLK.find(x=>x.k===set.clock)||CLK[0];startGame({human:set.color==='b'?-1:1,level:set.level,b:c.b,i:c.i,k:c.k});}
+/* ===== tiempo total jugado ===== */
+function fmtT(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60,p=n=>String(n).padStart(2,'0');return h?h+'h '+p(m)+'m '+p(x)+'s':m?m+'m '+p(x)+'s':x+'s';}
+function showPlayT(){$('playT').textContent=fmtT(stats.playMs);}
+setInterval(showPlayT,1000);showPlayT();
+/* ===== idioma ES / EN ===== */
+const D={
+'Ajedrez':'Chess','Tú vs Endo':'You vs Endo','AJEDREZ':'CHESS','· ENDO':'· ENDO','Preparando el tablero…':'Setting up the board…','AJEDREZ v2.1 · BY SXGURA INC':'CHESS v2.1 · BY SXGURA INC',
+'Controla el centro con peones y piezas.':'Control the center with pawns and pieces.','Enroca pronto para proteger a tu rey.':'Castle early to protect your king.','Desarrolla caballos y alfiles antes de mover la dama.':'Develop knights and bishops before moving the queen.','Antes de cada jugada pregúntate: ¿qué amenaza mi rival?':'Before every move ask yourself: what is my opponent threatening?','Los peones pasados valen oro en el final.':'Passed pawns are gold in the endgame.','Usa la pista si te atascas, ¡sin vergüenza!':'Use the hint if you get stuck, no shame!',
+'Sonido':'Sound','Logros':'Achievements','Ajustes':'Settings','Idioma':'Language','Cerrar':'Close','Sonidos':'Sounds','Vibración':'Vibration','Movimientos legales':'Legal moves','Última jugada':'Last move','Coordenadas':'Coordinates','Animaciones':'Animations','Promoción automática':'Auto promotion',
+'Nivel':'Level','Tú':'You','Blancas':'White','Negras':'Black',
+'Tu turno':'Your turn','Turno de Endo':"Endo's turn",'Endo está pensando…':'Endo is thinking…','¡Jaque! Protege a tu rey':'Check! Protect your king','Jaque a Endo':'Check on Endo','Pensando una pista…':'Thinking of a hint…',
+'Nueva':'New','Pista':'Hint','Girar':'Flip','Rendirse':'Resign','Jugadas':'Moves','Aún no hay jugadas':'No moves yet',
+'Tus puntos':'Your points','Mejor racha':'Best streak','Partidas':'Games','Victorias':'Wins','Tablas':'Draws','Derrotas':'Losses','Tiempo jugado':'Time played',
+'Principiante':'Beginner','Aficionado':'Amateur','Jugador de club':'Club player','Avanzado':'Advanced','Experto':'Expert','Maestro':'Master','Gran maestro':'Grandmaster','Fácil':'Easy','Medio':'Medium','Difícil':'Hard',
+'Comete errores a propósito':'Makes mistakes on purpose','Ideal para aprender':'Great for learning','Un rival con carácter':'A rival with character','Piensa varios movimientos':'Thinks several moves ahead','Juega a fondo. ¡Suerte!':'Plays at full strength. Good luck!',
+'Nueva partida':'New game','Elige cómo quieres jugar contra Endo.':'Choose how you want to play against Endo.','Juegas con':'You play as','Nivel de Endo':"Endo's level",'Reloj':'Clock','Cancelar':'Cancel','Jugar':'Play','Aleatorio':'Random','Sin reloj':'No clock',
+'Personaliza el tablero, las piezas y los sonidos.':'Customize the board, pieces and sounds.','Tablero':'Board','Estilo de piezas':'Piece style','Clásico':'Classic','Neón':'Neon','Plano':'Flat','Sonido y vibración':'Sound & vibration','Movimientos, jaque, victoria…':'Moves, check, victory…','Volumen':'Volume','En celulares compatibles':'On supported phones','Ayudas visuales':'Visual aids','Mostrar movimientos legales':'Show legal moves','Resaltar última jugada':'Highlight last move','Coordenadas del tablero':'Board coordinates','Desactívalas si tu equipo va lento':'Turn off if your device is slow','Promover siempre a dama':'Always promote to queen','Datos':'Data','Restablecer estadísticas':'Reset statistics',
+'Azul':'Blue','Madera':'Wood','Torneo':'Tournament','Mármol':'Marble','Rosa':'Pink','Noche':'Night','ELIGE UNA PIEZA':'CHOOSE A PIECE',
+'¡Victoria!':'Victory!','Derrota':'Defeat','¡Tablas!':'Draw!','Revancha':'Rematch',
+'¡Jaque mate! Ganaste':'Checkmate! You won','Jaque mate · gana Endo':'Checkmate · Endo wins','Tablas por ahogado':'Draw by stalemate','Tablas por material insuficiente':'Draw by insufficient material','Tablas por la regla de los 50 movimientos':'Draw by the 50-move rule','Tablas por triple repetición':'Draw by threefold repetition','Te rendiste':'You resigned','¡Ganaste por tiempo!':'You won on time!','Se acabó tu tiempo':'Your time ran out','Fin de la partida':'Game over',
+'¿Rendirte?':'Resign?','Contará como derrota y bajarán tus puntos.':'It will count as a loss and you will lose points.','Seguir jugando':'Keep playing','Rendirme':'Resign',
+'¿Restablecer estadísticas?':'Reset statistics?','Se borrarán tus puntos, estadísticas y logros. Los ajustes se conservan.':'Your points, statistics and achievements will be erased. Settings are kept.','Restablecer':'Reset','Estadísticas restablecidas':'Statistics reset',
+'Partida recuperada':'Game restored','Seguimos donde lo dejaste':'We continue where you left off','Bronce':'Bronze','Plata':'Silver','Oro':'Gold','Platino':'Platinum',
+/* logros: títulos */
+'Primer movimiento':'First move','Calentando':'Warming up','Constante':'Consistent','Aficionado de verdad':'True amateur','Veterano':'Veteran','Centenario':'Centurion','Primera victoria':'First victory','Tomando ritmo':'Gaining momentum','Ganador':'Winner','Estratega':'Strategist','Gran estratega':'Grand strategist','Leyenda del tablero':'Board legend','Pan comido':'Piece of cake','Aprendiendo a ganar':'Learning to win','Rival digno':'Worthy rival','Duro de roer':'Tough nut','Maestro derrotado':'Master defeated','Racha de tres':'Streak of three','Imparable':'Unstoppable','Invencible':'Invincible','Jaque mate':'Checkmate','Rematador':'Finisher','Verdugo':'Executioner','A cubierto':'Safe and sound','Rey a salvo':'King safe','Al paso':'En passant','Coronación':'Coronation','Fábrica de damas':'Queen factory','Humildad':'Humility','Cazador':'Hunter','Depredador':'Predator','Jaquea que algo queda':'Keep on checking','Acosador':'Harasser','Del lado oscuro':'From the dark side','Relámpago':'Lightning','Sin ayuda':'No help','Mente propia':'Own mind','Remontada':'Comeback','Ganó el reloj':'Beat the clock','Contra el reloj':'Against the clock','Ahogado':'Stalemate','Déjà vu':'Déjà vu','Maratón':'Marathon','Con ayuda':'With help','Cambio de perspectiva':'Change of perspective','Subiendo':'Climbing','Una hora':'One hour','Diez horas':'Ten hours','Fiel':'Loyal','Semana completa':'Full week','Decorador':'Decorator','Interiorista':'Interior designer',
+/* logros: descripciones fijas */
+'Enroca por primera vez':'Castle for the first time','Enroca 10 veces':'Castle 10 times','Captura al paso':'Capture en passant','Corona un peón':'Promote a pawn','Corona 5 peones':'Promote 5 pawns','Promueve a una pieza que no sea dama':'Promote to a piece other than a queen','Gana con negras':'Win as Black','Gana en 20 jugadas o menos':'Win in 20 moves or fewer','Gana en nivel Medio o más sin pistas':'Win at Medium level or higher without hints','Haz eso 5 veces':'Do that 5 times','Gana tras ir perdiendo 5 puntos de material':'Win after being down 5 points of material','Gana por tiempo':'Win on time','Juega 5 partidas con reloj':'Play 5 timed games','Termina una partida en tablas por ahogado':'End a game in a stalemate draw','Juega una partida de 50 jugadas o más':'Play a game of 50 moves or more','Usa 10 pistas':'Use 10 hints','Gira el tablero 5 veces':'Flip the board 5 times','Juega 1 hora en total':'Play 1 hour in total','Juega 10 horas en total':'Play 10 hours in total','Prueba 3 tableros distintos':'Try 3 different boards','Prueba los 8 tableros':'Try all 8 boards'
+};
+const pl=(n,a,b)=>n==1?a:b;
+const RX=[
+[/^(\d+) jugadas? · Nivel (.+)$/,(m,a,b)=>a+pl(a,' move',' moves')+' · Level '+tr(b)],
+[/^Puntos (\d+) → (\d+) \((.+)\)$/,(m,a,b,c)=>'Points '+a+' → '+b+' ('+c+')'],
+[/^(Blancas|Negras) · (.+)$/,(m,a,b)=>tr(a)+' · '+tr(b)],
+[/^Logro: (.+)$/,(m,a)=>'Achievement: '+tr(a)],
+[/^(\d+) de (\d+) desbloqueados$/,(m,a,b)=>a+' of '+b+' unlocked'],
+[/^Juega (\d+) partidas?$/,(m,n)=>'Play '+n+pl(n,' game',' games')],
+[/^Gana (\d+) partidas?$/,(m,n)=>'Win '+n+pl(n,' game',' games')],
+[/^Vence a Endo en nivel (.+)$/,(m,a)=>'Beat Endo on '+tr(a)+' level'],
+[/^Gana (\d+) partidas seguidas$/,(m,n)=>'Win '+n+' games in a row'],
+[/^Da jaque mate (\d+) (?:vez|veces)$/,(m,n)=>'Checkmate '+n+pl(n,' time',' times')],
+[/^Captura (\d+) piezas$/,(m,n)=>'Capture '+n+' pieces'],
+[/^Da jaque (\d+) veces$/,(m,n)=>'Give check '+n+' times'],
+[/^Alcanza (\d+) puntos$/,(m,n)=>'Reach '+n+' points'],
+[/^Juega (\d+) días seguidos$/,(m,n)=>'Play '+n+' days in a row']
+];
+function tr(s){
+  const m=/^(\s*)([\s\S]*?)(\s*)$/.exec(s);const c=m[2];if(!c)return s;
+  let r=Object.prototype.hasOwnProperty.call(D,c)?D[c]:undefined;
+  if(r===undefined)for(const [re,fn] of RX){const x=re.exec(c);if(x){r=fn.apply(null,x);break;}}
+  return r===undefined?s:m[1]+r+m[3];
+}
+let lang=set.lang==='en'?'en':'es';
+const TX=new WeakMap();
+function doText(n){
+  const v=n.nodeValue,rec=TX.get(n);
+  if(lang==='en'){if(rec&&v===rec.en)return;const en=tr(v);if(en!==v){TX.set(n,{es:v,en});n.nodeValue=en;}else TX.delete(n);}
+  else{if(rec&&v===rec.en)n.nodeValue=rec.es;TX.delete(n);}
+}
+function doAttr(el){
+  const v=el.getAttribute('aria-label');if(v==null)return;
+  if(lang==='en'){if(el._ae!==undefined&&v===el._ae)return;const en=tr(v);if(en!==v){el._as=v;el._ae=en;el.setAttribute('aria-label',en);}}
+  else if(el._ae!==undefined&&v===el._ae){el.setAttribute('aria-label',el._as);el._ae=undefined;}
+}
+function walk(root){
+  if(root.nodeType===3){if(root.parentNode&&!/^(SCRIPT|STYLE)$/.test(root.parentNode.nodeName))doText(root);return;}
+  if(root.nodeType!==1||/^(SCRIPT|STYLE)$/.test(root.nodeName))return;
+  const w=document.createTreeWalker(root,5,{acceptNode:n=>/^(SCRIPT|STYLE)$/.test(n.nodeName)?2:1});
+  const list=[];let n=w.nextNode();while(n){list.push(n);n=w.nextNode();}
+  if(root.hasAttribute&&root.hasAttribute('aria-label'))doAttr(root);
+  for(const x of list){if(x.nodeType===3)doText(x);else if(x.hasAttribute('aria-label'))doAttr(x);}
+}
+const mo=new MutationObserver(ms=>{for(const m of ms){
+  if(m.type==='characterData'){if(m.target.parentNode&&!/^(SCRIPT|STYLE)$/.test(m.target.parentNode.nodeName))doText(m.target);}
+  else if(m.type==='attributes')doAttr(m.target);
+  else m.addedNodes.forEach(walk);}});
+function setLang(l,silent){
+  lang=l==='en'?'en':'es';set.lang=lang;saveSet();
+  document.documentElement.lang=lang;document.title=lang==='en'?'Chess · You vs Endo':'Ajedrez · Tú vs Endo';
+  $('bLang').textContent=lang.toUpperCase();
+  qa('#sLang .chip').forEach(b=>b.classList.toggle('on',b.dataset.k===lang));
+  walk(document.body);
+}
+(function(){const h=$('sLang');h.innerHTML='';[['es','Español'],['en','English']].forEach(([k,n])=>{const b=document.createElement('button');b.className='chip';b.dataset.k=k;b.textContent=n;b.onclick=()=>{setLang(k);snd('sel');};h.appendChild(b);});})();
+$('bLang').onclick=()=>{setLang(lang==='es'?'en':'es');snd('sel');};
+mo.observe(document.body,{childList:true,characterData:true,subtree:true,attributes:true,attributeFilter:['aria-label']});
+setLang(lang);
+
 checkAch();
 window.__chess={G,E,stats,set,doMove,finish};
 }
