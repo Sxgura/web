@@ -143,7 +143,7 @@
     padding:11px 12px;font-size:14px;font-weight:600;color:#b0b3b8;
     border-bottom:3px solid transparent;cursor:pointer;
   }
-  .tab.active{color:#0866ff;border-bottom-color:#0866ff}
+  
 
   .feed{background:#1c1c1e}
   .post{
@@ -230,6 +230,93 @@
     stroke-linecap:round;
     stroke-linejoin:round;
   }
+
+  /* ===== like con contador ===== */
+  .like-wrap{display:flex;flex-direction:column;align-items:center;gap:1px;position:relative}
+  .like-count{font-size:12px;font-weight:700;color:#fff;line-height:1;text-shadow:0 1px 3px rgba(0,0,0,.7);min-height:12px;font-variant-numeric:tabular-nums}
+  .like-top.liked svg{fill:#ff3b5c;stroke:#ff3b5c}
+  .like-top.pop svg{animation:likePop .5s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes likePop{0%{transform:scale(.6)}60%{transform:scale(1.45)}100%{transform:scale(1)}}
+  .float-heart{position:absolute;left:50%;top:0;font-size:14px;pointer-events:none;animation:floatUp .9s ease-out forwards}
+  @keyframes floatUp{from{opacity:1;transform:translate(-50%,0) scale(.8)}to{opacity:0;transform:translate(calc(-50% + var(--dx)),-46px) scale(1.2)}}
+  .cover-actions{align-items:flex-start}
+
+  /* ===== destacada ===== */
+  .post-sub .pin{width:14px;height:14px;transform:rotate(35deg);fill:#b0b3b8}
+
+  /* ===== pestañas ===== */
+  .tabs{overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap;user-select:none;-webkit-user-select:none;transition:color .15s}
+  .tab:active{opacity:.7}
+  .panel{display:none}
+  .panel.show{display:block;animation:panelIn .25s ease}
+  @keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card-title{font-size:16px;font-weight:700;color:#fff;line-height:1.3}
+  .card-text{margin-top:8px;font-size:14px;line-height:1.45;color:#b0b3b8}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:#2a2b2d;border:1px solid #3a3b3c;font-size:13px;color:#e4e6eb}
+  .chip svg{width:16px;height:16px;stroke:#0866ff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .link-line{margin-top:14px;display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:12px;background:#2a2b2d;border:1px solid #3a3b3c;font-size:13.5px;color:#7db1ff;word-break:break-all}
+  .link-line svg{width:16px;height:16px;stroke:#7db1ff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .cta{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:12px;background:#0866ff;color:#fff;font-weight:700;font-size:14.5px;transition:transform .15s,opacity .15s}
+  .cta:active{transform:scale(.97);opacity:.9}
+  .cta svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .cta.wa{background:#25D366;color:#06210f}
+  .cta.wa svg{stroke:#06210f}
+  .services{list-style:none;margin-top:12px}
+  .services li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dotted #3f4042;font-size:14.5px;color:#e4e6eb}
+  .services li:last-child{border-bottom:none}
+  .services .ic{width:34px;height:34px;border-radius:50%;border:1px solid #6b5a2e;background:rgba(214,170,80,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .services .ic svg{width:18px;height:18px;stroke:#d9b45f;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .contact-name{margin-top:14px;font-size:13px;color:#b0b3b8;text-align:center}
+
+  .footer{padding:22px 14px 28px;text-align:center;font-size:12.5px;color:#7d8085;letter-spacing:.3px}
+  .footer b{color:#b0b3b8}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ===== iOS premium ===== */
+  :root{--ios-bg:#1c1c1e;--ios-card:#2a2a2d;--ios-sep:rgba(255,255,255,.09);--ios-blue:#0a84ff}
+  .app{display:flex;flex-direction:column}
+  .sheet{border-radius:22px 22px 0 0}
+  .menu{background:rgba(44,44,46,.82);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);border:.5px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.5)}
+  .menu button{padding:13px 16px}
+  .menu button+button{border-top:.5px solid var(--ios-sep)}
+  .menu button:hover,.menu button:active{background:rgba(255,255,255,.08)}
+  .toast{background:rgba(44,44,46,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:.5px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 18px;box-shadow:0 10px 28px rgba(0,0,0,.45)}
+  .tabs{gap:2px;margin-top:16px;padding:2px;background:#2c2c2e;border:none;border-radius:11px;overflow:hidden}
+  .tab{flex:1;text-align:center;padding:7px 8px;border-radius:9px;border-bottom:none;font-size:13.5px;color:#a1a1a6;transition:background .2s,color .2s}
+  .tab.active{background:#636366;color:#fff;border-bottom:none;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .feed{display:flex;flex-direction:column;flex:1;background:var(--ios-bg);padding:4px 12px 0}
+  .post{background:var(--ios-card);border:.5px solid rgba(255,255,255,.07);border-radius:20px;padding:15px;margin-top:10px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .card-title{font-size:15.5px;margin-top:12px}
+  .card-text{margin-top:6px;font-size:13.5px}
+  .link-line{display:inline-flex;margin-top:12px;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.06);border:none;font-size:12px;color:#8ab8ff}
+  .cta{display:inline-flex;width:auto;margin-top:10px;margin-left:8px;padding:7px 16px;border-radius:999px;background:transparent;border:1.3px solid var(--ios-blue);color:var(--ios-blue);font-size:13px;font-weight:600}
+  .cta:active{background:rgba(10,132,255,.14)}
+  .services{margin-top:8px}
+  .services li{padding:9px 0;font-size:14px;border-bottom:.5px solid var(--ios-sep)}
+  .services .ic{width:30px;height:30px}
+  .services .ic svg{width:16px;height:16px}
+  .contact-name{text-align:left;margin-top:12px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#8e8e93}
+  .contacts{margin-top:6px;background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden}
+  .contact{display:flex;align-items:center;gap:10px;padding:9px 12px;font-size:14px;color:#e4e6eb}
+  .contact+.contact{border-top:.5px solid var(--ios-sep)}
+  .contact:active{background:rgba(255,255,255,.08)}
+  .contact .wa{width:20px;height:20px}
+  .contact::after{content:"›";margin-left:auto;color:#636366;font-size:18px;line-height:1}
+  .footer{margin-top:auto;padding:26px 14px 22px;font-size:12px;font-weight:400;color:#7d8085;letter-spacing:0}
+  .link-line{margin-right:0}
+
+  /* ajustes finales */
+  .cta{margin-left:0;margin-top:12px}
+  .contacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:none;border-radius:0;overflow:visible}
+  .contact{justify-content:center;gap:8px;padding:10px 8px;border-radius:14px;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);font-weight:600;font-size:13.5px;transition:background .15s,transform .15s}
+  .contact+.contact{border-top:.5px solid rgba(255,255,255,.1)}
+  .contact::after{content:none}
+  .contact:active{transform:scale(.97);background:rgba(255,255,255,.1)}
+  .like-count{font-size:12.5px;margin-top:2px}
 </style>
 </head>
 <body>
@@ -240,11 +327,14 @@
     <div class="cover-gradient"></div>
 
     <div class="cover-actions">
-      <button class="cover-btn like-top" id="likeBtn" type="button" aria-label="Me gusta">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12.1 8.64l-.1.1-.11-.11C9.76 6.48 7.24 6.48 5.5 8.22c-1.74 1.74-1.74 4.56 0 6.3L12 21l6.5-6.48c1.74-1.74 1.74-4.56 0-6.3-1.74-1.74-4.26-1.74-6.4.42z"/>
-        </svg>
-      </button>
+      <div class="like-wrap" id="likeWrap">
+        <button class="cover-btn like-top" id="likeBtn" type="button" aria-label="Me gusta" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.1 8.64l-.1.1-.11-.11C9.76 6.48 7.24 6.48 5.5 8.22c-1.74 1.74-1.74 4.56 0 6.3L12 21l6.5-6.48c1.74-1.74 1.74-4.56 0-6.3-1.74-1.74-4.26-1.74-6.4.42z"/>
+          </svg>
+        </button>
+        <span class="like-count" id="likeCount" aria-live="polite">0</span>
+      </div>
 
       <button class="cover-btn" id="btnMore" aria-label="Más opciones" type="button">
         <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2" fill="#fff"/><circle cx="12" cy="12" r="2" fill="#fff"/><circle cx="19" cy="12" r="2" fill="#fff"/></svg>
@@ -264,7 +354,7 @@
           <rect x="4" y="4" width="16" height="16" rx="4"/>
           <path d="M12 8v8"/><path d="M8 12h8"/>
         </svg>
-        Crear un perfil
+        Crear mi perfil
       </button>
     </div>
   </div>
@@ -290,11 +380,14 @@ Y Dame Fuerzas Por El Dia. 🙌🏼
  </div>
 
     <div class="tabs">
-      <div class="tab active">Principal</div>
+      <div class="tab active" data-tab="principal" role="tab" tabindex="0">Principal</div>
+      <div class="tab" data-tab="proyecto" role="tab" tabindex="0">Proyecto</div>
+      <div class="tab" data-tab="medicina" role="tab" tabindex="0">Medicina</div>
     </div>
   </div>
 
   <div class="feed">
+  <div class="panel show" id="p-principal">
     <div class="post">
 
       <div class="post-head">
@@ -307,13 +400,7 @@ Y Dame Fuerzas Por El Dia. 🙌🏼
           </div>
 
           <div class="post-sub">
-            <img
-              class="pin"
-              src="https://api.iconify.design/mdi:pin.svg?color=%23b0b3b8"
-              alt="Fijado"
-              width="13"
-              height="13"
-            >
+            <svg class="pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2z"/></svg>
             <span>Destacada</span>
           </div>
         </div>
@@ -352,6 +439,52 @@ Y Dame Fuerzas Por El Dia. 🙌🏼
     </div>
   </div>
 
+  <div class="panel" id="p-proyecto">
+    <div class="post">
+      <div class="post-head">
+        <div class="post-av" style="background-image:url('https://i.ibb.co/BK2hbsr9/IMG-20260801-115053.jpg');"></div>
+        <div class="post-meta">
+          <div class="post-name-line"><div class="post-name">S'xgura B'rrokal</div>
+          <img class="verify" src="https://i.ibb.co/Y7mFPHCG/1788579887095.png" alt="Verificado" style="width:14px;height:14px;flex-basis:14px"></div>
+          <div class="post-sub"><span>Proyecto</span></div>
+        </div>
+      </div>
+      <div class="card-title">Visita mi sitio web</div>
+      <div class="card-text">Herramientas, utilidades, juegos y más.</div>
+            <a class="cta snd" href="https://sxgura.github.io/web/" target="_blank" rel="noopener noreferrer">Visitar web</a>
+    </div>
+  </div>
+
+  <div class="panel" id="p-medicina">
+    <div class="post">
+      <div class="post-head">
+        <div class="post-av" style="background-image:url('https://i.ibb.co/BK2hbsr9/IMG-20260801-115053.jpg');"></div>
+        <div class="post-meta">
+          <div class="post-name-line"><div class="post-name">S'xgura B'rrokal</div>
+          <img class="verify" src="https://i.ibb.co/Y7mFPHCG/1788579887095.png" alt="Verificado" style="width:14px;height:14px;flex-basis:14px"></div>
+          <div class="post-sub"><span>Medicina y salud</span></div>
+        </div>
+      </div>
+      <div class="card-title">Médicos de medicina ancestral y tratamiento espiritual</div>
+      <ul class="services">
+        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14zM5 19l7-7"/></svg></span>Lecturas</li>
+        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg></span>Baños y despojos</li>
+        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4l7 12H5zM12 20L5 8h14z"/></svg></span>Trabajos espirituales</li>
+        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6zM12 9v6M9 12h6"/></svg></span>Aseguranzas y protección</li>
+        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg></span>Medicina natural y espiritual</li>
+        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>Cadenas de liberación y limpias</li>
+      </ul>
+      <div class="contact-name">Contacto</div>
+      <div class="contacts">
+        <a class="contact snd" href="https://wa.me/573150160607" target="_blank" rel="noopener noreferrer"><img class="wa" src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" width="20" height="20"><span>Contacto 1</span></a>
+        <a class="contact snd" href="https://wa.me/573043345038" target="_blank" rel="noopener noreferrer"><img class="wa" src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" width="20" height="20"><span>Contacto 2</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">By Sxgura Inc</div>
+</div>
+
 </div>
 
 <div class="toast" id="toast">Enlace copiado</div>
@@ -370,64 +503,194 @@ Y Dame Fuerzas Por El Dia. 🙌🏼
     appId: "1:912354449131:web:4df2a48d6eb84223bd10ae"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const viewsRef = db.ref("perfilViews/total");
-  const viewCountEl = document.getElementById("viewCount");
+  /* ---------- utilidades ---------- */
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+    set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  };
+  function fmt(n){
+    n = Number(n) || 0;
+    if(n >= 1e6) return (n/1e6).toFixed(n>=1e7?0:1).replace(".0","") + "M";
+    if(n >= 1e4) return (n/1e3).toFixed(n>=1e5?0:1).replace(".0","") + "K";
+    return String(n);
+  }
 
-  viewsRef.on("value", (snap) => {
-    viewCountEl.textContent = snap.val() || 0;
-  });
-  viewsRef.transaction((current) => (current || 0) + 1);
-
-  document.getElementById("likeBtn").onclick = function (e) {
-    e.stopPropagation();
-    this.classList.toggle("liked");
+  /* ---------- sonidos (WebAudio, sin archivos) ---------- */
+  let AC = null;
+  function ac(){
+    try{
+      if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+      if(AC.state === "suspended") AC.resume();
+    }catch(e){ AC = null; }
+    return AC;
+  }
+  function tone(f0, f1, t0, dur, vol, type){
+    const c = ac(); if(!c) return;
+    const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + t0;
+    o.type = type || "sine";
+    o.frequency.setValueAtTime(f0, t);
+    if(f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  const SND = {
+    like(){ /* "pop" ascendente tipo reacción */
+      tone(330, 760, 0,    .16, .30, "sine");
+      tone(660, 1320,.05,  .20, .14, "triangle");
+      tone(1180,1180,.14,  .16, .10, "sine");
+    },
+    tap(){ tone(520, 380, 0, .07, .16, "triangle"); },
+    open(){ tone(420, 640, 0, .09, .16, "sine"); },
+    tab(){ tone(600, 800, 0, .08, .15, "sine"); },
+    share(){ tone(660, 660, 0, .12, .18, "sine"); tone(990, 990, .09, .16, .16, "sine"); tone(1320,1320,.18,.2,.12,"sine"); },
+    create(){ tone(500, 700, 0, .09, .16, "triangle"); tone(750, 1000, .08, .12, .14, "triangle"); }
   };
 
-  const menu = document.getElementById("moreMenu");
-  const toast = document.getElementById("toast");
+  /* ---------- Firebase (con tolerancia a fallos) ---------- */
+  let db = null, viewsRef = null, likesRef = null, SV = null;
+  try{
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    SV = firebase.database.ServerValue;
+    viewsRef = db.ref("perfilViews/total");
+    likesRef = db.ref("perfilLikes/total");
+  }catch(e){ console.warn("Firebase no disponible", e); }
+
+  /* Visualizaciones: cuenta al entrar al enlace; recargar en la misma visita no suma */
+  const viewEl = $("viewCount");
+  if(viewsRef){
+    viewsRef.on("value", (snap) => { viewEl.textContent = fmt(snap.val() || 0); });
+    let seen = false;
+    try{ seen = sessionStorage.getItem("sx_view_counted") === "1"; }catch(e){}
+    if(!seen){
+      try{ sessionStorage.setItem("sx_view_counted", "1"); }catch(e){}
+      viewsRef.transaction((c) => (c || 0) + 1);
+    }
+  }
+
+  /* Likes: total global en Firebase (visible para todos); cada dispositivo reacciona una sola vez */
+  const likeBtn = $("likeBtn"), likeCountEl = $("likeCount"), likeWrap = $("likeWrap");
+  let liked = store.get("sx_liked") === "1";
+  let likeTotal = 0;
+
+  function renderLike(){
+    likeBtn.classList.toggle("liked", liked);
+    likeBtn.setAttribute("aria-pressed", liked ? "true" : "false");
+    likeCountEl.textContent = fmt(likeTotal);
+  }
+  renderLike();
+
+  if(likesRef){
+    likesRef.on("value", (snap) => {
+      likeTotal = snap.val() || 0;
+      renderLike();
+    }, (err) => console.warn("Likes: sin permiso de lectura", err));
+  }
+
+  function floatHearts(){
+    for(let k = 0; k < 5; k++){
+      const h = document.createElement("span");
+      h.className = "float-heart";
+      h.textContent = ["❤️","💖","💗"][k % 3];
+      h.style.setProperty("--dx", (Math.random()*46 - 23) + "px");
+      h.style.animationDelay = (k * 70) + "ms";
+      likeWrap.appendChild(h);
+      setTimeout(() => h.remove(), 1200);
+    }
+  }
+
+  likeBtn.onclick = function(e){
+    e.stopPropagation();
+    SND.like();
+    if(liked){
+      /* ya reaccionó: solo un pequeño rebote, no se deshace */
+      likeBtn.classList.remove("pop"); void likeBtn.offsetWidth; likeBtn.classList.add("pop");
+      return;
+    }
+    liked = true;
+    store.set("sx_liked", "1");
+    likeTotal += 1;
+    renderLike();
+    likeBtn.classList.remove("pop"); void likeBtn.offsetWidth; likeBtn.classList.add("pop");
+    floatHearts();
+    if(likesRef){
+      likesRef.transaction((c) => (c || 0) + 1, (err) => {
+        if(err){ liked = false; store.set("sx_liked", "0"); likeTotal = Math.max(0, likeTotal - 1); renderLike(); showToast("No se pudo registrar"); }
+      });
+    }
+    if(navigator.vibrate) try{ navigator.vibrate(18); }catch(e){}
+  };
+
+  /* ---------- menú ---------- */
+  const menu = $("moreMenu");
+  const toast = $("toast");
   const linkToCopy = "sxgura.github.io/perfil/";
+  let toastT;
 
   function showToast(msg){
     toast.textContent = msg;
     toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 1600);
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toast.classList.remove("show"), 1600);
   }
 
   async function copyLink(){
     try{
       await navigator.clipboard.writeText(linkToCopy);
-      showToast("Enlace copiado");
     }catch(e){
       const t = document.createElement("textarea");
       t.value = linkToCopy;
       document.body.appendChild(t);
       t.select();
-      document.execCommand("copy");
+      try{ document.execCommand("copy"); }catch(_){}
       document.body.removeChild(t);
-      showToast("Enlace copiado");
     }
+    showToast("Enlace copiado");
   }
 
-  document.getElementById("btnMore").onclick = (e) => {
+  $("btnMore").onclick = (e) => {
     e.stopPropagation();
     menu.classList.toggle("show");
+    SND.open();
   };
 
-  document.getElementById("menuShare").onclick = async () => {
+  $("menuShare").onclick = async () => {
     menu.classList.remove("show");
+    SND.share();
     await copyLink();
   };
 
-  document.getElementById("menuCreate").onclick = () => {
+  $("menuCreate").onclick = () => {
     menu.classList.remove("show");
+    SND.create();
     const msg = "Hola, buenas. Vi el diseño de tu sitio web de perfil y me gustó. Quiero saber cómo puedo hacer para crear uno para mí. Gracias.";
-    const url = "https://wa.me/254102300454?text=" + encodeURIComponent(msg);
-    window.open(url, "_blank");
+    window.open("https://wa.me/254102300454?text=" + encodeURIComponent(msg), "_blank");
   };
 
   document.addEventListener("click", () => menu.classList.remove("show"));
+
+  /* ---------- pestañas ---------- */
+  const tabs = document.querySelectorAll(".tab");
+  function selectTab(name, silent){
+    tabs.forEach(t => {
+      const on = t.dataset.tab === name;
+      t.classList.toggle("active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    document.querySelectorAll(".panel").forEach(p => p.classList.toggle("show", p.id === "p-" + name));
+    if(!silent) SND.tab();
+  }
+  tabs.forEach(t => {
+    t.addEventListener("click", () => { if(!t.classList.contains("active")) selectTab(t.dataset.tab); });
+    t.addEventListener("keydown", (e) => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); t.click(); } });
+  });
+
+  /* ---------- sonido en enlaces y botones ---------- */
+  document.querySelectorAll(".social-row a, a.snd").forEach(a => a.addEventListener("click", () => SND.tap()));
 </script>
 </body>
 </html>
