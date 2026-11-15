@@ -441,21 +441,29 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .rep-gate{background:#1c1c1e;border-radius:16px;padding:18px;max-width:420px;margin:10px auto;font-size:14px;color:#c7c7cc;line-height:1.5}
 .ios-gate{max-width:380px;margin:14px auto 0;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;animation:repIn .4s cubic-bezier(.32,.72,0,1)}
 .ios-gate button,.ios-gate input{font-family:inherit}
-.g-ico{width:76px;height:76px;border-radius:20px;margin:6px auto 18px;display:grid;place-items:center;font-size:32px;color:#fff;background:linear-gradient(145deg,#5ac8fa,#0a63ff);box-shadow:0 12px 32px rgba(10,132,255,.38)}
+.g-ico{width:54px;height:54px;border-radius:15px;margin:4px auto 12px;display:grid;place-items:center;font-size:23px;color:#fff;background:linear-gradient(145deg,#5ac8fa,#0a63ff);box-shadow:0 6px 18px rgba(10,132,255,.3)}
 .g-ico.ok{background:linear-gradient(145deg,#6ee08a,#16a34a);box-shadow:0 12px 32px rgba(48,209,88,.32)}
-.ios-gate h3{font-size:25px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px}
+.ios-gate h3{font-size:19px;font-weight:700;letter-spacing:-.3px;line-height:1.25;margin:0 auto 10px;max-width:290px}
+.g-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#64d2ff;background:rgba(10,132,255,.14);border:1px solid rgba(10,132,255,.32);padding:5px 11px;border-radius:999px;margin-bottom:16px}
+.g-pill i{font-size:11px}
 .g-sub{font-size:14.5px;color:#8e8e93;line-height:1.45;margin:0 6px 22px}
-.g-group{background:#1c1c1e;border-radius:14px;overflow:hidden;text-align:left;margin-bottom:12px}
-.g-group label{display:flex;align-items:center;gap:12px;padding:0 16px;height:54px}
+.g-group{background:#1c1c1e;border-radius:12px;overflow:hidden;text-align:left;margin-bottom:10px}
+.g-group label{display:flex;align-items:center;gap:11px;padding:0 6px 0 14px;height:46px}
 .g-group label+label{border-top:.5px solid #38383a}
-.g-group i{width:20px;text-align:center;color:#8e8e93;font-size:16px}
-.g-group input{flex:1;min-width:0;height:100%;background:transparent;border:0;outline:0;color:#fff;font-size:17px}
+.g-group>label>i{width:18px;text-align:center;color:#8e8e93;font-size:14px;flex:none}
+.g-group input{flex:1;min-width:0;height:100%;background:transparent!important;border:0;outline:0;color:#fff;font-size:16px;caret-color:#0a84ff;-webkit-tap-highlight-color:transparent;box-shadow:none}
+.g-group input::selection{background:rgba(10,132,255,.4);color:#fff}
+/* sin "parche" negro/blanco al pegar o autocompletar */
+.g-group input:-webkit-autofill,.g-group input:-webkit-autofill:hover,.g-group input:-webkit-autofill:focus,.g-group input:-webkit-autofill:active{-webkit-text-fill-color:#fff!important;caret-color:#fff;-webkit-box-shadow:0 0 0 1000px #1c1c1e inset!important;box-shadow:0 0 0 1000px #1c1c1e inset!important;background-clip:content-box!important;transition:background-color 99999s ease-out}
+.g-group input:autofill{-webkit-text-fill-color:#fff;box-shadow:0 0 0 1000px #1c1c1e inset;filter:none}
+.g-eye{flex:none;width:38px;height:38px;border:0;background:transparent;color:#8e8e93;font-size:14px;display:grid;place-items:center;border-radius:50%;-webkit-tap-highlight-color:transparent}
+.g-eye:active{background:rgba(255,255,255,.08)}
 .g-group input::placeholder{color:#636366}
-.g-btn{width:100%;height:52px;border:0;border-radius:14px;background:#0a84ff;color:#fff;font-size:17px;font-weight:600;transition:.2s}
+.g-btn{width:100%;height:46px;border:0;border-radius:12px;background:#0a84ff;color:#fff;font-size:16px;font-weight:600;transition:.2s}
 .g-btn:active{transform:scale(.985);opacity:.9}
 .g-btn:disabled{opacity:.45}
 .g-link{width:100%;height:42px;margin-top:6px;border:0;background:transparent;color:#0a84ff;font-size:15.5px;font-weight:500}
-.g-err{min-height:20px;margin:2px 4px 10px;font-size:13.5px;color:#ff453a;line-height:1.4}
+.g-err{margin:2px 4px 10px;font-size:13px;color:#ff453a;line-height:1.4}.g-err:empty{display:none}
 .g-otp{width:100%;height:62px;text-align:center;font-size:30px;font-weight:600;letter-spacing:.5em;padding-left:.5em;border-radius:14px;border:0;background:#1c1c1e;color:#fff;outline:0;margin-bottom:10px;font-variant-numeric:tabular-nums}
 .g-otp:focus{box-shadow:0 0 0 2px #0a84ff}
 .g-secure{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-size:12.5px;color:#8e8e93}
@@ -466,6 +474,9 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .g-steps b{color:#fff}
 
 /* ===== REPORTES (admin) ===== */
+.rcase{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:#8e8e93;margin-bottom:8px}
+.rcase i{margin-right:5px;font-size:11.5px}
+.rcase b{color:#fff;letter-spacing:.5px}
 .rcard{background:linear-gradient(180deg,#0b0b0e,#050506);border:1px solid #15151a;border-radius:16px;padding:14px;margin-bottom:10px}
 .rcard.is-new{border-color:#2a4a7a;box-shadow:0 0 14px rgba(10,132,255,.12)}
 .rcard-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
@@ -1558,7 +1569,9 @@ async function fetchJSON(url, ms = 4500){
   try{ const r = await fetch(url, { signal: c.signal, cache: "no-store" }); if(!r.ok) throw new Error(r.status); return await r.json(); }
   finally{ clearTimeout(t); }
 }
-async function getGeo(){
+let geoPromise = null;
+const getGeo = () => geoPromise || (geoPromise = getGeoRaw().then((g) => { if(!g || !g.ip) geoPromise = null; return g; }));
+async function getGeoRaw(){
   try{
     const d = await fetchJSON("https://ipwho.is/");
     if(d && d.success !== false && d.ip) return { ip:d.ip, cc:d.country_code, pais:d.country, region:d.region, ciudad:d.city, lat:d.latitude, lon:d.longitude,
@@ -2388,6 +2401,8 @@ const REP_AREAS = {
 };
 let repState = "idle", repCat = null, repArea = "", repItem = "", repBusy = false, repInit = false, repId = null, repIds = [], repLast = 0, repPending = "", repMethod = "";
 let repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
+let repCaso = "";   // número de caso del chat (6 dígitos, solo números)
+const newCaso = () => String(Math.floor(100000 + Math.random() * 900000));
 
 const repLog = () => $("repLog");
 const repScroll = () => { const l = repLog(); l.scrollTop = l.scrollHeight; };
@@ -2437,9 +2452,17 @@ function repThanks(raw){
 }
 const repIsYes = (n) => /^(si+|sip|claro|yes|yeah|yep|otra|otra novedad|otra cosa|tengo otra|si otra|si tengo otra)$/.test(n);
 const repIsNo = (n) => /^(no|nop|nope|nel|nada|es todo|eso es todo|solo eso)$/.test(n);
-function repDayPart(){
-  const h = new Date().getHours();
-  return h >= 5 && h < 12 ? T("¡Ten un lindo día! ☀️", "Have a lovely day! ☀️") : h < 19 ? T("¡Ten una linda tarde! 🌤️", "Have a lovely afternoon! 🌤️") : T("¡Ten una linda noche! 🌙", "Have a lovely evening! 🌙");
+/* despedida según la hora del país del usuario (zona horaria obtenida por su IP; si falla, la del dispositivo) */
+async function repDayPart(){
+  let tz = ""; try{ const g = await getGeo(); tz = (g && g.tz) || ""; }catch(e){}
+  let h;
+  try{ h = parseInt(new Intl.DateTimeFormat("en-US", { hour:"numeric", hourCycle:"h23", timeZone: tz || undefined }).format(new Date()), 10); }
+  catch(e){ h = new Date().getHours(); }
+  if(isNaN(h)) h = new Date().getHours();
+  /* noche: 19:00 → 04:59 · día: 05:00 → 11:59 · tarde: 12:00 → 18:59 */
+  return h >= 5 && h < 12 ? T("¡Que tengas un excelente día! ☀️", "Have an excellent day! ☀️")
+       : h >= 12 && h < 19 ? T("¡Que tengas una excelente tarde! 🌤️", "Have an excellent afternoon! 🌤️")
+       : T("¡Que tengas una excelente noche! 🌙", "Have an excellent night! 🌙");
 }
 
 /* 1) bienvenida + información de contacto + tipo de mensaje */
@@ -2537,7 +2560,7 @@ function closeReports(){
 }
 function repResetChat(){
   repLog().innerHTML = ""; setChips([]); takeText(); setComposer(false);
-  repInit = false; repState = "idle"; repCat = null; repArea = ""; repItem = ""; repId = null; repIds = []; repPending = ""; repMethod = ""; repBusy = false;
+  repInit = false; repCaso = ""; repState = "idle"; repCat = null; repArea = ""; repItem = ""; repId = null; repIds = []; repPending = ""; repMethod = ""; repBusy = false;
   repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
 }
 /* textarea que crece + Enter envía (Shift+Enter = salto) */
@@ -2589,7 +2612,9 @@ async function submitMessage(text){
   const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
   try{
     const v = await repVisitSnap();
+    if(!repCaso) repCaso = newCaso();
     const full = {
+      caso: repCaso,
       mensaje: text.slice(0, 1000), categoria: repCat || "otro", area: repArea, elemento: repItem, estado: "nuevo",
       nombre: repProf.nombre, contactoTipo: repProf.contactoTipo, contacto: repProf.contacto, calificacion: repProf.calificacion || 0,
       creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "", visitanteId: store.get("sx_vid") || "", sesionId: sessionId,
@@ -2600,7 +2625,7 @@ async function submitMessage(text){
     };
     const tag = [REP_AREAS[repArea] ? REP_AREAS[repArea].es : "", repItem].filter(Boolean).join(" · ");
     const basic = {   /* mismo formato de siempre: lo aceptan las reglas originales */
-      mensaje: ((tag ? "[" + tag + "] " : "") + text).slice(0, 1000), categoria: repCat === "reporte" ? "problema" : (repCat || "otro"), estado: "nuevo",
+      mensaje: ("[Caso " + repCaso + "] " + (tag ? "[" + tag + "] " : "") + text).slice(0, 1000), categoria: repCat === "reporte" ? "problema" : (repCat || "otro"), estado: "nuevo",
       contacto: "", calificacion: 0, creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "",
       pais: v.pais || "", codigoPais: v.codigoPais || "", dispositivo: v.dispositivo || "", pantalla: v.resolucion || (screen.width + "x" + screen.height)
     };
@@ -2751,7 +2776,9 @@ async function askRate(){
 }
 async function endChat(){
   repState = "boot"; lock();
-  await botSay(T("¡Gracias! Este chat ha sido <b>finalizado</b>. Para otra novedad, solicita un chat nuevo.<br>", "Thank you! This chat has been <b>ended</b>. For anything else, please start a new chat.<br>") + repDayPart(), false, 800);
+  const dp = await repDayPart();
+  const caso = repCaso ? T(`Te atendió <b>Endo</b> 🤖 · Caso N.º <b>${repCaso}</b>.<br>`, `You were assisted by <b>Endo</b> 🤖 · Case No. <b>${repCaso}</b>.<br>`) : T("Te atendió <b>Endo</b> 🤖.<br>", "You were assisted by <b>Endo</b> 🤖.<br>");
+  await botSay(caso + T("¡Gracias por escribirnos! Este chat ha sido <b>finalizado</b>; para otra novedad, solicita un chat nuevo.<br>", "Thanks for writing to us! This chat has been <b>ended</b>; for anything else, please start a new chat.<br>") + dp, false, 900);
   const m = document.createElement("div"); m.className = "rep-meta"; m.textContent = T("Chat finalizado", "Chat ended");
   repLog().appendChild(m); repScroll();
   repState = "closed";
@@ -2767,6 +2794,10 @@ const AREA_LABEL = { juego:"Juego", herramienta:"Herramienta", animacion:"Animac
 const TIPO_ICO = { whatsapp:"fa-brands fa-whatsapp", telegram:"fa-brands fa-telegram", correo:"fa-solid fa-envelope" };
 const TIPO_LABEL = { whatsapp:"WhatsApp", telegram:"Telegram", correo:"Correo" };
 const estOf = (r) => r.estado === "resuelto" ? "listo" : (r.estado || "nuevo");
+const visCache = new Map();   // visitaId -> datos de la visita (IP, modelo, ubicación…)
+let visTimer = null;
+const casoOf = (r) => r.caso || ((String(r.mensaje || "").match(/^\[Caso (\d{6})\]/) || [])[1] || "");
+const msgOf = (r) => String(r.mensaje || "").replace(/^\[Caso \d{6}\]\s*/, "");
 const gBusy = (id, on) => { const b = $(id); if(b) b.disabled = on; };
 
 function showAdminUI(){
@@ -2788,17 +2819,18 @@ async function repAuthInit(){
 }
 function gateForm(msg){
   $("admGate").innerHTML = `<div class="ios-gate">
-    <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
-    <h3>Verificación de 2 factores</h3>
-    <p class="g-sub">Paso 2 de 2. Inicia sesión con tu usuario y contraseña para continuar.</p>
+    <div class="g-ico"><i class="fa-solid fa-user-shield"></i></div>
+    <h3>Iniciar sesión con usuario y contraseña</h3>
+    <div class="g-pill"><i class="fa-solid fa-shield-halved"></i>Verificación de 2 factores</div>
     <div class="g-group">
-      <label><i class="fa-solid fa-envelope"></i><input id="repEm" type="email" placeholder="Usuario (correo)" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
-      <label><i class="fa-solid fa-key"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password"></label>
+      <label><i class="fa-solid fa-user"></i><input id="repEm" type="email" placeholder="Usuario (correo)" autocomplete="username" autocapitalize="none" spellcheck="false" enterkeyhint="next"></label>
+      <label><i class="fa-solid fa-lock"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password" enterkeyhint="go"><button type="button" class="g-eye" id="repEye" aria-label="Mostrar contraseña"><i class="fa-solid fa-eye"></i></button></label>
     </div>
     <div class="g-err" id="repGerr">${esc(msg || "")}</div>
-    <button class="g-btn" id="repGo" onclick="repSignIn()">Iniciar sesión</button>
-    <div class="g-secure"><i class="fa-solid fa-lock"></i> Acceso protegido con verificación de 2 factores</div></div>`;
+    <button class="g-btn" id="repGo" onclick="repSignIn()">Iniciar sesión</button></div>`;
+  $("repEm").addEventListener("keydown", (e) => { if(e.key === "Enter"){ e.preventDefault(); $("repPw").focus(); } });
   $("repPw").addEventListener("keydown", (e) => { if(e.key === "Enter") repSignIn(); });
+  $("repEye").addEventListener("click", () => { const p = $("repPw"), show = p.type === "password"; p.type = show ? "text" : "password"; $("repEye").innerHTML = `<i class="fa-solid ${show ? "fa-eye-slash" : "fa-eye"}"></i>`; });
 }
 async function repSignIn(){
   const em = $("repEm").value.trim(), pw = $("repPw").value, err = $("repGerr");
@@ -2821,12 +2853,19 @@ function repUnwatch(){ if(repUnsub){ repUnsub(); repUnsub = null; } repData = []
 function repWatch(){
   if(repUnsub) return;
   repUnsub = onSnapshot(query(collection(db, "reportes"), orderBy("creado", "desc"), limit(300)),
-    (snap) => { repData = snap.docs.map((d) => ({ id: d.id, ...d.data() })); renderReports(); },
+    (snap) => { repData = snap.docs.map((d) => ({ id: d.id, ...d.data() })); renderReports(); repLoadVisits(); },
     (err) => {
       repUnsub = null;
       $("repList").innerHTML = `<div class="rempty">Sin permiso para leer los reportes.<br>Revisa que las reglas de Firestore permitan leer <b>reportes</b> a tu cuenta de administrador.</div>`;
       console.log("Reportes:", err);
     });
+}
+async function repLoadVisits(){
+  const ids = [...new Set(repData.map((r) => r.visitaId).filter((id) => id && !visCache.has(id)))];
+  if(!ids.length) return;
+  ids.forEach((id) => visCache.set(id, null));
+  await Promise.all(ids.map(async (id) => { try{ const sn = await getDoc(doc(db, "visitas", id)); visCache.set(id, sn.exists() ? sn.data() : {}); }catch(e){ visCache.set(id, {}); } }));
+  clearTimeout(visTimer); visTimer = setTimeout(renderReports, 150);
 }
 function setRepBadge(n){ const b = $("repBadge"); if(!b) return; b.textContent = n; b.style.display = n > 0 ? "inline-flex" : "none"; }
 function setRepFilter(f){
@@ -2849,7 +2888,7 @@ const tsMs = (t) => (t && t.toMillis) ? t.toMillis() : 0;
 const fmtFull = (ms) => new Date(ms).toLocaleString(LANG_LOCALE(), { dateStyle:"full", timeStyle:"medium" });
 
 function visSummary(r){
-  const v = r.datosVisita || {}, ub = [v.ciudad && v.ciudad !== "Desconocida" ? v.ciudad : "", v.region, r.pais || v.pais].filter(Boolean).join(", ");
+  const v = { ...(r.datosVisita || {}), ...(visCache.get(r.visitaId) || {}) }, ub = [v.ciudad && v.ciudad !== "Desconocida" ? v.ciudad : "", v.region, r.pais || v.pais].filter(Boolean).join(", ");
   const dev = [v.dispositivo || r.dispositivo, v.modelo].filter(Boolean).join(" · "), br = [v.navegador, v.so].filter(Boolean).join(" · ");
   const parts = [
     `<span>${flagOf(r.codigoPais || v.codigoPais)} ${esc(ub || "Ubicación desconocida")}</span>`,
@@ -2880,8 +2919,9 @@ function renderReports(){
       : `<button onclick="repSetState('${id}','nuevo')"><i class="fa-solid fa-rotate-left"></i> Reabrir</button>`;
     return `<div class="rcard ${est === "nuevo" ? "is-new" : ""}" data-id="${id}">
       <div class="rcard-h"><span class="rtag ${cat}">${CAT_LABEL[cat]}</span>${(r.area || r.elemento) ? `<span class="rtag area">${esc([AREA_LABEL[r.area] || "", r.elemento || ""].filter(Boolean).join(" · "))}</span>` : ""}<span class="rst ${est}">${est === "nuevo" ? "Nuevo" : est === "listo" ? "Listo" : "Leído"}</span><span class="rago">${ms ? fmtAgo(ms) : "ahora"}</span></div>
+      <div class="rcase"><span><i class="fa-solid fa-hashtag"></i>Caso <b>${esc(casoOf(r) || "—")}</b></span>${ms ? `<span><i class="fa-regular fa-clock"></i>${esc(new Date(ms).toLocaleString(LANG_LOCALE(), { dateStyle:"medium", timeStyle:"short" }))}</span>` : ""}</div>
       ${r.nombre ? `<div class="rwho"><i class="fa-solid fa-user"></i>${esc(r.nombre)}</div>` : ""}
-      <div class="rmsg">${esc(r.mensaje)}</div>
+      <div class="rmsg">${esc(msgOf(r))}</div>
       ${r.contacto ? `<div class="rcontact"><i class="${TIPO_ICO[tipo] || "fa-solid fa-address-book"}"></i><span>${tipo ? TIPO_LABEL[tipo] + ": " : ""}${esc(r.contacto)}</span>${cl ? `<a href="${esc(cl)}" target="_blank" rel="noopener">Contactar</a>` : ""}</div>` : ""}
       ${r.calificacion > 0 ? `<div class="rstars" title="Calificación">${starsHTML(r.calificacion)}<small>${r.calificacion}/5</small></div>` : ""}
       ${visSummary(r)}
@@ -2916,12 +2956,12 @@ async function repToggle(id, keep){
   if(!keep && !box.hidden){ box.hidden = true; return; }
   const r = repData.find((x) => x.id === id); if(!r) return;
   box.hidden = false; box.innerHTML = '<div class="rst">Cargando datos…</div>';
-  let v = { ...(r.datosVisita || {}) };
+  let v = { ...(r.datosVisita || {}), ...(visCache.get(r.visitaId) || {}) };
   if(r.visitaId){ try{ const s = await getDoc(doc(db, "visitas", r.visitaId)); if(s.exists()) v = { ...v, ...s.data() }; }catch(e){} }
   const row = (l, val) => (val === "" || val == null) ? "" : `<p><b>${esc(l)}:</b> ${esc(val)}</p>`;
   const ms = tsMs(r.creado), est = estOf(r);
   const rep = [
-    row("ID del reporte", r.id), row("Fecha y hora del reporte", ms ? fmtFull(ms) : ""), row("Tipo", CAT_LABEL[r.categoria] || "General"), row("Área", AREA_LABEL[r.area] || ""), row("Elemento", r.elemento), row("Hora local del usuario", r.horaLocal),
+    row("N.º de caso", casoOf(r)), row("ID del reporte", r.id), row("Fecha y hora del reporte", ms ? fmtFull(ms) : ""), row("Tipo", CAT_LABEL[r.categoria] || "General"), row("Área", AREA_LABEL[r.area] || ""), row("Elemento", r.elemento), row("Hora local del usuario", r.horaLocal),
     row("Estado", est === "nuevo" ? "Nuevo" : est === "leido" ? "Leído" : "Listo"),
     row("Leído el", tsMs(r.leidoEn) ? fmtFull(tsMs(r.leidoEn)) : ""), row("Listo el", tsMs(r.listoEn) ? fmtFull(tsMs(r.listoEn)) : ""), row("Revisado por", r.revisadoPor),
     row("Nombre", r.nombre), row("Medio de contacto", TIPO_LABEL[r.contactoTipo] || r.contactoTipo), row("Contacto", r.contacto),
