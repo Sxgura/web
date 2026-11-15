@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#000000">
 <title>S'xgura B'rrokal</title>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -386,6 +386,84 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 }
 @media (max-height:560px){.hero{min-height:auto}.hero h1{font-size:clamp(30px,9vw,44px)}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ===== REPORTES (visitante) ===== */
+.ios-row .ico.r{background:linear-gradient(145deg,#ff9f5a,#e8431a)}
+.rbadge{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#ff3b30;color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.rep-panel{position:fixed;inset:0;z-index:10020;background:#000;display:flex;flex-direction:column;transform:translateY(100%);opacity:0;pointer-events:none;transition:transform .38s cubic-bezier(.32,.72,0,1),opacity .25s;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif}
+.rep-panel *{font-family:inherit}
+.rep-panel.active{transform:none;opacity:1;pointer-events:auto}
+.rep-top{display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) 12px 10px;background:rgba(22,22,24,.86);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid rgba(255,255,255,.14);flex:none}
+.rep-back{width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:#0a84ff;font-size:19px;display:grid;place-items:center;flex:none}
+.rep-back:active{background:rgba(255,255,255,.08)}
+.rep-who{display:flex;align-items:center;gap:11px;min-width:0}
+.rep-avatar{position:relative;width:40px;height:40px;border-radius:50%;background:linear-gradient(145deg,#5ac8fa,#0a63ff);display:grid;place-items:center;font-size:18px;color:#fff;flex:none;box-shadow:0 4px 14px rgba(10,132,255,.35)}
+.rep-on{position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;background:#30d158;border:2px solid #161618}
+.rep-name{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.rep-name b{font-size:16px;font-weight:600}
+.rep-name span{font-size:12px;color:#8e8e93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rep-log{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:16px var(--pad) 10px;display:flex;flex-direction:column;gap:6px;width:100%;max-width:680px;margin:0 auto}
+.rep-msg{max-width:84%;padding:9px 14px;border-radius:19px;font-size:15.5px;line-height:1.38;white-space:pre-wrap;overflow-wrap:anywhere;animation:repIn .28s cubic-bezier(.32,.72,0,1)}
+@keyframes repIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+.rep-msg.bot{align-self:flex-start;background:#26262a;color:#f2f2f7;border-bottom-left-radius:6px}
+.rep-msg.me{align-self:flex-end;background:linear-gradient(180deg,#2b92ff,#0a74ff);color:#fff;border-bottom-right-radius:6px}
+.rep-msg.err{background:#3a1d1f;color:#ffb4ad}
+.rep-msg.wide{max-width:94%;width:100%}
+.rep-meta{align-self:center;font-size:11px;color:#8e8e93;margin:6px 0 2px}
+.rep-typing{display:inline-flex;gap:4px;padding:13px 15px}
+.rep-typing i{width:7px;height:7px;border-radius:50%;background:#8e8e93;animation:repDot 1.2s infinite}
+.rep-typing i:nth-child(2){animation-delay:.18s}.rep-typing i:nth-child(3){animation-delay:.36s}
+@keyframes repDot{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+.rep-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.rep-links a{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border-radius:12px;text-decoration:none;color:#fff;font-weight:600;font-size:14px}
+.rep-links a.wa{background:#1fa855}.rep-links a.tg{background:#1e8fc4}
+.rep-form2{display:flex;gap:8px;margin-top:10px}
+.rep-form2 input{flex:1;min-width:0;height:40px;border-radius:12px;border:1px solid #3a3a3c;background:#1c1c1e;color:#fff;padding:0 12px;font-size:15px}
+.rep-form2 input:focus{outline:none;border-color:#0a84ff}
+.rep-btn{height:40px;padding:0 14px;border-radius:12px;border:0;background:#0a84ff;color:#fff;font-weight:600;font-size:14px}
+.rep-btn.ghost{background:#3a3a3c;color:#e5e5ea}
+.rep-btn:disabled{opacity:.5}
+.rep-stars{display:flex;gap:6px;margin-top:10px;justify-content:center}
+.rep-stars button{background:none;border:0;font-size:30px;color:#48484a;line-height:1;padding:2px;transition:transform .15s,color .15s}
+.rep-stars button.on{color:#ffcc00}
+.rep-stars button:active{transform:scale(1.2)}
+.rep-chips{flex:none;display:flex;gap:8px;padding:6px var(--pad) 8px;width:100%;max-width:680px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.rep-chips::-webkit-scrollbar{display:none}
+.rep-chips button{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid #3a3a3c;background:#1c1c1e;color:#e5e5ea;font-size:14px;font-weight:500;white-space:nowrap;transition:.2s}
+.rep-chips button.on{background:rgba(10,132,255,.2);border-color:#0a84ff;color:#64b5ff}
+.rep-composer{flex:none;display:flex;align-items:flex-end;gap:8px;padding:8px var(--pad) max(12px,env(safe-area-inset-bottom));width:100%;max-width:680px;margin:0 auto;background:#000}
+.rep-composer textarea{flex:1;min-width:0;resize:none;max-height:130px;min-height:40px;padding:10px 15px;border-radius:20px;border:1px solid #3a3a3c;background:#1c1c1e;color:#fff;font-size:16px;line-height:1.35;overflow-y:auto}
+.rep-composer textarea:focus{outline:none;border-color:#0a84ff}
+.rep-send{width:40px;height:40px;border-radius:50%;border:0;background:#0a84ff;color:#fff;font-size:16px;display:grid;place-items:center;flex:none;transition:.2s}
+.rep-send:disabled{background:#3a3a3c;color:#8e8e93}
+@media(prefers-reduced-motion:reduce){.rep-panel,.rep-msg{transition:none;animation:none}}
+
+/* ===== REPORTES (admin) ===== */
+.rep-gate{background:#1c1c1e;border-radius:16px;padding:18px;max-width:420px;margin:10px auto}
+.rep-gate h3{font-size:17px;margin-bottom:6px}
+.rep-gate p{font-size:13px;color:#8e8e93;line-height:1.5;margin-bottom:12px}
+.rep-gate input{width:100%;height:44px;border-radius:12px;border:1px solid #3a3a3c;background:#000;color:#fff;padding:0 12px;font-size:15px;margin-bottom:10px}
+.rep-gate input:focus{outline:none;border-color:#0a84ff}
+.rep-gate .rep-btn{width:100%;height:44px}
+.rep-gate .gerr{color:#ff6b61;font-size:13px;margin-top:10px;line-height:1.45}
+.rcard{background:linear-gradient(180deg,#0b0b0e,#050506);border:1px solid #15151a;border-radius:16px;padding:14px;margin-bottom:10px}
+.rcard.is-new{border-color:#2a4a7a;box-shadow:0 0 14px rgba(10,132,255,.12)}
+.rcard-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.rtag{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px}
+.rtag.problema{background:rgba(255,69,58,.14);color:#ff6b61}.rtag.sugerencia{background:rgba(255,214,10,.14);color:#ffd60a}.rtag.otro{background:rgba(100,210,255,.14);color:#64d2ff}.rtag.general{background:rgba(142,142,147,.16);color:#c7c7cc}
+.rst{font-size:11.5px;color:#8e8e93}
+.rst.nuevo{color:#0a84ff;font-weight:700}.rst.resuelto{color:#30d158}
+.rago{margin-left:auto;font-size:12px;color:#8e8e93}
+.rmsg{font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;color:#f2f2f7}
+.rcontact{margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;background:#111114;border:1px solid #1f1f25;border-radius:12px;padding:9px 11px;overflow-wrap:anywhere}
+.rcontact a{color:#64b5ff;text-decoration:none;font-weight:600}
+.rstars{margin-top:10px;color:#ffcc00;letter-spacing:2px;font-size:15px}
+.rmeta{margin-top:10px;font-size:12px;color:#8e8e93;display:flex;gap:6px 12px;flex-wrap:wrap}
+.ract{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.ract button,.ract a{padding:8px 13px;border-radius:10px;border:1px solid #2a2a2e;background:#141416;color:#e5e5ea;font-size:13px;font-weight:600;text-decoration:none}
+.ract .ok{background:rgba(48,209,88,.14);border-color:rgba(48,209,88,.4);color:#30d158}
+.ract .del{color:#ff6b61}
+.rempty{text-align:center;color:#8e8e93;padding:40px 10px;font-size:14px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -443,11 +521,10 @@ organizados en una sola plataforma para todo el público.
 
 <div class="menu-group">
   <div class="menu-section-title">Funciones</div>
-  <a class="menu-item" href="igdl.html">
-    <div class="menu-icon blue"><i class="fas fa-download"></i></div>
-    <div class="menu-text"><b>Descargas</b></div>
+  <a class="menu-item" href="#" onclick="openReports();return false">
+    <div class="menu-icon red"><i class="fas fa-flag"></i></div>
+    <div class="menu-text"><b>Reportes</b></div>
   </a>
-
   <a class="menu-item" href="informacion.html">
     <div class="menu-icon purple"><i class="fas fa-circle-info"></i></div>
     <div class="menu-text"><b>Información</b></div>
@@ -677,6 +754,28 @@ Ingrese su código de acceso
 
 </div>
 
+<!-- REPORTES -->
+<div class="rep-panel" id="reportPanel" aria-hidden="true">
+  <div class="rep-top">
+    <button class="rep-back" onclick="closeReports()" aria-label="Volver"><i class="fas fa-chevron-left"></i></button>
+    <div class="rep-who">
+      <div class="rep-avatar"><i class="fas fa-robot"></i><span class="rep-on"></span></div>
+      <div class="rep-name"><b>Endo</b><span>Soporte Sxgura · en línea</span></div>
+    </div>
+  </div>
+  <div class="rep-log" id="repLog" data-no-i18n aria-live="polite"></div>
+  <div class="rep-chips" id="repChips">
+    <button data-c="problema" onclick="pickCat('problema')"><i class="fas fa-bug"></i> Problema</button>
+    <button data-c="sugerencia" onclick="pickCat('sugerencia')"><i class="fas fa-lightbulb"></i> Sugerencia</button>
+    <button data-c="otro" onclick="pickCat('otro')"><i class="fas fa-circle-question"></i> Otro</button>
+  </div>
+  <form class="rep-composer" id="repForm" onsubmit="sendReport(event)" autocomplete="off">
+    <input type="text" id="repHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
+    <textarea id="repText" rows="1" maxlength="1000" placeholder="Escribe tu mensaje…" enterkeyhint="send"></textarea>
+    <button type="submit" class="rep-send" id="repSend" aria-label="Enviar"><i class="fas fa-arrow-up"></i></button>
+  </form>
+</div>
+
 <!-- ADMIN -->
 <div class="admin-panel" id="adminPanel">
 
@@ -685,8 +784,10 @@ Ingrese su código de acceso
     <h2>Panel de Administración</h2>
     <button class="close-admin" onclick="closeAdmin()">Cerrar</button>
   </div>
-  <div class="ios-list">
+  <div id="admGate"></div>
+  <div class="ios-list" id="admList" style="display:none">
     <div class="ios-row" onclick="openAdminTab('visitas')"><span class="ico v"><i class="fas fa-eye"></i></span><span class="tx">Visitas</span><i class="fas fa-chevron-right chev"></i></div>
+    <div class="ios-row" onclick="openAdminTab('reportes')"><span class="ico r"><i class="fas fa-flag"></i></span><span class="tx">Reportes</span><span class="rbadge" id="repBadge" style="display:none">0</span><i class="fas fa-chevron-right chev"></i></div>
     <div class="ios-row" onclick="openAdminTab('productos')"><span class="ico p"><i class="fas fa-box"></i></span><span class="tx">Productos</span><i class="fas fa-chevron-right chev"></i></div>
     <div class="ios-row" onclick="openAdminTab('config')"><span class="ico c"><i class="fas fa-cog"></i></span><span class="tx">Configuración</span><i class="fas fa-chevron-right chev"></i></div>
   </div>
@@ -730,6 +831,18 @@ Ingrese su código de acceso
     <div class="chart-card" id="chartDays"></div>
     <div class="chart-card" id="chartHours"></div>
     <div class="breakdown" id="visitBreakdown"></div>
+  </div>
+</div>
+
+<div class="admin-tab" id="tab-reportes">
+  <div class="admin-tab-header"><h2>Reportes</h2><div class="admin-tab-header-right"><button class="btn-volver" id="repLogout" style="display:none" onclick="repSignOut()">Salir</button><button class="btn-volver" onclick="backToAdminMenu()">← Volver</button></div></div>
+  <div id="repWrap">
+    <div class="range-tabs counts" id="repFilter">
+      <button data-f="nuevo" class="active" onclick="setRepFilter('nuevo')"><b id="rcNew">–</b><span>Nuevos</span></button>
+      <button data-f="todos" onclick="setRepFilter('todos')"><b id="rcAll">–</b><span>Todos</span></button>
+      <button data-f="resuelto" onclick="setRepFilter('resuelto')"><b id="rcDone">–</b><span>Resueltos</span></button>
+    </div>
+    <div id="repList"></div>
   </div>
 </div>
 
@@ -1067,7 +1180,8 @@ const firebaseConfig = {
   messagingSenderId: "912354449131",
   appId: "1:912354449131:web:4df2a48d6eb84223bd10ae"
 };
-const db = getFirestore(initializeApp(firebaseConfig));
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
 
 /* ================= UTILIDADES ================= */
 const $ = (id) => document.getElementById(id);
@@ -1163,6 +1277,8 @@ const EN = {
   /* producto */
   "Países disponibles": "Available countries", "🇰🇪 Kenia": "🇰🇪 Kenya",
   "Lee detalladamente la descripción antes de comprar.": "Read the description carefully before buying.",
+  "Reportes": "Reports", "Soporte Sxgura · en línea": "Sxgura Support · online", "Problema": "Problem", "Sugerencia": "Suggestion", "Otro": "Other",
+  "Escribe tu mensaje…": "Type your message…", "Volver": "Back", "Enviar": "Send",
   "DESDE": "FROM", "CANTIDAD": "QUANTITY", "AÑADIR AL CARRITO": "ADD TO CART", "AÑADIDO AL CARRITO": "ADDED TO CART",
   "Números virtuales para la verificación de cuentas de WhatsApp. Varios países disponibles.": "Virtual numbers for WhatsApp account verification. Several countries available.",
   "El precio puede variar según el número del país seleccionado y método de pago.": "The price may vary depending on the selected country number and payment method.",
@@ -1739,6 +1855,7 @@ function showAdmin(){
   document.body.classList.add("panel-open");
   backToAdminMenu();
   watchPresence();
+  repAuthInit();
 }
 function closeAdmin(){
   adminOpen = false;
@@ -1746,12 +1863,14 @@ function closeAdmin(){
   $("visits").innerHTML = "";
   document.body.classList.remove("panel-open");
   unwatchPresence();
+  repUnwatch();
 }
 function openAdminTab(tab){
   $("adminMainMenu").style.display = "none";
   document.querySelectorAll(".admin-tab").forEach((t) => t.classList.remove("active"));
   const sel = $("tab-" + tab); if(sel){ sel.classList.add("active"); sel.scrollTop = 0; }
   if(tab === "visitas") loadVisits();
+  if(tab === "reportes") repAuthInit();
   if(tab === "productos") loadAdminProducts();
   if(tab === "config") loadNotificationStatus();
 }
@@ -2220,12 +2339,254 @@ function openNotification(){
   location.href = "notificacion.html";
 }
 
+
+/* ================= REPORTES (visitante) — chat con Endo ================= */
+const T = (es, en) => (lang === "en" ? en : es);
+const WA_LINK = "https://wa.me/254102300454", TG_LINK = "https://t.me/SxgProyect";
+const REP_COOLDOWN = 20000, REP_DAILY = 5;
+let repCat = null, repBusy = false, repInit = false, repId = null, repLast = 0;
+
+const repLog = () => $("repLog");
+const repScroll = () => { const l = repLog(); l.scrollTop = l.scrollHeight; };
+function repAdd(cls, html, wide){
+  const d = document.createElement("div");
+  d.className = "rep-msg " + cls + (wide ? " wide" : "");
+  d.innerHTML = html; repLog().appendChild(d); repScroll(); return d;
+}
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+async function botSay(html, wide, ms = 650){
+  const t = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
+  await wait(ms);
+  t.className = "rep-msg bot" + (wide ? " wide" : "");
+  t.innerHTML = html; repScroll(); return t;
+}
+async function repWelcome(){
+  repInit = true;
+  await botSay(T("¡Hola! 👋 Soy <b>Endo</b>, el asistente de Sxgura Inc.", "Hi! 👋 I'm <b>Endo</b>, the Sxgura Inc assistant."), false, 500);
+  await botSay(T("Aquí puedes <b>reportar</b> un problema de la web o de los juegos, dejar una <b>sugerencia</b> o hacer cualquier consulta. Escribe tu mensaje abajo y lo recibiremos de inmediato.",
+                 "Here you can <b>report</b> a problem with the site or games, leave a <b>suggestion</b> or ask anything. Type your message below and we'll receive it right away."), false, 800);
+  await botSay(T("También puedes escribirnos por los medios oficiales y enviar <b>capturas de pantalla</b> del problema si lo deseas:",
+                 "You can also reach us through our official channels and send <b>screenshots</b> of the problem if you wish:") +
+    `<div class="rep-links"><a class="wa" href="${WA_LINK}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a><a class="tg" href="${TG_LINK}" target="_blank" rel="noopener"><i class="fab fa-telegram"></i> Telegram</a></div>`, true, 800);
+}
+/* el teclado móvil no tapa el cuadro de texto */
+if(window.visualViewport){
+  const vv = window.visualViewport, fitVV = () => {
+    const p = $("reportPanel"); if(!p) return;
+    if(vv.height < innerHeight - 80){ p.style.height = vv.height + "px"; p.style.bottom = "auto"; p.style.top = vv.offsetTop + "px"; repScroll(); }
+    else { p.style.height = ""; p.style.bottom = ""; p.style.top = ""; }
+  };
+  vv.addEventListener("resize", fitVV); vv.addEventListener("scroll", fitVV);
+}
+function openReports(){
+  closeMenu();
+  $("reportPanel").classList.add("active"); $("reportPanel").setAttribute("aria-hidden", "false");
+  document.body.classList.add("panel-open");
+  if(!repInit) repWelcome();
+  if(lang === "en") translateNode($("reportPanel"));
+  setTimeout(() => { try{ $("repText").focus({ preventScroll: true }); }catch(e){} }, 400);
+}
+function closeReports(){
+  $("reportPanel").classList.remove("active"); $("reportPanel").setAttribute("aria-hidden", "true");
+  document.body.classList.remove("panel-open");
+  try{ $("repText").blur(); }catch(e){}
+}
+function pickCat(c){
+  repCat = repCat === c ? null : c;
+  document.querySelectorAll("#repChips button").forEach((b) => b.classList.toggle("on", b.dataset.c === repCat));
+  $("repText").focus();
+}
+/* textarea que crece + Enter envía (Shift+Enter = salto) */
+(function(){
+  const ta = $("repText"); if(!ta) return;
+  const fit = () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 130) + "px"; };
+  ta.addEventListener("input", fit);
+  ta.addEventListener("keydown", (e) => { if(e.key === "Enter" && !e.shiftKey && !e.isComposing){ e.preventDefault(); $("repForm").requestSubmit(); } });
+  ta._fit = fit;
+})();
+
+function repDay(){ return new Date().toISOString().slice(0, 10); }
+function repQuota(){
+  try{ const q = JSON.parse(store.get("sxRepQ", "{}")); return q.d === repDay() ? q.n : 0; }catch(e){ return 0; }
+}
+const repQuotaAdd = () => store.set("sxRepQ", JSON.stringify({ d: repDay(), n: repQuota() + 1 }));
+
+async function sendReport(ev){
+  ev.preventDefault();
+  if(repBusy) return;
+  const ta = $("repText"), text = ta.value.trim();
+  if(text.length < 5){ repAdd("bot err", T("Cuéntame un poco más (mínimo 5 caracteres) 🙂", "Tell me a bit more (at least 5 characters) 🙂")); return; }
+  if($("repHp").value){ ta.value = ""; return; }                       // honeypot anti-bots
+  if(Date.now() - repLast < REP_COOLDOWN){ repAdd("bot err", T("Espera unos segundos antes de enviar otro mensaje.", "Please wait a few seconds before sending another message.")); return; }
+  if(repQuota() >= REP_DAILY){ repAdd("bot err", T("Alcanzaste el límite de mensajes de hoy. Puedes escribirnos por WhatsApp o Telegram.", "You've reached today's message limit. You can write to us on WhatsApp or Telegram.")); return; }
+
+  repBusy = true; $("repSend").disabled = true;
+  repAdd("me", esc(text));
+  const cat = repCat || "general";
+  ta.value = ""; ta._fit && ta._fit();
+  const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
+  try{
+    let geo = {}; try{ geo = await getGeo(); }catch(e){}
+    const ref = await addDoc(collection(db, "reportes"), {
+      mensaje: text.slice(0, 1000), categoria: cat, estado: "nuevo", contacto: "", calificacion: 0,
+      creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "",
+      pais: countryName(geo.cc, geo.pais) || "", codigoPais: (geo.cc || "").toUpperCase(),
+      dispositivo: (navigator.userAgentData && navigator.userAgentData.mobile) ? "Móvil" : (/Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Móvil" : "PC"),
+      pantalla: screen.width + "x" + screen.height
+    });
+    repId = ref.id; repLast = Date.now(); repQuotaAdd();
+    await wait(500);
+    typing.className = "rep-msg bot";
+    typing.innerHTML = T("¡Gracias! 💙 Tu solicitud ha sido <b>recibida</b> y será atendida por nuestro supervisor.", "Thank you! 💙 Your request has been <b>received</b> and will be handled by our supervisor.");
+    repScroll();
+    await repFollowUp();
+  }catch(e){
+    console.log("Reporte no enviado:", e);
+    typing.className = "rep-msg bot err";
+    typing.innerHTML = T("No pude enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp o Telegram.", "I couldn't send your message. Check your connection and try again, or write to us on WhatsApp or Telegram.");
+    ta.value = text; ta._fit && ta._fit();
+  }finally{
+    repBusy = false; $("repSend").disabled = false; repScroll();
+  }
+}
+async function repSave(patch){
+  if(!repId) return false;
+  try{ await setDoc(doc(db, "reportes", repId), patch, { merge: true }); return true; }catch(e){ return false; }
+}
+async function repFollowUp(){
+  const id = repId;
+  const m = await botSay(T("¿Quieres que te respondamos? Déjanos un medio de contacto <b>(opcional)</b>: WhatsApp, Telegram o correo.", "Want us to get back to you? Leave a contact method <b>(optional)</b>: WhatsApp, Telegram or email.") +
+    `<form class="rep-form2" id="repCF"><input type="text" id="repCI" maxlength="80" placeholder="${esc(T("+57 300… / @usuario / correo", "+1 555… / @user / email"))}" autocomplete="off"><button class="rep-btn" type="submit">${T("Guardar", "Save")}</button><button class="rep-btn ghost" type="button" id="repCS">${T("Omitir", "Skip")}</button></form>`, true, 900);
+  const form = m.querySelector("#repCF"), inp = m.querySelector("#repCI");
+  const next = async () => { form.remove(); await repRate(id); };
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const v = inp.value.trim().slice(0, 80);
+    if(v.length < 3){ inp.focus(); return; }
+    form.querySelector(".rep-btn").disabled = true;
+    const ok = await repSave({ contacto: v });
+    repAdd("me", esc(v));
+    await botSay(ok ? T("Listo, te contactaremos por ahí. ✅", "Done, we'll contact you there. ✅") : T("No pude guardar tu contacto, pero tu mensaje sí llegó.", "I couldn't save your contact, but your message did arrive."), false, 500);
+    await next();
+  });
+  m.querySelector("#repCS").addEventListener("click", next);
+}
+async function repRate(id){
+  const m = await botSay(T("Por último, ¿cómo calificarías tu experiencia con la web?", "Lastly, how would you rate your experience with the site?") +
+    `<div class="rep-stars" id="repSt">${[1,2,3,4,5].map((n) => `<button type="button" data-n="${n}" aria-label="${n}">★</button>`).join("")}</div>`, true, 700);
+  const stars = [...m.querySelectorAll("#repSt button")];
+  stars.forEach((b) => {
+    b.addEventListener("mouseenter", () => stars.forEach((s) => s.classList.toggle("on", +s.dataset.n <= +b.dataset.n)));
+    b.addEventListener("click", async () => {
+      const n = +b.dataset.n;
+      stars.forEach((s) => { s.classList.toggle("on", +s.dataset.n <= n); s.disabled = true; });
+      await repSave({ calificacion: n });
+      await botSay(T("¡Gracias por tu calificación! Si necesitas algo más, escríbeme cuando quieras. 💙", "Thanks for your rating! If you need anything else, message me anytime. 💙"), false, 500);
+      repId = null;
+    });
+  });
+}
+
+/* ================= REPORTES (admin) — requiere Firebase Auth ================= */
+let authMod = null, fbAuth = null, authUnsub = null, repUnsub = null, repData = [], repFilter = "nuevo";
+const CAT_LABEL = { problema: "Problema", sugerencia: "Sugerencia", otro: "Otro", general: "General" };
+async function repAuthInit(){
+  if(authUnsub){ if(fbAuth && fbAuth.currentUser) repWatch(); return; }
+  try{
+    authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+    fbAuth = authMod.getAuth(fbApp);
+    authUnsub = authMod.onAuthStateChanged(fbAuth, (u) => {
+      if(u){
+        $("admGate").innerHTML = ""; $("admList").style.display = ""; $("repLogout").style.display = "";
+        repWatch();
+      } else {
+        repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none";
+        backToAdminMenu(); repGateForm();
+      }
+    });
+  }catch(e){
+    $("admGate").innerHTML = '<div class="rep-gate"><h3>No se pudo cargar</h3><p>No fue posible cargar la autenticación de Firebase. Revisa tu conexión y vuelve a abrir el panel.</p></div>';
+  }
+}
+function repGateForm(msg){
+  $("admGate").innerHTML = `<div class="rep-gate"><h3>Inicia sesión</h3>
+    <p>Por seguridad, el panel usa tu cuenta de Firebase (Authentication). Inicia sesión una vez y el navegador la recordará.</p>
+    <input id="repEm" type="email" placeholder="Correo del administrador" autocomplete="username">
+    <input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password">
+    <button class="rep-btn" onclick="repSignIn()">Iniciar sesión</button>
+    <div class="gerr" id="repGerr">${esc(msg || "")}</div></div>`;
+}
+async function repSignIn(){
+  const em = $("repEm").value.trim(), pw = $("repPw").value;
+  if(!em || !pw){ $("repGerr").textContent = "Escribe correo y contraseña."; return; }
+  try{ await authMod.signInWithEmailAndPassword(fbAuth, em, pw); }
+  catch(e){
+    const c = e && e.code || "";
+    $("repGerr").textContent = c.includes("operation-not-allowed") ? "Activa 'Correo/contraseña' en Firebase → Authentication → Método de acceso."
+      : c.includes("network") ? "Sin conexión." : "Correo o contraseña incorrectos.";
+  }
+}
+async function repSignOut(){ try{ await authMod.signOut(fbAuth); }catch(e){} }
+function repUnwatch(){ if(repUnsub){ repUnsub(); repUnsub = null; } repData = []; setRepBadge(0); }
+function repWatch(){
+  if(repUnsub) return;
+  repUnsub = onSnapshot(query(collection(db, "reportes"), orderBy("creado", "desc"), limit(200)),
+    (snap) => { repData = snap.docs.map((d) => ({ id: d.id, ...d.data() })); renderReports(); },
+    (err) => {
+      repUnsub = null;
+      $("repList").innerHTML = `<div class="rempty">Sin permiso para leer los reportes.<br>Revisa que las reglas de Firestore permitan leer <b>reportes</b> a tu cuenta de administrador.</div>`;
+      console.log("Reportes:", err);
+    });
+}
+function setRepBadge(n){ const b = $("repBadge"); if(!b) return; b.textContent = n; b.style.display = n > 0 ? "inline-flex" : "none"; }
+function setRepFilter(f){
+  repFilter = f;
+  document.querySelectorAll("#repFilter button").forEach((b) => b.classList.toggle("active", b.dataset.f === f));
+  renderReports();
+}
+function contactLink(c){
+  const t = c.trim();
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return `mailto:${t}`;
+  if(/^@?[A-Za-z0-9_]{4,32}$/.test(t) && /[A-Za-z]/.test(t)) return `https://t.me/${t.replace(/^@/, "")}`;
+  const d = t.replace(/[^\d]/g, "");
+  if(d.length >= 7 && d.length <= 15) return `https://wa.me/${d}`;
+  return "";
+}
+function renderReports(){
+  const list = $("repList"); if(!list) return;
+  const nw = repData.filter((r) => (r.estado || "nuevo") === "nuevo").length;
+  const dn = repData.filter((r) => r.estado === "resuelto").length;
+  $("rcNew").textContent = nw; $("rcAll").textContent = repData.length; $("rcDone").textContent = dn;
+  setRepBadge(nw);
+  const rows = repData.filter((r) => repFilter === "todos" ? true : repFilter === "resuelto" ? r.estado === "resuelto" : (r.estado || "nuevo") === "nuevo");
+  if(!rows.length){ list.innerHTML = `<div class="rempty">${repFilter === "nuevo" ? "No hay reportes nuevos 🎉" : "Sin reportes en esta lista."}</div>`; return; }
+  list.innerHTML = rows.map((r) => {
+    const est = r.estado || "nuevo", cat = CAT_LABEL[r.categoria] ? r.categoria : "general";
+    const ms = (r.creado && r.creado.toMillis) ? r.creado.toMillis() : 0;
+    const cl = r.contacto ? contactLink(r.contacto) : "";
+    const stars = r.calificacion > 0 ? `<div class="rstars" title="Calificación">${"★".repeat(r.calificacion)}${"☆".repeat(5 - r.calificacion)}</div>` : "";
+    return `<div class="rcard ${est === "nuevo" ? "is-new" : ""}" data-id="${esc(r.id)}">
+      <div class="rcard-h"><span class="rtag ${cat}">${CAT_LABEL[cat]}</span><span class="rst ${est}">${est === "nuevo" ? "● Nuevo" : est === "resuelto" ? "✓ Resuelto" : "Leído"}</span><span class="rago">${ms ? fmtAgo(ms) : "ahora"}</span></div>
+      <div class="rmsg">${esc(r.mensaje)}</div>
+      ${r.contacto ? `<div class="rcontact"><i class="fas fa-address-book"></i><span>${esc(r.contacto)}</span>${cl ? `<a href="${esc(cl)}" target="_blank" rel="noopener">Contactar</a>` : ""}</div>` : ""}
+      ${stars}
+      <div class="rmeta"><span>${flagOf(r.codigoPais)} ${esc(r.pais || "País desconocido")}</span><span>${esc(r.dispositivo || "")} ${esc(r.pantalla || "")}</span><span>${r.idioma === "en" ? "EN" : "ES"}</span></div>
+      <div class="ract">${est !== "resuelto" ? `<button class="ok" onclick="repSetState('${esc(r.id)}','resuelto')">✓ Resuelto</button>` : `<button onclick="repSetState('${esc(r.id)}','nuevo')">Reabrir</button>`}
+        ${est === "nuevo" ? `<button onclick="repSetState('${esc(r.id)}','leido')">Marcar leído</button>` : ""}
+        <button class="del" onclick="repDelete('${esc(r.id)}')">Eliminar</button></div>
+    </div>`;
+  }).join("");
+}
+async function repSetState(id, estado){ try{ await setDoc(doc(db, "reportes", id), { estado }, { merge: true }); }catch(e){ alert("No se pudo actualizar (revisa las reglas)."); } }
+async function repDelete(id){ if(!confirm("¿Eliminar este reporte definitivamente?")) return; try{ await deleteDoc(doc(db, "reportes", id)); }catch(e){ alert("No se pudo eliminar (revisa las reglas)."); } }
+
 /* ================= EXPORTAR PARA onclick="" ================= */
 Object.assign(window, {
   openMenu, closeMenu, openStore, closeStore, openLogin, closeLogin, togglePass, loginAdmin,
   openProduct, closeProduct, changeQty, addToCart, openCart, closeCart, changeCartQty, removeFromCart,
   goToPayment, closePay, selectPayment, closeConfirm, sendOrderToWhatsApp,
   openCodePanel, closeCodePanel, addNum, removeNum, checkCode,
+  openReports, closeReports, pickCat, sendReport, setRepFilter, repSignOut, repSignIn, repSetState, repDelete,
   closeAdmin, openAdminTab, backToAdminMenu, setRange, moreVisits, setVMode, setStatRange, loadStats, changeStatus, changeActiveCount,
   setNotification, loadNotificationStatus, openNotification, toggleLang, updateProductStatus, loadAdminProducts, updateCatalogStatuses
 });
