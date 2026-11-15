@@ -391,9 +391,11 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .ios-row .ico.r{background:linear-gradient(145deg,#ff9f5a,#e8431a)}
 .rbadge{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#ff3b30;color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
 .rep-panel{position:fixed;inset:0;z-index:10020;background:#000;display:flex;flex-direction:column;transform:translateY(100%);opacity:0;pointer-events:none;transition:transform .38s cubic-bezier(.32,.72,0,1),opacity .25s;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif}
-.rep-panel *{font-family:inherit}
+.rep-panel button,.rep-panel input,.rep-panel textarea{font-family:inherit}
 .rep-panel.active{transform:none;opacity:1;pointer-events:auto}
 .rep-top{display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) 12px 10px;background:rgba(22,22,24,.86);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid rgba(255,255,255,.14);flex:none}
+.rep-x{margin-left:auto;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#d1d1d6;font-size:16px;display:grid;place-items:center;flex:none}
+.rep-x:active{background:rgba(255,255,255,.2)}
 .rep-back{width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:#0a84ff;font-size:19px;display:grid;place-items:center;flex:none}
 .rep-back:active{background:rgba(255,255,255,.08)}
 .rep-who{display:flex;align-items:center;gap:11px;min-width:0}
@@ -438,7 +440,7 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 /* ===== ACCESO ADMIN (estilo iOS + 2FA) ===== */
 .rep-gate{background:#1c1c1e;border-radius:16px;padding:18px;max-width:420px;margin:10px auto;font-size:14px;color:#c7c7cc;line-height:1.5}
 .ios-gate{max-width:380px;margin:14px auto 0;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;animation:repIn .4s cubic-bezier(.32,.72,0,1)}
-.ios-gate *{font-family:inherit}
+.ios-gate button,.ios-gate input{font-family:inherit}
 .g-ico{width:76px;height:76px;border-radius:20px;margin:6px auto 18px;display:grid;place-items:center;font-size:32px;color:#fff;background:linear-gradient(145deg,#5ac8fa,#0a63ff);box-shadow:0 12px 32px rgba(10,132,255,.38)}
 .g-ico.ok{background:linear-gradient(145deg,#6ee08a,#16a34a);box-shadow:0 12px 32px rgba(48,209,88,.32)}
 .ios-gate h3{font-size:25px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px}
@@ -468,7 +470,7 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .rcard.is-new{border-color:#2a4a7a;box-shadow:0 0 14px rgba(10,132,255,.12)}
 .rcard-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
 .rtag{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px}
-.rtag.reporte,.rtag.problema{background:rgba(255,69,58,.14);color:#ff6b61}.rtag.sugerencia{background:rgba(255,214,10,.14);color:#ffd60a}.rtag.otro{background:rgba(100,210,255,.14);color:#64d2ff}.rtag.general{background:rgba(142,142,147,.16);color:#c7c7cc}
+.rtag.reporte,.rtag.problema{background:rgba(255,69,58,.14);color:#ff6b61}.rtag.sugerencia{background:rgba(255,214,10,.14);color:#ffd60a}.rtag.otro{background:rgba(100,210,255,.14);color:#64d2ff}.rtag.area{background:rgba(10,132,255,.14);color:#64b5ff}.rtag.general{background:rgba(142,142,147,.16);color:#c7c7cc}
 .rst{font-size:11.5px;color:#8e8e93;font-weight:600}
 .rst.nuevo{color:#0a84ff;font-weight:700}.rst.listo{color:#30d158}.rst.leido{color:#ffd60a}
 .rago{margin-left:auto;font-size:12px;color:#8e8e93}
@@ -488,6 +490,9 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .rdet h5{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8e8e93;margin:10px 0 8px}
 .rdet h5:first-child{margin-top:0}
 .rdet .tags{margin-bottom:8px}
+.rvis{margin-top:10px;font-size:12px;color:#a1a1a6;background:#0e0e12;border:1px solid #1a1a20;border-radius:12px;padding:9px 11px;display:flex;flex-wrap:wrap;gap:5px 12px;overflow-wrap:anywhere}
+.rvis i{color:#6e6e73;margin-right:5px}
+.rvis .nv{color:#30d158;font-weight:600}
 .rempty{text-align:center;color:#8e8e93;padding:40px 10px;font-size:14px;line-height:1.5}
 </style>
 </head>
@@ -782,11 +787,11 @@ Ingrese su código de acceso
 <!-- REPORTES -->
 <div class="rep-panel" id="reportPanel" aria-hidden="true">
   <div class="rep-top">
-    <button class="rep-back" onclick="closeReports()" aria-label="Volver"><i class="fas fa-chevron-left"></i></button>
     <div class="rep-who">
-      <div class="rep-avatar"><i class="fas fa-robot"></i><span class="rep-on"></span></div>
-      <div class="rep-name"><b>Endo</b><span>Soporte Sxgura · en línea</span></div>
+      <div class="rep-avatar"><i class="fa-solid fa-headset"></i><span class="rep-on"></span></div>
+      <div class="rep-name"><b>Endo</b><span>Soporte técnico</span></div>
     </div>
+    <button class="rep-x" onclick="closeReports()" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div class="rep-log" id="repLog" data-no-i18n aria-live="polite"></div>
   <div class="rep-chips" id="repChips" style="display:none"></div>
@@ -1299,7 +1304,7 @@ const EN = {
   /* producto */
   "Países disponibles": "Available countries", "🇰🇪 Kenia": "🇰🇪 Kenya",
   "Lee detalladamente la descripción antes de comprar.": "Read the description carefully before buying.",
-  "Reportes": "Reports", "Soporte Sxgura · en línea": "Sxgura Support · online", "Problema": "Problem", "Sugerencia": "Suggestion", "Otro": "Other",
+  "Reportes": "Reports", "Soporte técnico": "Technical support", "Problema": "Problem", "Sugerencia": "Suggestion", "Otro": "Other",
   "Escribe tu mensaje…": "Type your message…", "Volver": "Back", "Enviar": "Send",
   "DESDE": "FROM", "CANTIDAD": "QUANTITY", "AÑADIR AL CARRITO": "ADD TO CART", "AÑADIDO AL CARRITO": "ADDED TO CART",
   "Números virtuales para la verificación de cuentas de WhatsApp. Varios países disponibles.": "Virtual numbers for WhatsApp account verification. Several countries available.",
@@ -2373,9 +2378,16 @@ function openNotification(){
 const T = (es, en) => (lang === "en" ? en : es);
 const WA_LINK = "https://wa.me/254102300454", TG_LINK = "https://t.me/SxgProyect";
 const REP_COOLDOWN = 8000, REP_DAILY = 8;
-const FA = { bug:"fa-solid fa-bug", bulb:"fa-solid fa-lightbulb", chat:"fa-solid fa-comment-dots", wa:"fa-brands fa-whatsapp", tg:"fa-brands fa-telegram", mail:"fa-solid fa-envelope", plus:"fa-solid fa-plus", x:"fa-solid fa-xmark", skip:"fa-solid fa-forward", back:"fa-solid fa-rotate-left" };
-let repState = "idle", repCat = null, repBusy = false, repInit = false, repId = null, repLast = 0, repPending = "", repMethod = "";
-let repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false, rateDone:false };
+const FA = { bug:"fa-solid fa-bug", bulb:"fa-solid fa-lightbulb", chat:"fa-solid fa-comment-dots", wa:"fa-brands fa-whatsapp", tg:"fa-brands fa-telegram", mail:"fa-solid fa-envelope", plus:"fa-solid fa-plus", x:"fa-solid fa-xmark", skip:"fa-solid fa-forward", back:"fa-solid fa-rotate-left", ok:"fa-solid fa-check", user:"fa-solid fa-user" };
+/* Áreas del reporte/sugerencia y sus botones. Edita aquí los nombres si agregas juegos, herramientas o animaciones. */
+const REP_AREAS = {
+  juego:       { es:"Juego", en:"Game", icon:"fa-solid fa-gamepad", ask:["¿De qué juego se trata?", "Which game is it about?"], items:["Dama","Dados","Ruleta","Ajedrez","Hormiga","Tres En Rayas","Galaxy Shooter"] },
+  herramienta: { es:"Herramienta", en:"Tool", icon:"fa-solid fa-toolbox", ask:["¿De qué herramienta se trata?", "Which tool is it about?"], items:["Herramientas","Información","Descargas"] },
+  animacion:   { es:"Animación", en:"Animation", icon:"fa-solid fa-wand-magic-sparkles", ask:["¿De qué animación se trata?", "Which animation is it about?"], items:["Flor","Galaxia","Estrella"] },
+  otra:        { es:"Otra", en:"Other", icon:"fa-solid fa-ellipsis" }
+};
+let repState = "idle", repCat = null, repArea = "", repItem = "", repBusy = false, repInit = false, repId = null, repIds = [], repLast = 0, repPending = "", repMethod = "";
+let repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
 
 const repLog = () => $("repLog");
 const repScroll = () => { const l = repLog(); l.scrollTop = l.scrollHeight; };
@@ -2410,6 +2422,8 @@ function setComposer(on, ph){
 }
 const lock = () => { setChips([]); setComposer(false); };
 const takeText = () => { const ta = $("repText"); ta.value = ""; ta._fit && ta._fit(); };
+const skipChip = (fn) => ({ label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn });
+const youSay = (t) => repAdd("me", esc(t));
 
 /* detección de agradecimientos / despedidas */
 const rnorm = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
@@ -2421,15 +2435,20 @@ function repThanks(raw){
   const t = n.split(" ");
   return t.length <= 8 && t.every((w) => THX.has(w)) && t.some((w) => THX_CORE.has(w));
 }
-const repIsYes = (n) => /^(si+|sip|claro|yes|yeah|yep|otra|otra novedad|tengo otra|si otra|si tengo otra)$/.test(n);
-const repIsNo = (n) => /^(no|nop|nope|nel|nada)$/.test(n);
+const repIsYes = (n) => /^(si+|sip|claro|yes|yeah|yep|otra|otra novedad|otra cosa|tengo otra|si otra|si tengo otra)$/.test(n);
+const repIsNo = (n) => /^(no|nop|nope|nel|nada|es todo|eso es todo|solo eso)$/.test(n);
+function repDayPart(){
+  const h = new Date().getHours();
+  return h >= 5 && h < 12 ? T("¡Ten un lindo día! ☀️", "Have a lovely day! ☀️") : h < 19 ? T("¡Ten una linda tarde! 🌤️", "Have a lovely afternoon! 🌤️") : T("¡Ten una linda noche! 🌙", "Have a lovely evening! 🌙");
+}
 
+/* 1) bienvenida + información de contacto + tipo de mensaje */
 async function repWelcome(){
   repInit = true; repState = "boot"; lock();
-  await botSay(T("¡Hola! 👋 Soy <b>Endo</b>, el asistente de Sxgura Inc.", "Hi! 👋 I'm <b>Endo</b>, the Sxgura Inc assistant."), false, 500);
-  await botSay(T("Estoy aquí para recibir tus <b>reportes</b>, <b>sugerencias</b> o cualquier otra novedad. Todo llega directo a nuestro equipo.",
-                 "I'm here to receive your <b>reports</b>, <b>suggestions</b> or any other news. Everything goes straight to our team."), false, 800);
-  await botSay(T("Si prefieres, también puedes escribirnos por los medios oficiales y enviar <b>capturas de pantalla</b>:",
+  await botSay(T("¡Hola! 👋 Soy <b>Endo</b>, el asistente de soporte de Sxgura Inc.", "Hi! 👋 I'm <b>Endo</b>, the Sxgura Inc support assistant."), false, 500);
+  await botSay(T("Aquí puedes enviar un <b>reporte</b>, una <b>sugerencia</b> o cualquier otra novedad. Todo llega directo a nuestro equipo.",
+                 "Here you can send a <b>report</b>, a <b>suggestion</b> or any other news. Everything goes straight to our team."), false, 800);
+  await botSay(T("También puedes escribirnos por nuestros medios oficiales y enviar <b>capturas de pantalla</b>:",
                  "You can also reach us through our official channels and send <b>screenshots</b>:") +
     `<div class="rep-links"><a class="wa" href="${WA_LINK}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a><a class="tg" href="${TG_LINK}" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></div>`, true, 800);
   await showCats(false);
@@ -2437,27 +2456,61 @@ async function repWelcome(){
 async function showCats(again, intro){
   repState = "boot"; lock();
   await botSay(intro || (again ? T("¡Claro! 😊 ¿De qué trata esta nueva novedad?", "Sure! 😊 What is this new matter about?")
-                              : T("Empecemos. ¿De qué trata tu mensaje?", "Let's begin. What is your message about?")), false, 650);
+                              : T("Cuéntame, ¿de qué trata tu mensaje?", "Tell me, what is your message about?")), false, 650);
   repState = "cat";
   setChips([
     { label:T("Reporte", "Report"), icon:FA.bug, fn:() => pickCat("reporte") },
     { label:T("Sugerencia", "Suggestion"), icon:FA.bulb, fn:() => pickCat("sugerencia") },
     { label:T("Otra novedad", "Other news"), icon:FA.chat, fn:() => pickCat("otro") }
   ]);
-  setComposer(false, T("Elige una opción…", "Choose an option…"));
+  setComposer(false);
 }
 async function pickCat(c){
   if(repState !== "cat") return;
-  repCat = c; repState = "boot"; lock();
-  const lab = { reporte:T("Reporte", "Report"), sugerencia:T("Sugerencia", "Suggestion"), otro:T("Otra novedad", "Other news") };
-  repAdd("me", esc(lab[c]));
+  repCat = c; repArea = ""; repItem = ""; repState = "boot"; lock();
+  youSay({ reporte:T("Reporte", "Report"), sugerencia:T("Sugerencia", "Suggestion"), otro:T("Otra novedad", "Other news") }[c]);
+  if(c === "otro") return askMsg();
+  await askArea();
+}
+/* 2) tipo: juego / herramienta / animación / otra */
+async function askArea(){
+  repState = "boot"; lock();
+  await botSay(repCat === "reporte" ? T("Entendido 🐞 ¿Qué tipo de reporte vas a hacer?", "Got it 🐞 What kind of report will you make?")
+                                    : T("¡Genial! 💡 ¿Sobre qué quieres sugerir algo?", "Great! 💡 What would you like to suggest something about?"), false, 650);
+  repState = "area";
+  setChips([...["juego","herramienta","animacion","otra"].map((k) => ({ label:T(REP_AREAS[k].es, REP_AREAS[k].en), icon:REP_AREAS[k].icon, fn:() => pickArea(k) })),
+            { label:T("Atrás", "Back"), icon:FA.back, cls:"soft", fn:() => { youSay(T("Atrás", "Back")); showCats(true); } }]);
+  setComposer(false);
+}
+async function pickArea(k){
+  if(repState !== "area") return;
+  repArea = k; repItem = ""; repState = "boot"; lock();
+  youSay(T(REP_AREAS[k].es, REP_AREAS[k].en));
+  if(k === "otra") return askMsg();
+  await botSay(T(...REP_AREAS[k].ask), false, 600);
+  repState = "item";
+  setChips([...REP_AREAS[k].items.map((n) => ({ label:n, fn:() => pickItem(n) })),
+            { label:T("Otro", "Other"), icon:REP_AREAS.otra.icon, fn:() => pickItem("") },
+            { label:T("Atrás", "Back"), icon:FA.back, cls:"soft", fn:() => { youSay(T("Atrás", "Back")); askArea(); } }]);
+  setComposer(false);
+}
+async function pickItem(n){
+  if(repState !== "item") return;
+  repItem = n; repState = "boot"; lock();
+  youSay(n || T("Otro", "Other"));
+  await askMsg();
+}
+/* 3) mensaje libre */
+async function askMsg(){
+  repState = "boot"; lock();
   if(repPending){ const t = repPending; repPending = ""; repState = "msg"; $("repText").disabled = false; $("repText").value = t; $("repForm").requestSubmit(); return; }
+  const what = repItem ? ` ${T("sobre", "about")} <b>${esc(repItem)}</b>` : "";
   const say = {
-    reporte:    T("Entendido. Haznos saber tu <b>reporte</b>: cuéntame qué ocurrió, dónde y, si puedes, cómo reproducirlo.", "Got it. Let us know your <b>report</b>: tell me what happened, where and, if you can, how to reproduce it."),
-    sugerencia: T("¡Genial! 💡 Sugiérenos: ¿qué te gustaría que <b>añadamos o mejoremos</b> en la web o en alguno de nuestros servicios?", "Great! 💡 Suggest away: what would you like us to <b>add or improve</b> on the site or in any of our services?"),
-    otro:       T("Claro, cuéntame tu <b>novedad</b>. ¿Qué quieres decirnos?", "Sure, tell me your <b>news</b>. What would you like to tell us?")
+    reporte:    T(`Haznos saber tu <b>reporte</b>${what}: cuéntame qué ocurrió y, si puedes, cómo reproducirlo.`, `Let us know your <b>report</b>${what}: tell me what happened and, if you can, how to reproduce it.`),
+    sugerencia: T(`Cuéntanos tu <b>sugerencia</b>${what}: ¿qué te gustaría que añadamos o mejoremos?`, `Tell us your <b>suggestion</b>${what}: what would you like us to add or improve?`),
+    otro:       T("Claro, escribe aquí el mensaje que quieres enviarnos. ✍️", "Sure, write here the message you want to send us. ✍️")
   };
-  await botSay(say[c], false, 650);
+  await botSay(say[repCat], false, 650);
   repState = "msg"; setComposer(true, T("Escribe tu mensaje…", "Type your message…"));
 }
 /* el teclado móvil no tapa el cuadro de texto */
@@ -2480,11 +2533,12 @@ function closeReports(){
   $("reportPanel").classList.remove("active"); $("reportPanel").setAttribute("aria-hidden", "true");
   document.body.classList.remove("panel-open");
   try{ $("repText").blur(); }catch(e){}
+  if(repState === "closed") setTimeout(repResetChat, 500);   // chat finalizado: el próximo abre uno nuevo
 }
 function repResetChat(){
   repLog().innerHTML = ""; setChips([]); takeText(); setComposer(false);
-  repInit = false; repState = "idle"; repCat = null; repId = null; repPending = ""; repMethod = ""; repBusy = false;
-  repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false, rateDone:false };
+  repInit = false; repState = "idle"; repCat = null; repArea = ""; repItem = ""; repId = null; repIds = []; repPending = ""; repMethod = ""; repBusy = false;
+  repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
 }
 /* textarea que crece + Enter envía (Shift+Enter = salto) */
 (function(){
@@ -2525,30 +2579,31 @@ async function sendReport(ev){
   if(repState === "more") return stepMore(raw);
 }
 async function submitMessage(text){
-  if(repThanks(text)){ takeText(); repAdd("me", esc(text)); return farewell(); }
+  if(repThanks(text)){ takeText(); youSay(text); return finish(true); }
   if(text.length < 5){ repAdd("bot err", T("Cuéntame un poco más (mínimo 5 caracteres) 🙂", "Tell me a bit more (at least 5 characters) 🙂")); return; }
   if(Date.now() - repLast < REP_COOLDOWN){ repAdd("bot err", T("Espera unos segundos antes de enviar otro mensaje.", "Please wait a few seconds before sending another message.")); return; }
   if(repQuota() >= REP_DAILY){ repAdd("bot err", T("Alcanzaste el límite de mensajes de hoy. Puedes escribirnos por WhatsApp o Telegram.", "You've reached today's message limit. You can write to us on WhatsApp or Telegram.")); return; }
 
   repBusy = true; setComposer(false, T("Enviando…", "Sending…"));
-  repAdd("me", esc(text)); takeText();
+  youSay(text); takeText();
   const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
   try{
     const v = await repVisitSnap();
     const ref = await addDoc(collection(db, "reportes"), {
-      mensaje: text.slice(0, 1000), categoria: repCat || "otro", estado: "nuevo",
+      mensaje: text.slice(0, 1000), categoria: repCat || "otro", area: repArea, elemento: repItem, estado: "nuevo",
       nombre: repProf.nombre, contactoTipo: repProf.contactoTipo, contacto: repProf.contacto, calificacion: repProf.calificacion || 0,
       creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "", visitanteId: store.get("sx_vid") || "", sesionId: sessionId,
+      horaLocal: new Date().toString(),
       pais: v.pais || "", codigoPais: v.codigoPais || "", ciudad: v.ciudad || "", ip: v.ip || "",
       dispositivo: v.dispositivo || "", pantalla: v.resolucion || (screen.width + "x" + screen.height),
       datosVisita: v
     });
-    repId = ref.id; repLast = Date.now(); repQuotaAdd();
+    repId = ref.id; repIds.push(ref.id); repLast = Date.now(); repQuotaAdd();
     await wait(450);
     typing.className = "rep-msg bot";
-    typing.innerHTML = T("¡Gracias! 💙 Tu solicitud ha sido <b>recibida</b> y será atendida por nuestro supervisor.", "Thank you! 💙 Your request has been <b>received</b> and will be handled by our supervisor.");
+    typing.innerHTML = T("¡Listo! 💙 Tu mensaje ha sido <b>recibido</b> y será atendido por nuestro supervisor.", "Done! 💙 Your message has been <b>received</b> and will be handled by our supervisor.");
     repScroll(); repBusy = false;
-    await repNext();
+    await (repProf.contactDone ? askMore() : askName());
   }catch(e){
     console.log("Reporte no enviado:", e);
     typing.className = "rep-msg bot err";
@@ -2557,57 +2612,53 @@ async function submitMessage(text){
     repBusy = false; setComposer(true, T("Escribe tu mensaje…", "Type your message…"));
   }
 }
+/* guarda un dato en todos los mensajes enviados en este chat */
 async function repSave(patch){
-  if(!repId) return false;
-  try{ await setDoc(doc(db, "reportes", repId), patch, { merge: true }); return true; }catch(e){ return false; }
+  if(!repIds.length) return false;
+  try{ await Promise.all(repIds.map((id) => setDoc(doc(db, "reportes", id), patch, { merge: true }))); return true; }catch(e){ return false; }
 }
-const repNext = () => !repProf.contactDone ? askName() : !repProf.rateDone ? askRate() : askMore();
 
-/* 1) nombre */
+/* 4) datos de contacto (opcionales) */
 async function askName(){
   repState = "boot"; lock();
-  await botSay(T("Para atenderte mejor, ¿cómo te llamas? <i>(opcional)</i>", "To help you better, what's your name? <i>(optional)</i>"), false, 800);
+  await botSay(T("Ahora, para ponernos en contacto contigo, ¿cuál es tu <b>nombre</b>? <i>(opcional)</i>", "Now, so we can get in touch with you, what's your <b>name</b>? <i>(optional)</i>"), false, 800);
   repState = "name"; setComposer(true, T("Escribe tu nombre…", "Type your name…"));
-  setChips([{ label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:async () => { repAdd("me", esc(T("Omitir", "Skip"))); await askMethod(); } }]);
+  setChips([skipChip(async () => { youSay(T("Omitir", "Skip")); await askMethod(); })]);
 }
 async function stepName(text){
   const v = text.replace(/\s+/g, " ").trim().slice(0, 60);
   if(v.length < 2){ repAdd("bot err", T("Escribe un nombre válido, por favor.", "Please type a valid name.")); return; }
-  takeText(); repAdd("me", esc(v)); repProf.nombre = v; repState = "boot"; lock();
+  takeText(); youSay(v); repProf.nombre = v; repState = "boot"; lock();
   await repSave({ nombre: v });
   await botSay(T(`Mucho gusto, <b>${esc(v)}</b> 😊`, `Nice to meet you, <b>${esc(v)}</b> 😊`), false, 500);
   await askMethod();
 }
-/* 2) medio de contacto */
 async function askMethod(again){
   repState = "boot"; lock();
   await botSay(again ? T("Sin problema. Elige otro medio:", "No problem. Pick another channel:")
-                     : T("¿Por qué medio prefieres que te contactemos?", "Which channel do you prefer for us to contact you?"), false, 700);
+                     : T("¿Por qué medio quieres que te contactemos? <i>(opcional)</i>", "Which channel would you like us to use? <i>(optional)</i>"), false, 700);
   repState = "method";
   setChips([
     { label:"WhatsApp", icon:FA.wa, fn:() => pickMethod("whatsapp") },
     { label:"Telegram", icon:FA.tg, fn:() => pickMethod("telegram") },
     { label:T("Correo", "Email"), icon:FA.mail, fn:() => pickMethod("correo") },
-    { label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:skipContact }
+    { label:repProf.nombre ? T("Solo mi nombre", "Just my name") : T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:skipContact }
   ]);
   setComposer(false);
 }
 async function pickMethod(m){
   if(repState !== "method") return;
   repMethod = m; repState = "boot"; lock();
-  repAdd("me", esc(m === "whatsapp" ? "WhatsApp" : m === "telegram" ? "Telegram" : T("Correo", "Email")));
+  youSay(m === "whatsapp" ? "WhatsApp" : m === "telegram" ? "Telegram" : T("Correo", "Email"));
   const say = {
-    whatsapp: T("Escribe tu número de WhatsApp con código de país (ej. <b>+57 300 123 4567</b>).", "Type your WhatsApp number with country code (e.g. <b>+1 555 123 4567</b>)."),
-    telegram: T("Escribe tu usuario de Telegram (ej. <b>@usuario</b>).", "Type your Telegram username (e.g. <b>@username</b>)."),
-    correo:   T("Escribe tu correo electrónico.", "Type your email address.")
+    whatsapp: T("Escribe tu número de WhatsApp con código de país, por ejemplo <b>+573000000000</b>.", "Type your WhatsApp number with country code, e.g. <b>+573000000000</b>."),
+    telegram: T("Escribe tu usuario de Telegram, por ejemplo <b>@usuario</b>.", "Type your Telegram username, e.g. <b>@username</b>."),
+    correo:   T("Escribe tu correo electrónico, por ejemplo <b>nombre@correo.com</b>.", "Type your email address, e.g. <b>name@mail.com</b>.")
   };
-  const ph = { whatsapp:"+57 300 123 4567", telegram:"@usuario", correo:"correo@ejemplo.com" };
+  const ph = { whatsapp:"+573000000000", telegram:"@usuario", correo:"nombre@correo.com" };
   await botSay(say[m], false, 600);
   repState = "contact"; setComposer(true, ph[m]);
-  setChips([
-    { label:T("Cambiar medio", "Change channel"), icon:FA.back, cls:"soft", fn:() => askMethod(true) },
-    { label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:skipContact }
-  ]);
+  setChips([{ label:T("Cambiar medio", "Change channel"), icon:FA.back, cls:"soft", fn:() => askMethod(true) }, skipChip(skipContact)]);
 }
 function repCheckContact(m, t){
   if(m === "whatsapp"){ const d = t.replace(/\D/g, ""); return (/^[+\d\s().-]+$/.test(t) && d.length >= 7 && d.length <= 15) ? (t.startsWith("+") ? "+" + d : d) : null; }
@@ -2617,30 +2668,57 @@ function repCheckContact(m, t){
 async function stepContact(text){
   const v = repCheckContact(repMethod, text.trim());
   if(!v){
-    repAdd("bot err", repMethod === "whatsapp" ? T("Ese número no parece válido. Inclúyelo con código de país, por ejemplo +57 300 123 4567.", "That number doesn't look valid. Include the country code, e.g. +1 555 123 4567.")
+    repAdd("bot err", repMethod === "whatsapp" ? T("Ese número no parece válido. Inclúyelo con código de país, por ejemplo +573000000000.", "That number doesn't look valid. Include the country code, e.g. +573000000000.")
       : repMethod === "telegram" ? T("Ese usuario no parece válido. Usa el formato @usuario (mínimo 4 caracteres).", "That username doesn't look valid. Use the format @username (at least 4 characters).")
       : T("Ese correo no parece válido. Revisa que esté bien escrito.", "That email doesn't look valid. Please check it."));
     return;
   }
-  takeText(); repAdd("me", esc(v)); repState = "boot"; lock();
+  takeText(); youSay(v); repState = "boot"; lock();
   repProf.contactoTipo = repMethod; repProf.contacto = v; repProf.contactDone = true;
   const ok = await repSave({ contactoTipo: repMethod, contacto: v });
   await botSay(ok ? T("Listo, te contactaremos por ahí. ✅", "Done, we'll contact you there. ✅") : T("No pude guardar tu contacto, pero tu mensaje sí llegó.", "I couldn't save your contact, but your message did arrive."), false, 500);
-  await repNext();
+  await askMore();
 }
 async function skipContact(){
-  repAdd("me", esc(T("Omitir", "Skip")));
+  youSay(repProf.nombre ? T("Solo mi nombre", "Just my name") : T("Omitir", "Skip"));
   repProf.contactDone = true; repState = "boot"; lock();
   await botSay(T("Sin problema 👍", "No problem 👍"), false, 400);
-  await repNext();
+  await askMore();
 }
-/* 3) calificación */
+
+/* 5) ¿es todo o otra cosa? */
+async function askMore(){
+  repState = "boot"; lock();
+  await botSay(T("¿Eso sería todo o vas a reportar otra cosa?", "Is that everything, or will you report something else?"), false, 650);
+  repState = "more";
+  setChips([
+    { label:T("Es todo", "That's all"), icon:FA.ok, fn:() => { youSay(T("Es todo", "That's all")); finish(false); } },
+    { label:T("Otra novedad", "Another matter"), icon:FA.plus, fn:() => { youSay(T("Otra novedad", "Another matter")); showCats(true); } }
+  ]);
+  setComposer(true, T("Escribe aquí…", "Type here…"));
+}
+async function stepMore(text){
+  takeText(); youSay(text);
+  const n = rnorm(text);
+  if(repIsYes(n)) return showCats(true);
+  if(repIsNo(n) || repThanks(text)) return finish(true);
+  repPending = text.slice(0, 1000);
+  return showCats(true, T("Con gusto. Para registrarlo bien, ¿de qué se trata?", "Happy to. To log it properly, what is it about?"));
+}
+/* 6) agradecimiento → calificación → fin del chat */
+async function finish(thanked){
+  repState = "boot"; lock();
+  if(thanked) await botSay(T("¡Fue un gusto haberte ayudado! 💙", "It was a pleasure helping you! 💙"), false, 600);
+  if(!repIds.length) return endChat();
+  await botSay(T("Gracias por tus comentarios, nos ayudan a que <b>Sxgura Inc Web</b> sea mejor. 💙", "Thanks for your feedback, it helps us make <b>Sxgura Inc Web</b> better. 💙"), false, 700);
+  await askRate();
+}
 async function askRate(){
   repState = "boot"; lock();
-  const m = await botSay(T("Por último, ¿cómo calificarías tu experiencia con la web?", "Lastly, how would you rate your experience with the site?") +
+  const m = await botSay(T("¿Qué tan satisfecho quedaste con la atención?", "How satisfied are you with the support?") +
     `<div class="rep-stars" id="repSt">${[1,2,3,4,5].map((n) => `<button type="button" data-n="${n}" aria-label="${n}"><i class="fa-solid fa-star"></i></button>`).join("")}</div>`, true, 700);
   repState = "rate";
-  setChips([{ label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:async () => { repAdd("me", esc(T("Omitir", "Skip"))); repProf.rateDone = true; await askMore(); } }]);
+  setChips([skipChip(async () => { youSay(T("Omitir", "Skip")); await endChat(); })]);
   const stars = [...m.querySelectorAll("#repSt button")];
   stars.forEach((b) => {
     b.addEventListener("mouseenter", () => { if(repState === "rate") stars.forEach((s) => s.classList.toggle("on", +s.dataset.n <= +b.dataset.n)); });
@@ -2648,53 +2726,27 @@ async function askRate(){
       if(repState !== "rate") return;
       const n = +b.dataset.n; repState = "boot"; lock();
       stars.forEach((s) => { s.classList.toggle("on", +s.dataset.n <= n); s.disabled = true; });
-      repProf.calificacion = n; repProf.rateDone = true;
+      repProf.calificacion = n;
       await repSave({ calificacion: n });
-      await botSay(T("¡Gracias por tu calificación! 💙", "Thanks for your rating! 💙"), false, 500);
-      await askMore();
+      await endChat();
     });
   });
 }
-/* 4) despedida / otra novedad / cerrar */
-async function askMore(){
+async function endChat(){
   repState = "boot"; lock();
-  await botSay(T("¿Tienes alguna otra novedad?", "Do you have any other news?"), false, 600);
-  repState = "more";
-  setChips([
-    { label:T("Otra novedad", "Another matter"), icon:FA.plus, fn:() => { repAdd("me", esc(T("Otra novedad", "Another matter"))); showCats(true); } },
-    { label:T("Cerrar chat", "Close chat"), icon:FA.x, cls:"danger", fn:repClose }
-  ]);
-  setComposer(true, T("Escribe aquí…", "Type here…"));
-}
-async function farewell(){
-  repState = "boot"; lock();
-  await botSay(T("¡Fue un gusto haberte ayudado! 💙", "It was a pleasure helping you! 💙"), false, 600);
-  await askMore();
-}
-async function stepMore(text){
-  takeText(); repAdd("me", esc(text));
-  const n = rnorm(text);
-  if(repIsYes(n)) return showCats(true);
-  if(repIsNo(n) || repThanks(text)) return farewell();
-  repPending = text.slice(0, 1000);
-  return showCats(true, T("Con gusto. Para registrarlo bien, ¿de qué se trata?", "Happy to. To log it properly, what is it about?"));
-}
-async function repClose(){
-  if(repState === "closed") return;
-  repAdd("me", esc(T("Cerrar chat", "Close chat")));
-  repState = "closed"; lock();
-  await botSay(T("¡Gracias por escribirnos! 👋 Cierro el chat. Cuando quieras, inicia uno nuevo.", "Thanks for writing to us! 👋 Closing the chat. Start a new one anytime."), false, 600);
-  const m = document.createElement("div"); m.className = "rep-meta"; m.textContent = T("Chat cerrado", "Chat closed");
+  await botSay(T("¡Gracias! Este chat ha sido <b>finalizado</b>. Para otra novedad, solicita un chat nuevo.<br>", "Thank you! This chat has been <b>ended</b>. For anything else, please start a new chat.<br>") + repDayPart(), false, 800);
+  const m = document.createElement("div"); m.className = "rep-meta"; m.textContent = T("Chat finalizado", "Chat ended");
   repLog().appendChild(m); repScroll();
-  await wait(1400);
-  closeReports();
-  setTimeout(repResetChat, 500);
+  repState = "closed";
+  setChips([{ label:T("Cerrar chat", "Close chat"), icon:FA.x, cls:"danger", fn:closeReports }]);
+  setComposer(false, T("Chat finalizado", "Chat ended"));
 }
 
 /* ================= REPORTES (admin) — Firebase Auth + verificación en 2 pasos ================= */
 let authMod = null, fbAuth = null, authUnsub = null, repUnsub = null, repData = [], repFilter = "nuevo";
 let mfaResolver = null, mfaHint = null, mfaSecret = null;
 const CAT_LABEL = { reporte:"Reporte", problema:"Reporte", sugerencia:"Sugerencia", otro:"Otra novedad", general:"General" };
+const AREA_LABEL = { juego:"Juego", herramienta:"Herramienta", animacion:"Animación", otra:"Otra" };
 const TIPO_ICO = { whatsapp:"fa-brands fa-whatsapp", telegram:"fa-brands fa-telegram", correo:"fa-solid fa-envelope" };
 const TIPO_LABEL = { whatsapp:"WhatsApp", telegram:"Telegram", correo:"Correo" };
 const estOf = (r) => r.estado === "resuelto" ? "listo" : (r.estado || "nuevo");
@@ -2727,20 +2779,20 @@ function gateForm(msg){
   $("admGate").innerHTML = `<div class="ios-gate">
     <div class="g-ico"><i class="fa-solid fa-lock"></i></div>
     <h3>Acceso seguro</h3>
-    <p class="g-sub">Inicia sesión con tu usuario y contraseña. Después confirmarás tu identidad con un código de verificación.</p>
+    <p class="g-sub">Inicia sesión con tu usuario y contraseña. Después confirmarás tu identidad con tu código de verificación de 2 factores.</p>
     <div class="g-group">
       <label><i class="fa-solid fa-envelope"></i><input id="repEm" type="email" placeholder="Correo" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
       <label><i class="fa-solid fa-key"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password"></label>
     </div>
     <div class="g-err" id="repGerr">${esc(msg || "")}</div>
     <button class="g-btn" id="repGo" onclick="repSignIn()">Continuar</button>
-    <div class="g-secure"><i class="fa-solid fa-shield-halved"></i> Protegido con verificación en 2 pasos</div></div>`;
+    <div class="g-secure"><i class="fa-solid fa-shield-halved"></i> Protegido con verificación de 2 factores</div></div>`;
   $("repPw").addEventListener("keydown", (e) => { if(e.key === "Enter") repSignIn(); });
 }
 function gateCode(msg){
   $("admGate").innerHTML = `<div class="ios-gate">
     <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
-    <h3>Verificación en 2 pasos</h3>
+    <h3>Verificación de 2 factores</h3>
     <p class="g-sub">Abre tu app autenticadora y escribe el código de 6 dígitos de <b>Sxgura</b>.</p>
     <input class="g-otp" id="repOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······" aria-label="Código de 6 dígitos">
     <div class="g-err" id="repGerr">${esc(msg || "")}</div>
@@ -2778,7 +2830,7 @@ async function gateEnroll(){
   }catch(e){
     const c = (e && e.code) || "";
     $("admGate").innerHTML = `<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-triangle-exclamation"></i></div><h3>No se pudo activar</h3>
-      <p class="g-sub">${c.includes("operation-not-allowed") || c.includes("unsupported") ? "Activa la verificación en 2 pasos (TOTP) en Firebase → Authentication → Método de acceso → Autenticación multifactor (requiere Identity Platform)." : c.includes("unverified-email") ? "Verifica primero el correo de esta cuenta de Firebase y vuelve a intentarlo." : c.includes("requires-recent-login") ? "Por seguridad, inicia sesión de nuevo." : "Inténtalo de nuevo en unos segundos."}</p>
+      <p class="g-sub">${c.includes("operation-not-allowed") || c.includes("unsupported") ? "Activa la verificación de 2 factores (TOTP) en Firebase → Authentication → Método de acceso → Autenticación multifactor (requiere Identity Platform)." : c.includes("unverified-email") ? "Verifica primero el correo de esta cuenta de Firebase y vuelve a intentarlo." : c.includes("requires-recent-login") ? "Por seguridad, inicia sesión de nuevo." : "Inténtalo de nuevo en unos segundos."}</p>
       <button class="g-btn" onclick="repGateCancel()">Entendido</button></div>`;
   }
 }
@@ -2866,6 +2918,20 @@ const starsHTML = (n) => [1,2,3,4,5].map((i) => `<i class="${i <= n ? "fa-solid"
 const tsMs = (t) => (t && t.toMillis) ? t.toMillis() : 0;
 const fmtFull = (ms) => new Date(ms).toLocaleString(LANG_LOCALE(), { dateStyle:"full", timeStyle:"medium" });
 
+function visSummary(r){
+  const v = r.datosVisita || {}, ub = [v.ciudad && v.ciudad !== "Desconocida" ? v.ciudad : "", v.region, r.pais || v.pais].filter(Boolean).join(", ");
+  const dev = [v.dispositivo || r.dispositivo, v.modelo].filter(Boolean).join(" · "), br = [v.navegador, v.so].filter(Boolean).join(" · ");
+  const parts = [
+    `<span>${flagOf(r.codigoPais || v.codigoPais)} ${esc(ub || "Ubicación desconocida")}</span>`,
+    v.ip || r.ip ? `<span><i class="fa-solid fa-network-wired"></i>${esc(v.ip || r.ip)}</span>` : "",
+    dev ? `<span><i class="fa-solid fa-mobile-screen"></i>${esc(dev)}</span>` : "",
+    br ? `<span><i class="fa-solid fa-globe"></i>${esc(br)}</span>` : "",
+    v.origen ? `<span><i class="fa-solid fa-arrow-right-to-bracket"></i>${esc(v.origen)}</span>` : "",
+    v.visitanteNuevo === true ? `<span class="nv"><i class="fa-solid fa-star" style="color:#30d158"></i>Visitante nuevo</span>` : v.visitanteNuevo === false ? `<span>Visitante recurrente${v.nVisita ? " · visita " + esc(v.nVisita) : ""}</span>` : "",
+    `<span>${r.idioma === "en" ? "EN" : "ES"}</span>`
+  ].filter(Boolean);
+  return `<div class="rvis">${parts.join("")}</div>`;
+}
 function renderReports(){
   const list = $("repList"); if(!list) return;
   const cnt = { nuevo:0, leido:0, listo:0 };
@@ -2883,12 +2949,12 @@ function renderReports(){
       : est === "leido" ? `<button class="ok" onclick="repSetState('${id}','listo')"><i class="fa-solid fa-check"></i> Listo</button><button onclick="repSetState('${id}','nuevo')">Volver a nuevo</button>`
       : `<button onclick="repSetState('${id}','nuevo')"><i class="fa-solid fa-rotate-left"></i> Reabrir</button>`;
     return `<div class="rcard ${est === "nuevo" ? "is-new" : ""}" data-id="${id}">
-      <div class="rcard-h"><span class="rtag ${cat}">${CAT_LABEL[cat]}</span><span class="rst ${est}">${est === "nuevo" ? "Nuevo" : est === "listo" ? "Listo" : "Leído"}</span><span class="rago">${ms ? fmtAgo(ms) : "ahora"}</span></div>
+      <div class="rcard-h"><span class="rtag ${cat}">${CAT_LABEL[cat]}</span>${(r.area || r.elemento) ? `<span class="rtag area">${esc([AREA_LABEL[r.area] || "", r.elemento || ""].filter(Boolean).join(" · "))}</span>` : ""}<span class="rst ${est}">${est === "nuevo" ? "Nuevo" : est === "listo" ? "Listo" : "Leído"}</span><span class="rago">${ms ? fmtAgo(ms) : "ahora"}</span></div>
       ${r.nombre ? `<div class="rwho"><i class="fa-solid fa-user"></i>${esc(r.nombre)}</div>` : ""}
       <div class="rmsg">${esc(r.mensaje)}</div>
       ${r.contacto ? `<div class="rcontact"><i class="${TIPO_ICO[tipo] || "fa-solid fa-address-book"}"></i><span>${tipo ? TIPO_LABEL[tipo] + ": " : ""}${esc(r.contacto)}</span>${cl ? `<a href="${esc(cl)}" target="_blank" rel="noopener">Contactar</a>` : ""}</div>` : ""}
       ${r.calificacion > 0 ? `<div class="rstars" title="Calificación">${starsHTML(r.calificacion)}<small>${r.calificacion}/5</small></div>` : ""}
-      <div class="rmeta"><span>${flagOf(r.codigoPais)} ${esc(r.pais || "País desconocido")}</span><span>${esc(r.dispositivo || "")} ${esc(r.pantalla || "")}</span><span>${r.idioma === "en" ? "EN" : "ES"}</span></div>
+      ${visSummary(r)}
       <div class="ract">${btns}<button class="info" onclick="repToggle('${id}')"><i class="fa-solid fa-circle-info"></i> Ver datos completos</button></div>
       <div class="rdet" id="rdet-${id}" data-id="${id}" hidden></div>
     </div>`;
@@ -2922,7 +2988,7 @@ async function repToggle(id, keep){
   const row = (l, val) => (val === "" || val == null) ? "" : `<p><b>${esc(l)}:</b> ${esc(val)}</p>`;
   const ms = tsMs(r.creado), est = estOf(r);
   const rep = [
-    row("ID del reporte", r.id), row("Fecha y hora del reporte", ms ? fmtFull(ms) : ""), row("Tipo", CAT_LABEL[r.categoria] || "General"),
+    row("ID del reporte", r.id), row("Fecha y hora del reporte", ms ? fmtFull(ms) : ""), row("Tipo", CAT_LABEL[r.categoria] || "General"), row("Área", AREA_LABEL[r.area] || ""), row("Elemento", r.elemento), row("Hora local del usuario", r.horaLocal),
     row("Estado", est === "nuevo" ? "Nuevo" : est === "leido" ? "Leído" : "Listo"),
     row("Leído el", tsMs(r.leidoEn) ? fmtFull(tsMs(r.leidoEn)) : ""), row("Listo el", tsMs(r.listoEn) ? fmtFull(tsMs(r.listoEn)) : ""), row("Revisado por", r.revisadoPor),
     row("Nombre", r.nombre), row("Medio de contacto", TIPO_LABEL[r.contactoTipo] || r.contactoTipo), row("Contacto", r.contacto),
