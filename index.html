@@ -254,15 +254,16 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .store-panel>*{max-width:760px;margin-left:auto;margin-right:auto}
 .catalog-x{font-size:26px;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;transition:.25s;opacity:.7}
 .catalog-x:hover{opacity:1;background:#111;color:#ff4d4d}
-.store-tools{display:flex;align-items:center;gap:6px}
+.store-tools{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 .live-users,.lang-btn,.cart-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
   border-radius:16px;height:34px;color:#fff;font-size:12px;font-weight:600;transition:.2s}
 .live-users{padding:0 10px}
 .live-users i{font-size:13px}
-.lang-btn{padding:0 10px;cursor:pointer}
+.lang-btn{padding:0 10px;cursor:pointer;flex:none;min-width:44px;box-sizing:border-box;font-family:inherit;line-height:1;white-space:nowrap;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;margin:0}
+.lang-btn .lg-ico{width:15px;height:15px;flex:none;display:block}
+.lang-btn .t{display:block;font-size:12px;font-weight:700;letter-spacing:.3px;line-height:1}
 .lang-btn:hover,.cart-btn:hover{background:rgba(0,140,255,.15);border-color:rgba(0,140,255,.45)}
 .lang-btn:active{transform:scale(.95)}
-.lang-btn i{font-size:12px}
 .cart-btn{position:relative;width:40px;cursor:pointer;font-size:14px}
 .cart-badge{position:absolute;top:-7px;right:-7px;background:var(--blue);font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #050505;box-shadow:0 0 8px rgba(0,140,255,.6)}
 .store-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
@@ -472,6 +473,18 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .g-key{font-family:ui-monospace,Menlo,Consolas,monospace!important;font-size:13px;background:#1c1c1e;border-radius:12px;padding:11px 12px;word-break:break-all;color:#e5e5ea;margin-bottom:12px;user-select:all}
 .g-steps{text-align:left;font-size:13.5px;color:#a1a1a6;line-height:1.55;margin:0 4px 14px}
 .g-steps b{color:#fff}
+
+/* ===== PANEL DE VERIFICACIÓN (paso 2) ===== */
+.gate-panel{position:fixed;inset:0;z-index:10070;background:radial-gradient(circle at 50% 0%,rgba(10,132,255,.16),transparent 55%),#000;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 18px max(16px,env(safe-area-inset-bottom));overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .3s}
+.gate-panel.active{opacity:1;pointer-events:auto}
+.gate-x{position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;border:0;background:rgba(255,255,255,.1);color:#d1d1d6;font-size:14px;font-weight:600;padding:8px 14px;border-radius:999px;font-family:inherit}
+.gate-box{width:100%;max-width:380px;margin:auto}
+.gate-box .ios-gate{margin-top:0}
+.g-stepper{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 18px;font-size:12px;font-weight:600;color:#8e8e93}
+.g-stepper span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.g-stepper .done{color:#30d158}.g-stepper .done i{width:16px;height:16px;border-radius:50%;background:rgba(48,209,88,.18);display:grid;place-items:center;font-size:9px}
+.g-stepper .now{color:#fff}.g-stepper .now b{width:16px;height:16px;border-radius:50%;background:#0a84ff;display:grid;place-items:center;font-size:10px}
+.g-stepper .ln{width:26px;height:1.5px;background:#3a3a3c;border-radius:2px}
 
 /* ===== REPORTES (admin) ===== */
 .rcase{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:#8e8e93;margin-bottom:8px}
@@ -814,6 +827,11 @@ Ingrese su código de acceso
 </div>
 
 <!-- ADMIN -->
+<div class="gate-panel" id="gatePanel" aria-hidden="true">
+  <button class="gate-x" onclick="cancelGate()">Cancelar</button>
+  <div class="gate-box" id="gateBox"></div>
+</div>
+
 <div class="admin-panel" id="adminPanel">
 
 <div class="admin-main-menu" id="adminMainMenu">
@@ -821,7 +839,6 @@ Ingrese su código de acceso
     <h2>Panel de Administración</h2>
     <button class="close-admin" onclick="closeAdmin()">Cerrar</button>
   </div>
-  <div id="admGate"></div>
   <div class="ios-list" id="admList" style="display:none">
     <div class="ios-row" onclick="openAdminTab('visitas')"><span class="ico v"><i class="fas fa-eye"></i></span><span class="tx">Visitas</span><i class="fas fa-chevron-right chev"></i></div>
     <div class="ios-row" onclick="openAdminTab('reportes')"><span class="ico r"><i class="fas fa-flag"></i></span><span class="tx">Reportes</span><span class="rbadge" id="repBadge" style="display:none">0</span><i class="fas fa-chevron-right chev"></i></div>
@@ -921,7 +938,7 @@ Ingrese su código de acceso
 
   <div class="store-tools">
     <div class="live-users" title="En línea ahora"><i class="fas fa-eye"></i><span id="liveUsersCount">1</span></div>
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-label="Cambiar idioma / Change language"><i class="fas fa-globe"></i><span class="t" id="langLabel">EN</span></button>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-label="Cambiar idioma / Change language"><svg class="lg-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 3 2.8 15 0 18"/><path d="M12 3c-2.8 3-2.8 15 0 18"/></svg><span class="t" id="langLabel">EN</span></button>
     <div class="cart-btn" id="cartBtn" onclick="openCart()" role="button" aria-label="Carrito">
       <i class="fas fa-shopping-cart"></i>
       <div class="cart-badge" id="cartBadge" style="display:none;">0</div>
@@ -1798,7 +1815,7 @@ async function loginAdmin(){
     resetLoginFields();
     $("error").style.display = "none";
     closePanelClass("loginPanel");
-    showAdmin();
+    startAdminAccess();
   }else{
     const a = $("loginAlert"); a.style.display = "block";
     resetLoginFields();
@@ -1879,7 +1896,7 @@ async function checkCode(){
   if(ok){
     pinAttempts = 0; store.set("pinAttempts", "0");
     showCodeMessage("Acceso autorizado", "success", null);
-    setTimeout(() => { closeCodePanel(); showAdmin(); }, 900);
+    setTimeout(() => { closeCodePanel(); startAdminAccess(); }, 900);
     return;
   }
   inputCode = ""; pinAttempts++; store.set("pinAttempts", pinAttempts);
@@ -1896,16 +1913,20 @@ async function markAdminVisit(){      // marca desde qué visita se entró al pa
 }
 let adminOpen = false;
 function showAdmin(){
+  if(!(fbAuth && fbAuth.currentUser)){ startAdminAccess(); return; }       // sin verificación no se abre el panel
   adminOpen = true;
   markAdminVisit();
   $("adminPanel").style.display = "block";
   document.body.classList.add("panel-open");
   backToAdminMenu();
   watchPresence();
-  repAuthInit();
+  $("admList").style.display = ""; $("repLogout").style.display = "";
+  repWatch();
 }
 function closeAdmin(){
   adminOpen = false;
+  try{ if(authMod && fbAuth && fbAuth.currentUser) authMod.signOut(fbAuth); }catch(e){}   // cada acceso exige verificar de nuevo
+  $("admList").style.display = "none";
   $("adminPanel").style.display = "none";
   $("visits").innerHTML = "";
   document.body.classList.remove("panel-open");
@@ -1917,7 +1938,6 @@ function openAdminTab(tab){
   document.querySelectorAll(".admin-tab").forEach((t) => t.classList.remove("active"));
   const sel = $("tab-" + tab); if(sel){ sel.classList.add("active"); sel.scrollTop = 0; }
   if(tab === "visitas") loadVisits();
-  if(tab === "reportes") repAuthInit();
   if(tab === "productos") loadAdminProducts();
   if(tab === "config") loadNotificationStatus();
 }
@@ -2390,7 +2410,7 @@ function openNotification(){
 /* ================= REPORTES (visitante) — chat con Endo ================= */
 const T = (es, en) => (lang === "en" ? en : es);
 const WA_LINK = "https://wa.me/254102300454", TG_LINK = "https://t.me/SxgProyect";
-const REP_COOLDOWN = 8000, REP_DAILY = 8;
+const REP_COOLDOWN = 8000, REP_LIMIT = 3, REP_WINDOW = 30 * 60 * 1000;   // 3 mensajes cada 30 minutos
 const FA = { bug:"fa-solid fa-bug", bulb:"fa-solid fa-lightbulb", chat:"fa-solid fa-comment-dots", wa:"fa-brands fa-whatsapp", tg:"fa-brands fa-telegram", mail:"fa-solid fa-envelope", plus:"fa-solid fa-plus", x:"fa-solid fa-xmark", skip:"fa-solid fa-forward", back:"fa-solid fa-rotate-left", ok:"fa-solid fa-check", user:"fa-solid fa-user" };
 /* Áreas del reporte/sugerencia y sus botones. Edita aquí los nombres si agregas juegos, herramientas o animaciones. */
 const REP_AREAS = {
@@ -2572,11 +2592,12 @@ function repResetChat(){
   ta._fit = fit;
 })();
 
-function repDay(){ return new Date().toISOString().slice(0, 10); }
-function repQuota(){
-  try{ const q = JSON.parse(store.get("sxRepQ", "{}")); return q.d === repDay() ? q.n : 0; }catch(e){ return 0; }
+/* límite: 3 mensajes cada 30 minutos (ventana deslizante guardada en el navegador) */
+function repTimes(){
+  try{ const a = JSON.parse(store.get("sxRepT", "[]")); return (Array.isArray(a) ? a : []).map(Number).filter((t) => t > Date.now() - REP_WINDOW && t <= Date.now() + 60000); }catch(e){ return []; }
 }
-const repQuotaAdd = () => store.set("sxRepQ", JSON.stringify({ d: repDay(), n: repQuota() + 1 }));
+const repQuotaAdd = () => store.set("sxRepT", JSON.stringify([...repTimes(), Date.now()]));
+const repWaitMin = () => Math.max(1, Math.ceil((Math.min(...repTimes()) + REP_WINDOW - Date.now()) / 60000));
 
 /* datos completos de la visita (IP, ubicación, dispositivo, fecha…) que acompañan cada reporte */
 async function repVisitSnap(){
@@ -2605,7 +2626,11 @@ async function submitMessage(text){
   if(repThanks(text)){ takeText(); youSay(text); return finish(true); }
   if(text.length < 5){ repAdd("bot err", T("Cuéntame un poco más (mínimo 5 caracteres) 🙂", "Tell me a bit more (at least 5 characters) 🙂")); return; }
   if(Date.now() - repLast < REP_COOLDOWN){ repAdd("bot err", T("Espera unos segundos antes de enviar otro mensaje.", "Please wait a few seconds before sending another message.")); return; }
-  if(repQuota() >= REP_DAILY){ repAdd("bot err", T("Alcanzaste el límite de mensajes de hoy. Puedes escribirnos por WhatsApp o Telegram.", "You've reached today's message limit. You can write to us on WhatsApp or Telegram.")); return; }
+  if(repTimes().length >= REP_LIMIT){
+    const n = repWaitMin();
+    repAdd("bot err", T(`¡Eso es interesante! 😊 Pero se estableció el <b>límite máximo de solicitudes</b>. Vuelve a intentarlo en ${n} ${n === 1 ? "minuto" : "minutos"}.`, `That's interesting! 😊 But the <b>maximum request limit</b> has been reached. Please try again in ${n} ${n === 1 ? "minute" : "minutes"}.`));
+    return;
+  }
 
   repBusy = true; setComposer(false, T("Enviando…", "Sending…"));
   youSay(text); takeText();
@@ -2800,25 +2825,34 @@ const casoOf = (r) => r.caso || ((String(r.mensaje || "").match(/^\[Caso (\d{6})
 const msgOf = (r) => String(r.mensaje || "").replace(/^\[Caso \d{6}\]\s*/, "");
 const gBusy = (id, on) => { const b = $(id); if(b) b.disabled = on; };
 
-function showAdminUI(){
-  $("admGate").innerHTML = ""; $("admList").style.display = ""; $("repLogout").style.display = "";
-  repWatch();
+/* ---- Paso 2: verificación de 2 factores (Firebase) antes de abrir los menús ---- */
+let gateWanted = false;
+async function ensureAuth(){
+  if(fbAuth) return;
+  authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+  fbAuth = authMod.getAuth(fbApp);
+  authUnsub = authMod.onAuthStateChanged(fbAuth, (u) => {
+    if(u && gateWanted){ gateWanted = false; hideGate(); showAdmin(); }
+    else if(!u && adminOpen){ closeAdmin(); }                       // la sesión terminó: se cierra el panel
+  });
 }
-async function repAuthInit(){
-  if(authUnsub){ if(fbAuth && fbAuth.currentUser) repWatch(); return; }
+function hideGate(){ const g = $("gatePanel"); g.classList.remove("active"); g.setAttribute("aria-hidden", "true"); if(!adminOpen) document.body.classList.remove("panel-open"); }
+function cancelGate(){ gateWanted = false; hideGate(); try{ if(fbAuth && fbAuth.currentUser) authMod.signOut(fbAuth); }catch(e){} }
+async function startAdminAccess(){
+  const g = $("gatePanel"); g.classList.add("active"); g.setAttribute("aria-hidden", "false"); document.body.classList.add("panel-open");
+  gateWanted = false;
+  $("gateBox").innerHTML = '<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-user-shield"></i></div><h3>Verificando…</h3></div>';
   try{
-    authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
-    fbAuth = authMod.getAuth(fbApp);
-    authUnsub = authMod.onAuthStateChanged(fbAuth, (u) => {
-      if(u){ showAdminUI(); }
-      else { repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none"; backToAdminMenu(); gateForm(); }
-    });
+    await ensureAuth();
+    if(fbAuth.currentUser) await authMod.signOut(fbAuth);           // nunca se reutiliza una sesión anterior
+    gateWanted = true; gateForm();
   }catch(e){
-    $("admGate").innerHTML = '<div class="rep-gate"><b>No se pudo cargar</b><br>No fue posible cargar la autenticación de Firebase. Revisa tu conexión y vuelve a abrir el panel.</div>';
+    $("gateBox").innerHTML = '<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-triangle-exclamation"></i></div><h3>No se pudo cargar</h3><p class="g-sub">No fue posible cargar la verificación de Firebase. Revisa tu conexión e inténtalo de nuevo.</p></div>';
   }
 }
 function gateForm(msg){
-  $("admGate").innerHTML = `<div class="ios-gate">
+  $("gateBox").innerHTML = `<div class="ios-gate">
+    <div class="g-stepper"><span class="done"><i class="fa-solid fa-check"></i>Inicio de sesión</span><span class="ln"></span><span class="now"><b>2</b>Verificación</span></div>
     <div class="g-ico"><i class="fa-solid fa-user-shield"></i></div>
     <h3>Iniciar sesión con usuario y contraseña</h3>
     <div class="g-pill"><i class="fa-solid fa-shield-halved"></i>Verificación de 2 factores</div>
@@ -2827,16 +2861,18 @@ function gateForm(msg){
       <label><i class="fa-solid fa-lock"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password" enterkeyhint="go"><button type="button" class="g-eye" id="repEye" aria-label="Mostrar contraseña"><i class="fa-solid fa-eye"></i></button></label>
     </div>
     <div class="g-err" id="repGerr">${esc(msg || "")}</div>
-    <button class="g-btn" id="repGo" onclick="repSignIn()">Iniciar sesión</button></div>`;
+    <button class="g-btn" id="repGo" onclick="repSignIn()">Verificar y entrar</button>
+    <div class="g-secure"><i class="fa-solid fa-lock"></i> Acceso protegido</div></div>`;
   $("repEm").addEventListener("keydown", (e) => { if(e.key === "Enter"){ e.preventDefault(); $("repPw").focus(); } });
   $("repPw").addEventListener("keydown", (e) => { if(e.key === "Enter") repSignIn(); });
   $("repEye").addEventListener("click", () => { const p = $("repPw"), show = p.type === "password"; p.type = show ? "text" : "password"; $("repEye").innerHTML = `<i class="fa-solid ${show ? "fa-eye-slash" : "fa-eye"}"></i>`; });
+  setTimeout(() => { try{ $("repEm").focus({ preventScroll:true }); }catch(e){} }, 350);
 }
 async function repSignIn(){
   const em = $("repEm").value.trim(), pw = $("repPw").value, err = $("repGerr");
   if(!em || !pw){ err.textContent = "Escribe tu usuario y contraseña."; return; }
   gBusy("repGo", true); err.textContent = "";
-  try{ await authMod.signInWithEmailAndPassword(fbAuth, em, pw); }
+  try{ await authMod.signInWithEmailAndPassword(fbAuth, em, pw); }       // al verificar, onAuthStateChanged abre el panel
   catch(e){
     const c = (e && e.code) || "";
     err.textContent = c.includes("operation-not-allowed") ? "Activa 'Correo/contraseña' en Firebase → Authentication → Método de acceso."
@@ -2848,7 +2884,7 @@ async function repSignIn(){
     gBusy("repGo", false);
   }
 }
-async function repSignOut(){ try{ await authMod.signOut(fbAuth); }catch(e){} }
+async function repSignOut(){ try{ await authMod.signOut(fbAuth); }catch(e){} }     // al salir se cierra el panel (ver onAuthStateChanged)
 function repUnwatch(){ if(repUnsub){ repUnsub(); repUnsub = null; } repData = []; setRepBadge(0); }
 function repWatch(){
   if(repUnsub) return;
@@ -2992,7 +3028,7 @@ Object.assign(window, {
   openProduct, closeProduct, changeQty, addToCart, openCart, closeCart, changeCartQty, removeFromCart,
   goToPayment, closePay, selectPayment, closeConfirm, sendOrderToWhatsApp,
   openCodePanel, closeCodePanel, addNum, removeNum, checkCode,
-  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, repSetState, repToggle,
+  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, startAdminAccess, cancelGate, repSetState, repToggle,
   closeAdmin, openAdminTab, backToAdminMenu, setRange, moreVisits, setVMode, setStatRange, loadStats, changeStatus, changeActiveCount,
   setNotification, loadNotificationStatus, openNotification, toggleLang, updateProductStatus, loadAdminProducts, updateCatalogStatuses
 });
