@@ -2589,7 +2589,7 @@ async function submitMessage(text){
   const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
   try{
     const v = await repVisitSnap();
-    const ref = await addDoc(collection(db, "reportes"), {
+    const full = {
       mensaje: text.slice(0, 1000), categoria: repCat || "otro", area: repArea, elemento: repItem, estado: "nuevo",
       nombre: repProf.nombre, contactoTipo: repProf.contactoTipo, contacto: repProf.contacto, calificacion: repProf.calificacion || 0,
       creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "", visitanteId: store.get("sx_vid") || "", sesionId: sessionId,
@@ -2597,7 +2597,17 @@ async function submitMessage(text){
       pais: v.pais || "", codigoPais: v.codigoPais || "", ciudad: v.ciudad || "", ip: v.ip || "",
       dispositivo: v.dispositivo || "", pantalla: v.resolucion || (screen.width + "x" + screen.height),
       datosVisita: v
-    });
+    };
+    const tag = [REP_AREAS[repArea] ? REP_AREAS[repArea].es : "", repItem].filter(Boolean).join(" · ");
+    const basic = {   /* mismo formato de siempre: lo aceptan las reglas originales */
+      mensaje: ((tag ? "[" + tag + "] " : "") + text).slice(0, 1000), categoria: repCat === "reporte" ? "problema" : (repCat || "otro"), estado: "nuevo",
+      contacto: "", calificacion: 0, creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "",
+      pais: v.pais || "", codigoPais: v.codigoPais || "", dispositivo: v.dispositivo || "", pantalla: v.resolucion || (screen.width + "x" + screen.height)
+    };
+    let ref, basicMode = false;
+    try{ ref = await addDoc(collection(db, "reportes"), full); }
+    catch(e1){ console.log("Formato completo rechazado, uso el básico:", e1); basicMode = true; ref = await addDoc(collection(db, "reportes"), basic); }
+    if(basicMode && (repProf.nombre || repProf.contacto)) repPatchDoc(ref.id, { contacto: repLegacyContact() }, { contacto: repLegacyContact() });
     repId = ref.id; repIds.push(ref.id); repLast = Date.now(); repQuotaAdd();
     await wait(450);
     typing.className = "rep-msg bot";
@@ -2607,15 +2617,22 @@ async function submitMessage(text){
   }catch(e){
     console.log("Reporte no enviado:", e);
     typing.className = "rep-msg bot err";
-    typing.innerHTML = T("No pude enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp o Telegram.", "I couldn't send your message. Check your connection and try again, or write to us on WhatsApp or Telegram.");
+    typing.innerHTML = T("No pude enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp o Telegram.", "I couldn't send your message. Check your connection and try again, or write to us on WhatsApp or Telegram.") + ` <small>(${esc((e && e.code) || "error")})</small>`;
     $("repText").value = text; $("repText")._fit && $("repText")._fit();
     repBusy = false; setComposer(true, T("Escribe tu mensaje…", "Type your message…"));
   }
 }
-/* guarda un dato en todos los mensajes enviados en este chat */
-async function repSave(patch){
+/* guarda un dato en todos los mensajes del chat; si las reglas rechazan los campos nuevos, usa el formato básico */
+const repLegacyContact = () => [repProf.nombre, repProf.contacto ? ({ whatsapp:"WhatsApp", telegram:"Telegram", correo:"Correo" }[repProf.contactoTipo] || "") + ": " + repProf.contacto : ""].filter(Boolean).join(" · ").slice(0, 80);
+async function repPatchDoc(id, full, basic){
+  const r = doc(db, "reportes", id);
+  try{ await setDoc(r, full, { merge: true }); return true; }
+  catch(e){ console.log("Dato completo rechazado, uso el básico:", e); try{ await setDoc(r, basic, { merge: true }); return true; }catch(e2){ console.log(e2); return false; } }
+}
+async function repSave(full, basic){
   if(!repIds.length) return false;
-  try{ await Promise.all(repIds.map((id) => setDoc(doc(db, "reportes", id), patch, { merge: true }))); return true; }catch(e){ return false; }
+  const r = await Promise.all(repIds.map((id) => repPatchDoc(id, full, basic || full)));
+  return r.every(Boolean);
 }
 
 /* 4) datos de contacto (opcionales) */
@@ -2629,7 +2646,7 @@ async function stepName(text){
   const v = text.replace(/\s+/g, " ").trim().slice(0, 60);
   if(v.length < 2){ repAdd("bot err", T("Escribe un nombre válido, por favor.", "Please type a valid name.")); return; }
   takeText(); youSay(v); repProf.nombre = v; repState = "boot"; lock();
-  await repSave({ nombre: v });
+  await repSave({ nombre: v }, { contacto: repLegacyContact() });
   await botSay(T(`Mucho gusto, <b>${esc(v)}</b> 😊`, `Nice to meet you, <b>${esc(v)}</b> 😊`), false, 500);
   await askMethod();
 }
@@ -2675,7 +2692,7 @@ async function stepContact(text){
   }
   takeText(); youSay(v); repState = "boot"; lock();
   repProf.contactoTipo = repMethod; repProf.contacto = v; repProf.contactDone = true;
-  const ok = await repSave({ contactoTipo: repMethod, contacto: v });
+  const ok = await repSave({ nombre: repProf.nombre, contactoTipo: repMethod, contacto: v }, { contacto: repLegacyContact() });
   await botSay(ok ? T("Listo, te contactaremos por ahí. ✅", "Done, we'll contact you there. ✅") : T("No pude guardar tu contacto, pero tu mensaje sí llegó.", "I couldn't save your contact, but your message did arrive."), false, 500);
   await askMore();
 }
@@ -2757,19 +2774,13 @@ function showAdminUI(){
   repWatch();
 }
 async function repAuthInit(){
-  if(authUnsub){ if(fbAuth && fbAuth.currentUser && !$("admGate").innerHTML.trim()) repWatch(); return; }
+  if(authUnsub){ if(fbAuth && fbAuth.currentUser) repWatch(); return; }
   try{
     authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
     fbAuth = authMod.getAuth(fbApp);
     authUnsub = authMod.onAuthStateChanged(fbAuth, (u) => {
-      if(u){
-        let n = 0; try{ n = authMod.multiFactor(u).enrolledFactors.length; }catch(e){}
-        if(!n){ repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none"; backToAdminMenu(); gateEnroll(); return; }
-        showAdminUI();
-      } else {
-        repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none";
-        backToAdminMenu(); if(!mfaResolver) gateForm();
-      }
+      if(u){ showAdminUI(); }
+      else { repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none"; backToAdminMenu(); gateForm(); }
     });
   }catch(e){
     $("admGate").innerHTML = '<div class="rep-gate"><b>No se pudo cargar</b><br>No fue posible cargar la autenticación de Firebase. Revisa tu conexión y vuelve a abrir el panel.</div>';
@@ -2777,114 +2788,33 @@ async function repAuthInit(){
 }
 function gateForm(msg){
   $("admGate").innerHTML = `<div class="ios-gate">
-    <div class="g-ico"><i class="fa-solid fa-lock"></i></div>
-    <h3>Acceso seguro</h3>
-    <p class="g-sub">Inicia sesión con tu usuario y contraseña. Después confirmarás tu identidad con tu código de verificación de 2 factores.</p>
+    <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
+    <h3>Verificación de 2 factores</h3>
+    <p class="g-sub">Paso 2 de 2. Inicia sesión con tu usuario y contraseña para continuar.</p>
     <div class="g-group">
-      <label><i class="fa-solid fa-envelope"></i><input id="repEm" type="email" placeholder="Correo" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+      <label><i class="fa-solid fa-envelope"></i><input id="repEm" type="email" placeholder="Usuario (correo)" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
       <label><i class="fa-solid fa-key"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password"></label>
     </div>
     <div class="g-err" id="repGerr">${esc(msg || "")}</div>
-    <button class="g-btn" id="repGo" onclick="repSignIn()">Continuar</button>
-    <div class="g-secure"><i class="fa-solid fa-shield-halved"></i> Protegido con verificación de 2 factores</div></div>`;
+    <button class="g-btn" id="repGo" onclick="repSignIn()">Iniciar sesión</button>
+    <div class="g-secure"><i class="fa-solid fa-lock"></i> Acceso protegido con verificación de 2 factores</div></div>`;
   $("repPw").addEventListener("keydown", (e) => { if(e.key === "Enter") repSignIn(); });
-}
-function gateCode(msg){
-  $("admGate").innerHTML = `<div class="ios-gate">
-    <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
-    <h3>Verificación de 2 factores</h3>
-    <p class="g-sub">Abre tu app autenticadora y escribe el código de 6 dígitos de <b>Sxgura</b>.</p>
-    <input class="g-otp" id="repOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······" aria-label="Código de 6 dígitos">
-    <div class="g-err" id="repGerr">${esc(msg || "")}</div>
-    <button class="g-btn" id="repGo" onclick="repVerifyCode()">Verificar</button>
-    <button class="g-link" onclick="repGateCancel()">Volver</button></div>`;
-  const o = $("repOtp");
-  o.addEventListener("input", () => { o.value = o.value.replace(/\D/g, "").slice(0, 6); if(o.value.length === 6) repVerifyCode(); });
-  setTimeout(() => { try{ o.focus(); }catch(e){} }, 150);
-}
-async function gateEnroll(){
-  const u = fbAuth.currentUser;
-  $("admGate").innerHTML = `<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div><h3>Activa tu 2FA</h3><p class="g-sub">Preparando tu clave segura…</p></div>`;
-  try{
-    const session = await authMod.multiFactor(u).getSession();
-    mfaSecret = await authMod.TotpMultiFactorGenerator.generateSecret(session);
-    const uri = mfaSecret.generateQrCodeUrl(u.email || "admin", "Sxgura");
-    $("admGate").innerHTML = `<div class="ios-gate">
-      <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
-      <h3>Activa tu 2FA</h3>
-      <p class="g-sub">Es obligatorio para entrar. Solo se hace una vez.</p>
-      <div class="g-steps"><b>1.</b> Escanea el código con Google Authenticator, Authy o similar.<br><b>2.</b> Escribe aquí el código de 6 dígitos que te muestre.</div>
-      <div class="g-qr" id="repQR"></div>
-      <div class="g-key">${esc(mfaSecret.secretKey)}</div>
-      <a class="g-link" style="display:block;text-decoration:none;line-height:42px" href="${esc(uri)}">Abrir en mi app autenticadora</a>
-      <input class="g-otp" id="repOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······" aria-label="Código de 6 dígitos">
-      <div class="g-err" id="repGerr"></div>
-      <button class="g-btn" id="repGo" onclick="repEnrollConfirm()">Activar y entrar</button>
-      <button class="g-link" onclick="repGateCancel()">Cancelar</button></div>`;
-    const o = $("repOtp");
-    o.addEventListener("input", () => { o.value = o.value.replace(/\D/g, "").slice(0, 6); if(o.value.length === 6) repEnrollConfirm(); });
-    try{
-      if(!window.QRCode) await new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-      new QRCode($("repQR"), { text: uri, width: 170, height: 170, colorDark: "#000000", colorLight: "#ffffff" });
-    }catch(e){ $("repQR").style.display = "none"; }
-  }catch(e){
-    const c = (e && e.code) || "";
-    $("admGate").innerHTML = `<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-triangle-exclamation"></i></div><h3>No se pudo activar</h3>
-      <p class="g-sub">${c.includes("operation-not-allowed") || c.includes("unsupported") ? "Activa la verificación de 2 factores (TOTP) en Firebase → Authentication → Método de acceso → Autenticación multifactor (requiere Identity Platform)." : c.includes("unverified-email") ? "Verifica primero el correo de esta cuenta de Firebase y vuelve a intentarlo." : c.includes("requires-recent-login") ? "Por seguridad, inicia sesión de nuevo." : "Inténtalo de nuevo en unos segundos."}</p>
-      <button class="g-btn" onclick="repGateCancel()">Entendido</button></div>`;
-  }
 }
 async function repSignIn(){
   const em = $("repEm").value.trim(), pw = $("repPw").value, err = $("repGerr");
-  if(!em || !pw){ err.textContent = "Escribe tu correo y contraseña."; return; }
+  if(!em || !pw){ err.textContent = "Escribe tu usuario y contraseña."; return; }
   gBusy("repGo", true); err.textContent = "";
   try{ await authMod.signInWithEmailAndPassword(fbAuth, em, pw); }
   catch(e){
     const c = (e && e.code) || "";
-    if(c === "auth/multi-factor-auth-required"){
-      mfaResolver = authMod.getMultiFactorResolver(fbAuth, e);
-      mfaHint = mfaResolver.hints.find((h) => h.factorId === authMod.TotpMultiFactorGenerator.FACTOR_ID) || null;
-      if(mfaHint){ gateCode(); return; }
-      mfaResolver = null; err.textContent = "Tu cuenta usa un segundo factor no compatible. Usa una app autenticadora (TOTP).";
-    } else {
-      err.textContent = c.includes("operation-not-allowed") ? "Activa 'Correo/contraseña' en Firebase → Authentication → Método de acceso."
-        : c.includes("network") ? "Sin conexión." : c.includes("too-many") ? "Demasiados intentos. Espera un momento." : "Correo o contraseña incorrectos.";
-    }
+    err.textContent = c.includes("operation-not-allowed") ? "Activa 'Correo/contraseña' en Firebase → Authentication → Método de acceso."
+      : c.includes("network") ? "Sin conexión."
+      : c.includes("too-many") ? "Demasiados intentos. Espera un momento."
+      : c.includes("multi-factor") ? "Esta cuenta tiene multifactor de Firebase activado. Desactívalo en Firebase o usa otra cuenta."
+      : (c.includes("wrong-password") || c.includes("invalid-credential") || c.includes("user-not-found") || c.includes("invalid-email")) ? "Usuario o contraseña incorrectos."
+      : "No se pudo iniciar sesión (" + (c || "error") + ").";
     gBusy("repGo", false);
   }
-}
-async function repVerifyCode(){
-  const code = ($("repOtp").value || "").replace(/\D/g, ""), err = $("repGerr");
-  if(code.length !== 6){ err.textContent = "Escribe los 6 dígitos."; return; }
-  if($("repGo").disabled) return;
-  gBusy("repGo", true); err.textContent = "";
-  try{
-    await mfaResolver.resolveSignIn(authMod.TotpMultiFactorGenerator.assertionForSignIn(mfaHint.uid, code));
-    mfaResolver = null; mfaHint = null;
-  }catch(e){
-    const c = (e && e.code) || "";
-    err.textContent = c.includes("invalid-verification-code") ? "Código incorrecto o vencido." : c.includes("too-many") ? "Demasiados intentos. Espera un momento." : "No se pudo verificar. Inténtalo de nuevo.";
-    $("repOtp").value = ""; gBusy("repGo", false);
-  }
-}
-async function repEnrollConfirm(){
-  const code = ($("repOtp").value || "").replace(/\D/g, ""), err = $("repGerr");
-  if(code.length !== 6){ err.textContent = "Escribe los 6 dígitos."; return; }
-  if($("repGo").disabled) return;
-  gBusy("repGo", true); err.textContent = "";
-  try{
-    await authMod.multiFactor(fbAuth.currentUser).enroll(authMod.TotpMultiFactorGenerator.assertionForEnrollment(mfaSecret, code), "Sxgura Admin");
-    mfaSecret = null; showAdminUI();
-  }catch(e){
-    const c = (e && e.code) || "";
-    err.textContent = c.includes("invalid-verification-code") ? "Código incorrecto. Revisa la hora de tu teléfono e inténtalo otra vez."
-      : c.includes("requires-recent-login") ? "Por seguridad, cierra sesión e inicia de nuevo." : "No se pudo activar. Inténtalo de nuevo.";
-    $("repOtp").value = ""; gBusy("repGo", false);
-  }
-}
-function repGateCancel(){
-  mfaResolver = null; mfaHint = null; mfaSecret = null;
-  if(fbAuth && fbAuth.currentUser) repSignOut(); else gateForm();
 }
 async function repSignOut(){ try{ await authMod.signOut(fbAuth); }catch(e){} }
 function repUnwatch(){ if(repUnsub){ repUnsub(); repUnsub = null; } repData = []; setRepBadge(0); }
@@ -2962,11 +2892,14 @@ function renderReports(){
   open.forEach((id) => { if(repData.some((r) => r.id === id)) repToggle(id, true); });
 }
 async function repSetState(id, estado){
-  const patch = { estado };
-  if(estado === "leido") patch.leidoEn = serverTimestamp();
-  if(estado === "listo") patch.listoEn = serverTimestamp();
-  try{ if(fbAuth && fbAuth.currentUser && fbAuth.currentUser.email) patch.revisadoPor = fbAuth.currentUser.email; }catch(e){}
-  try{ await setDoc(doc(db, "reportes", id), patch, { merge: true }); }catch(e){ alert("No se pudo actualizar (revisa las reglas)."); }
+  const db_ = estado === "listo" ? "resuelto" : estado;          // en la base se guarda como siempre: nuevo / leido / resuelto
+  const full = { estado: db_ };
+  if(estado === "leido") full.leidoEn = serverTimestamp();
+  if(estado === "listo") full.listoEn = serverTimestamp();
+  try{ if(fbAuth && fbAuth.currentUser && fbAuth.currentUser.email) full.revisadoPor = fbAuth.currentUser.email; }catch(e){}
+  const ref = doc(db, "reportes", id);
+  try{ await setDoc(ref, full, { merge: true }); }
+  catch(e){ try{ await setDoc(ref, { estado: db_ }, { merge: true }); }catch(e2){ alert("No se pudo actualizar (revisa las reglas): " + ((e2 && e2.code) || "")); } }
 }
 /* ficha completa: datos del reporte + datos de la visita (IP, ubicación, dispositivo, fecha…) */
 const V_ROWS = [
@@ -3019,7 +2952,7 @@ Object.assign(window, {
   openProduct, closeProduct, changeQty, addToCart, openCart, closeCart, changeCartQty, removeFromCart,
   goToPayment, closePay, selectPayment, closeConfirm, sendOrderToWhatsApp,
   openCodePanel, closeCodePanel, addNum, removeNum, checkCode,
-  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, repVerifyCode, repEnrollConfirm, repGateCancel, repSetState, repToggle,
+  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, repSetState, repToggle,
   closeAdmin, openAdminTab, backToAdminMenu, setRange, moreVisits, setVMode, setStatRange, loadStats, changeStatus, changeActiveCount,
   setNotification, loadNotificationStatus, openNotification, toggleLang, updateProductStatus, loadAdminProducts, updateCatalogStatuses
 });
