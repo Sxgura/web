@@ -387,7 +387,7 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 @media (max-height:560px){.hero{min-height:auto}.hero h1{font-size:clamp(30px,9vw,44px)}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
-/* ===== REPORTES (visitante) ===== */
+/* ===== REPORTES (visitante) — chat Endo ===== */
 .ios-row .ico.r{background:linear-gradient(145deg,#ff9f5a,#e8431a)}
 .rbadge{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#ff3b30;color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
 .rep-panel{position:fixed;inset:0;z-index:10020;background:#000;display:flex;flex-direction:column;transform:translateY(100%);opacity:0;pointer-events:none;transition:transform .38s cubic-bezier(.32,.72,0,1),opacity .25s;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif}
@@ -409,7 +409,7 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .rep-msg.me{align-self:flex-end;background:linear-gradient(180deg,#2b92ff,#0a74ff);color:#fff;border-bottom-right-radius:6px}
 .rep-msg.err{background:#3a1d1f;color:#ffb4ad}
 .rep-msg.wide{max-width:94%;width:100%}
-.rep-meta{align-self:center;font-size:11px;color:#8e8e93;margin:6px 0 2px}
+.rep-meta{align-self:center;font-size:11.5px;color:#8e8e93;margin:8px 0 2px}
 .rep-typing{display:inline-flex;gap:4px;padding:13px 15px}
 .rep-typing i{width:7px;height:7px;border-radius:50%;background:#8e8e93;animation:repDot 1.2s infinite}
 .rep-typing i:nth-child(2){animation-delay:.18s}.rep-typing i:nth-child(3){animation-delay:.36s}
@@ -417,52 +417,77 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .rep-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .rep-links a{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border-radius:12px;text-decoration:none;color:#fff;font-weight:600;font-size:14px}
 .rep-links a.wa{background:#1fa855}.rep-links a.tg{background:#1e8fc4}
-.rep-form2{display:flex;gap:8px;margin-top:10px}
-.rep-form2 input{flex:1;min-width:0;height:40px;border-radius:12px;border:1px solid #3a3a3c;background:#1c1c1e;color:#fff;padding:0 12px;font-size:15px}
-.rep-form2 input:focus{outline:none;border-color:#0a84ff}
-.rep-btn{height:40px;padding:0 14px;border-radius:12px;border:0;background:#0a84ff;color:#fff;font-weight:600;font-size:14px}
-.rep-btn.ghost{background:#3a3a3c;color:#e5e5ea}
-.rep-btn:disabled{opacity:.5}
-.rep-stars{display:flex;gap:6px;margin-top:10px;justify-content:center}
-.rep-stars button{background:none;border:0;font-size:30px;color:#48484a;line-height:1;padding:2px;transition:transform .15s,color .15s}
+.rep-stars{display:flex;gap:8px;margin-top:12px;justify-content:center}
+.rep-stars button{background:none;border:0;font-size:28px;color:#48484a;line-height:1;padding:3px;transition:transform .15s,color .15s}
 .rep-stars button.on{color:#ffcc00}
 .rep-stars button:active{transform:scale(1.2)}
-.rep-chips{flex:none;display:flex;gap:8px;padding:6px var(--pad) 8px;width:100%;max-width:680px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
-.rep-chips::-webkit-scrollbar{display:none}
-.rep-chips button{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid #3a3a3c;background:#1c1c1e;color:#e5e5ea;font-size:14px;font-weight:500;white-space:nowrap;transition:.2s}
-.rep-chips button.on{background:rgba(10,132,255,.2);border-color:#0a84ff;color:#64b5ff}
+.rep-chips{flex:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:8px var(--pad) 6px;width:100%;max-width:680px;margin:0 auto}
+.rep-chips button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid rgba(10,132,255,.55);background:rgba(10,132,255,.12);color:#64b5ff;font-size:14.5px;font-weight:600;white-space:nowrap;transition:.2s;animation:repIn .3s cubic-bezier(.32,.72,0,1)}
+.rep-chips button:active{transform:scale(.96);background:rgba(10,132,255,.28)}
+.rep-chips button i{font-size:14px}
+.rep-chips button.soft{border-color:#3a3a3c;background:#1c1c1e;color:#c7c7cc}
+.rep-chips button.danger{border-color:rgba(255,69,58,.55);background:rgba(255,69,58,.12);color:#ff6b61}
 .rep-composer{flex:none;display:flex;align-items:flex-end;gap:8px;padding:8px var(--pad) max(12px,env(safe-area-inset-bottom));width:100%;max-width:680px;margin:0 auto;background:#000}
 .rep-composer textarea{flex:1;min-width:0;resize:none;max-height:130px;min-height:40px;padding:10px 15px;border-radius:20px;border:1px solid #3a3a3c;background:#1c1c1e;color:#fff;font-size:16px;line-height:1.35;overflow-y:auto}
 .rep-composer textarea:focus{outline:none;border-color:#0a84ff}
+.rep-composer textarea:disabled{opacity:.45}
 .rep-send{width:40px;height:40px;border-radius:50%;border:0;background:#0a84ff;color:#fff;font-size:16px;display:grid;place-items:center;flex:none;transition:.2s}
 .rep-send:disabled{background:#3a3a3c;color:#8e8e93}
-@media(prefers-reduced-motion:reduce){.rep-panel,.rep-msg{transition:none;animation:none}}
+@media(prefers-reduced-motion:reduce){.rep-panel,.rep-msg,.rep-chips button{transition:none;animation:none}}
+
+/* ===== ACCESO ADMIN (estilo iOS + 2FA) ===== */
+.rep-gate{background:#1c1c1e;border-radius:16px;padding:18px;max-width:420px;margin:10px auto;font-size:14px;color:#c7c7cc;line-height:1.5}
+.ios-gate{max-width:380px;margin:14px auto 0;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;animation:repIn .4s cubic-bezier(.32,.72,0,1)}
+.ios-gate *{font-family:inherit}
+.g-ico{width:76px;height:76px;border-radius:20px;margin:6px auto 18px;display:grid;place-items:center;font-size:32px;color:#fff;background:linear-gradient(145deg,#5ac8fa,#0a63ff);box-shadow:0 12px 32px rgba(10,132,255,.38)}
+.g-ico.ok{background:linear-gradient(145deg,#6ee08a,#16a34a);box-shadow:0 12px 32px rgba(48,209,88,.32)}
+.ios-gate h3{font-size:25px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px}
+.g-sub{font-size:14.5px;color:#8e8e93;line-height:1.45;margin:0 6px 22px}
+.g-group{background:#1c1c1e;border-radius:14px;overflow:hidden;text-align:left;margin-bottom:12px}
+.g-group label{display:flex;align-items:center;gap:12px;padding:0 16px;height:54px}
+.g-group label+label{border-top:.5px solid #38383a}
+.g-group i{width:20px;text-align:center;color:#8e8e93;font-size:16px}
+.g-group input{flex:1;min-width:0;height:100%;background:transparent;border:0;outline:0;color:#fff;font-size:17px}
+.g-group input::placeholder{color:#636366}
+.g-btn{width:100%;height:52px;border:0;border-radius:14px;background:#0a84ff;color:#fff;font-size:17px;font-weight:600;transition:.2s}
+.g-btn:active{transform:scale(.985);opacity:.9}
+.g-btn:disabled{opacity:.45}
+.g-link{width:100%;height:42px;margin-top:6px;border:0;background:transparent;color:#0a84ff;font-size:15.5px;font-weight:500}
+.g-err{min-height:20px;margin:2px 4px 10px;font-size:13.5px;color:#ff453a;line-height:1.4}
+.g-otp{width:100%;height:62px;text-align:center;font-size:30px;font-weight:600;letter-spacing:.5em;padding-left:.5em;border-radius:14px;border:0;background:#1c1c1e;color:#fff;outline:0;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.g-otp:focus{box-shadow:0 0 0 2px #0a84ff}
+.g-secure{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-size:12.5px;color:#8e8e93}
+.g-secure i{color:#30d158}
+.g-qr{display:inline-block;background:#fff;border-radius:16px;padding:12px;margin-bottom:12px;min-height:60px}
+.g-key{font-family:ui-monospace,Menlo,Consolas,monospace!important;font-size:13px;background:#1c1c1e;border-radius:12px;padding:11px 12px;word-break:break-all;color:#e5e5ea;margin-bottom:12px;user-select:all}
+.g-steps{text-align:left;font-size:13.5px;color:#a1a1a6;line-height:1.55;margin:0 4px 14px}
+.g-steps b{color:#fff}
 
 /* ===== REPORTES (admin) ===== */
-.rep-gate{background:#1c1c1e;border-radius:16px;padding:18px;max-width:420px;margin:10px auto}
-.rep-gate h3{font-size:17px;margin-bottom:6px}
-.rep-gate p{font-size:13px;color:#8e8e93;line-height:1.5;margin-bottom:12px}
-.rep-gate input{width:100%;height:44px;border-radius:12px;border:1px solid #3a3a3c;background:#000;color:#fff;padding:0 12px;font-size:15px;margin-bottom:10px}
-.rep-gate input:focus{outline:none;border-color:#0a84ff}
-.rep-gate .rep-btn{width:100%;height:44px}
-.rep-gate .gerr{color:#ff6b61;font-size:13px;margin-top:10px;line-height:1.45}
 .rcard{background:linear-gradient(180deg,#0b0b0e,#050506);border:1px solid #15151a;border-radius:16px;padding:14px;margin-bottom:10px}
 .rcard.is-new{border-color:#2a4a7a;box-shadow:0 0 14px rgba(10,132,255,.12)}
 .rcard-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
 .rtag{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px}
-.rtag.problema{background:rgba(255,69,58,.14);color:#ff6b61}.rtag.sugerencia{background:rgba(255,214,10,.14);color:#ffd60a}.rtag.otro{background:rgba(100,210,255,.14);color:#64d2ff}.rtag.general{background:rgba(142,142,147,.16);color:#c7c7cc}
-.rst{font-size:11.5px;color:#8e8e93}
-.rst.nuevo{color:#0a84ff;font-weight:700}.rst.resuelto{color:#30d158}
+.rtag.reporte,.rtag.problema{background:rgba(255,69,58,.14);color:#ff6b61}.rtag.sugerencia{background:rgba(255,214,10,.14);color:#ffd60a}.rtag.otro{background:rgba(100,210,255,.14);color:#64d2ff}.rtag.general{background:rgba(142,142,147,.16);color:#c7c7cc}
+.rst{font-size:11.5px;color:#8e8e93;font-weight:600}
+.rst.nuevo{color:#0a84ff;font-weight:700}.rst.listo{color:#30d158}.rst.leido{color:#ffd60a}
 .rago{margin-left:auto;font-size:12px;color:#8e8e93}
+.rwho{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:6px;color:#fff}
+.rwho i{color:#8e8e93;font-size:13px}
 .rmsg{font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;color:#f2f2f7}
 .rcontact{margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;background:#111114;border:1px solid #1f1f25;border-radius:12px;padding:9px 11px;overflow-wrap:anywhere}
-.rcontact a{color:#64b5ff;text-decoration:none;font-weight:600}
-.rstars{margin-top:10px;color:#ffcc00;letter-spacing:2px;font-size:15px}
+.rcontact a{color:#64b5ff;text-decoration:none;font-weight:600;margin-left:auto}
+.rstars{margin-top:10px;color:#ffcc00;font-size:14px;display:flex;gap:3px;align-items:center}
+.rstars small{color:#8e8e93;margin-left:6px;font-size:12px}
 .rmeta{margin-top:10px;font-size:12px;color:#8e8e93;display:flex;gap:6px 12px;flex-wrap:wrap}
 .ract{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.ract button,.ract a{padding:8px 13px;border-radius:10px;border:1px solid #2a2a2e;background:#141416;color:#e5e5ea;font-size:13px;font-weight:600;text-decoration:none}
+.ract button,.ract a{padding:8px 13px;border-radius:10px;border:1px solid #2a2a2e;background:#141416;color:#e5e5ea;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .ract .ok{background:rgba(48,209,88,.14);border-color:rgba(48,209,88,.4);color:#30d158}
-.ract .del{color:#ff6b61}
+.ract .info{background:rgba(10,132,255,.12);border-color:rgba(10,132,255,.45);color:#64b5ff}
+.rdet{margin-top:12px;border-top:1px solid #1a1a1f;padding-top:12px}
+.rdet h5{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8e8e93;margin:10px 0 8px}
+.rdet h5:first-child{margin-top:0}
+.rdet .tags{margin-bottom:8px}
 .rempty{text-align:center;color:#8e8e93;padding:40px 10px;font-size:14px;line-height:1.5}
 </style>
 </head>
@@ -764,15 +789,11 @@ Ingrese su código de acceso
     </div>
   </div>
   <div class="rep-log" id="repLog" data-no-i18n aria-live="polite"></div>
-  <div class="rep-chips" id="repChips">
-    <button data-c="problema" onclick="pickCat('problema')"><i class="fas fa-bug"></i> Problema</button>
-    <button data-c="sugerencia" onclick="pickCat('sugerencia')"><i class="fas fa-lightbulb"></i> Sugerencia</button>
-    <button data-c="otro" onclick="pickCat('otro')"><i class="fas fa-circle-question"></i> Otro</button>
-  </div>
+  <div class="rep-chips" id="repChips" style="display:none"></div>
   <form class="rep-composer" id="repForm" onsubmit="sendReport(event)" autocomplete="off">
     <input type="text" id="repHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
-    <textarea id="repText" rows="1" maxlength="1000" placeholder="Escribe tu mensaje…" enterkeyhint="send"></textarea>
-    <button type="submit" class="rep-send" id="repSend" aria-label="Enviar"><i class="fas fa-arrow-up"></i></button>
+    <textarea id="repText" rows="1" maxlength="1000" placeholder="Elige una opción…" enterkeyhint="send" disabled></textarea>
+    <button type="submit" class="rep-send" id="repSend" aria-label="Enviar" disabled><i class="fas fa-arrow-up"></i></button>
   </form>
 </div>
 
@@ -839,8 +860,9 @@ Ingrese su código de acceso
   <div id="repWrap">
     <div class="range-tabs counts" id="repFilter">
       <button data-f="nuevo" class="active" onclick="setRepFilter('nuevo')"><b id="rcNew">–</b><span>Nuevos</span></button>
+      <button data-f="leido" onclick="setRepFilter('leido')"><b id="rcRead">–</b><span>Leídos</span></button>
+      <button data-f="listo" onclick="setRepFilter('listo')"><b id="rcDone">–</b><span>Listos</span></button>
       <button data-f="todos" onclick="setRepFilter('todos')"><b id="rcAll">–</b><span>Todos</span></button>
-      <button data-f="resuelto" onclick="setRepFilter('resuelto')"><b id="rcDone">–</b><span>Resueltos</span></button>
     </div>
     <div id="repList"></div>
   </div>
@@ -1612,6 +1634,34 @@ const fmtDur = (sec) => {
   const h = Math.floor(m / 60); return h + " h" + (m % 60 ? " " + (m % 60) + " min" : "");
 };
 
+let visitSnap = null;
+function buildVisitDoc(geo, dev, br, org, vid, nuevo, n){
+  const conn = navigator.connection || {};
+  const now = new Date();
+  return {
+      /* campos originales (compatibilidad) */
+      pais: countryName(geo.cc, geo.pais), ciudad: geo.ciudad || "Desconocida", ip: geo.ip || "Oculta",
+      dispositivo: dev.dispositivo, modelo: dev.modelo, navegador: br.navegador, referrer: org.referrer,
+      resolucion: screen.width + "x" + screen.height,
+      idioma: navigator.language || "Desconocido",
+      zonaHoraria: Intl.DateTimeFormat().resolvedOptions().timeZone || geo.tz || "Desconocida",
+      isp: geo.isp || "Desconocido",
+      fecha: now.toLocaleDateString(), hora: now.toLocaleTimeString(), 
+      /* campos nuevos */
+      codigoPais: (geo.cc || "").toUpperCase(), region: geo.region || "", continente: geo.continente || "", codigoPostal: geo.cp || "",
+      lat: geo.lat != null ? Math.round(geo.lat * 100) / 100 : null, lon: geo.lon != null ? Math.round(geo.lon * 100) / 100 : null,
+      asn: String(geo.asn || ""),
+      modeloCodigo: dev.modeloCodigo, so: dev.so, soVersion: dev.soVersion, navegadorVersion: br.navegadorVersion,
+      origen: org.origen, tipoNavegacion: org.tipoNavegacion, pagina: location.pathname + location.search.slice(0, 60),
+      idiomas: (navigator.languages || []).slice(0, 4).join(", "),
+      viewport: innerWidth + "x" + innerHeight, dpr: window.devicePixelRatio || 1,
+      memoriaGB: navigator.deviceMemory || null, nucleos: navigator.hardwareConcurrency || null, tactil: navigator.maxTouchPoints || 0,
+      conexion: [conn.effectiveType, conn.downlink ? conn.downlink + "Mbps" : ""].filter(Boolean).join(" · "),
+      esquema: matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro",
+      visitante: vid, visitanteNuevo: nuevo, nVisita: n, offsetMin: -now.getTimezoneOffset()
+    };
+}
+
 /* ================= REGISTRO DE VISITA (1 por sesión) ================= */
 async function registerVisit(){
   if(navigator.webdriver) return;                 // evita contar bots/automatizaciones
@@ -1626,30 +1676,9 @@ async function registerVisit(){
     if(!vid){ vid = uid(); store.set("sx_vid", vid); store.set("sx_first", Date.now()); }
     const n = (parseInt(store.get("sx_n", "0")) || 0) + 1; store.set("sx_n", n);
 
-    const conn = navigator.connection || {};
-    const now = new Date();
-    const doc_ = {
-      /* campos originales (compatibilidad) */
-      pais: countryName(geo.cc, geo.pais), ciudad: geo.ciudad || "Desconocida", ip: geo.ip || "Oculta",
-      dispositivo: dev.dispositivo, modelo: dev.modelo, navegador: br.navegador, referrer: org.referrer,
-      resolucion: screen.width + "x" + screen.height,
-      idioma: navigator.language || "Desconocido",
-      zonaHoraria: Intl.DateTimeFormat().resolvedOptions().timeZone || geo.tz || "Desconocida",
-      isp: geo.isp || "Desconocido",
-      fecha: now.toLocaleDateString(), hora: now.toLocaleTimeString(), timestamp: serverTimestamp(),
-      /* campos nuevos */
-      codigoPais: (geo.cc || "").toUpperCase(), region: geo.region || "", continente: geo.continente || "", codigoPostal: geo.cp || "",
-      lat: geo.lat != null ? Math.round(geo.lat * 100) / 100 : null, lon: geo.lon != null ? Math.round(geo.lon * 100) / 100 : null,
-      asn: String(geo.asn || ""),
-      modeloCodigo: dev.modeloCodigo, so: dev.so, soVersion: dev.soVersion, navegadorVersion: br.navegadorVersion,
-      origen: org.origen, tipoNavegacion: org.tipoNavegacion, pagina: location.pathname + location.search.slice(0, 60),
-      idiomas: (navigator.languages || []).slice(0, 4).join(", "),
-      viewport: innerWidth + "x" + innerHeight, dpr: window.devicePixelRatio || 1,
-      memoriaGB: navigator.deviceMemory || null, nucleos: navigator.hardwareConcurrency || null, tactil: navigator.maxTouchPoints || 0,
-      conexion: [conn.effectiveType, conn.downlink ? conn.downlink + "Mbps" : ""].filter(Boolean).join(" · "),
-      esquema: matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro",
-      visitante: vid, visitanteNuevo: nuevo, nVisita: n, offsetMin: -now.getTimezoneOffset()
-    };
+    const base = buildVisitDoc(geo, dev, br, org, vid, nuevo, n);
+    const doc_ = { ...base, timestamp: serverTimestamp() };
+    try{ visitSnap = JSON.parse(JSON.stringify(base)); sessionStorage.setItem("sx_visit_snap", JSON.stringify(visitSnap)); }catch(e){}
     const ref = await addDoc(collection(db, "visitas"), doc_);
     myVisitId = ref.id;
     try{ sessionStorage.setItem("sx_visit_id", ref.id); }catch(e){}
@@ -2343,8 +2372,10 @@ function openNotification(){
 /* ================= REPORTES (visitante) — chat con Endo ================= */
 const T = (es, en) => (lang === "en" ? en : es);
 const WA_LINK = "https://wa.me/254102300454", TG_LINK = "https://t.me/SxgProyect";
-const REP_COOLDOWN = 20000, REP_DAILY = 5;
-let repCat = null, repBusy = false, repInit = false, repId = null, repLast = 0;
+const REP_COOLDOWN = 8000, REP_DAILY = 8;
+const FA = { bug:"fa-solid fa-bug", bulb:"fa-solid fa-lightbulb", chat:"fa-solid fa-comment-dots", wa:"fa-brands fa-whatsapp", tg:"fa-brands fa-telegram", mail:"fa-solid fa-envelope", plus:"fa-solid fa-plus", x:"fa-solid fa-xmark", skip:"fa-solid fa-forward", back:"fa-solid fa-rotate-left" };
+let repState = "idle", repCat = null, repBusy = false, repInit = false, repId = null, repLast = 0, repPending = "", repMethod = "";
+let repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false, rateDone:false };
 
 const repLog = () => $("repLog");
 const repScroll = () => { const l = repLog(); l.scrollTop = l.scrollHeight; };
@@ -2360,14 +2391,74 @@ async function botSay(html, wide, ms = 650){
   t.className = "rep-msg bot" + (wide ? " wide" : "");
   t.innerHTML = html; repScroll(); return t;
 }
+function setChips(items){
+  const box = $("repChips"); box.innerHTML = "";
+  items.forEach((it) => {
+    const b = document.createElement("button"); b.type = "button";
+    if(it.cls) b.className = it.cls;
+    b.innerHTML = (it.icon ? `<i class="${it.icon}"></i>` : "") + `<span>${esc(it.label)}</span>`;
+    b.addEventListener("click", () => { if(!repBusy) it.fn(); });
+    box.appendChild(b);
+  });
+  box.style.display = items.length ? "" : "none";
+  repScroll();
+}
+function setComposer(on, ph){
+  const ta = $("repText"), s = $("repSend");
+  ta.disabled = !on; s.disabled = !on; ta.placeholder = ph || T("Elige una opción…", "Choose an option…");
+  if(on && !matchMedia("(pointer:coarse)").matches){ try{ ta.focus({ preventScroll:true }); }catch(e){} }
+}
+const lock = () => { setChips([]); setComposer(false); };
+const takeText = () => { const ta = $("repText"); ta.value = ""; ta._fit && ta._fit(); };
+
+/* detección de agradecimientos / despedidas */
+const rnorm = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+const THX = new Set("ok okey okay oki vale listo dale perfecto genial bien bueno buenisimo entendido gracias muchas mil muchisimas thanks thank you thx ty cool great nice bye chao chau adios hasta luego nada mas no eso es todo de acuerdo excelente super igualmente igual para ti usted por la ayuda tu su amable atencion ya y gran buen dia tarde noche".split(" "));
+const THX_CORE = new Set("ok okey okay oki vale listo dale perfecto genial gracias thanks thank thx ty cool great nice bye chao chau adios entendido excelente super luego mas todo acuerdo".split(" "));
+function repThanks(raw){
+  const n = rnorm(raw);
+  if(!n) return /\p{Extended_Pictographic}/u.test(raw) && raw.length <= 8;
+  const t = n.split(" ");
+  return t.length <= 8 && t.every((w) => THX.has(w)) && t.some((w) => THX_CORE.has(w));
+}
+const repIsYes = (n) => /^(si+|sip|claro|yes|yeah|yep|otra|otra novedad|tengo otra|si otra|si tengo otra)$/.test(n);
+const repIsNo = (n) => /^(no|nop|nope|nel|nada)$/.test(n);
+
 async function repWelcome(){
-  repInit = true;
+  repInit = true; repState = "boot"; lock();
   await botSay(T("¡Hola! 👋 Soy <b>Endo</b>, el asistente de Sxgura Inc.", "Hi! 👋 I'm <b>Endo</b>, the Sxgura Inc assistant."), false, 500);
-  await botSay(T("Aquí puedes <b>reportar</b> un problema de la web o de los juegos, dejar una <b>sugerencia</b> o hacer cualquier consulta. Escribe tu mensaje abajo y lo recibiremos de inmediato.",
-                 "Here you can <b>report</b> a problem with the site or games, leave a <b>suggestion</b> or ask anything. Type your message below and we'll receive it right away."), false, 800);
-  await botSay(T("También puedes escribirnos por los medios oficiales y enviar <b>capturas de pantalla</b> del problema si lo deseas:",
-                 "You can also reach us through our official channels and send <b>screenshots</b> of the problem if you wish:") +
-    `<div class="rep-links"><a class="wa" href="${WA_LINK}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a><a class="tg" href="${TG_LINK}" target="_blank" rel="noopener"><i class="fab fa-telegram"></i> Telegram</a></div>`, true, 800);
+  await botSay(T("Estoy aquí para recibir tus <b>reportes</b>, <b>sugerencias</b> o cualquier otra novedad. Todo llega directo a nuestro equipo.",
+                 "I'm here to receive your <b>reports</b>, <b>suggestions</b> or any other news. Everything goes straight to our team."), false, 800);
+  await botSay(T("Si prefieres, también puedes escribirnos por los medios oficiales y enviar <b>capturas de pantalla</b>:",
+                 "You can also reach us through our official channels and send <b>screenshots</b>:") +
+    `<div class="rep-links"><a class="wa" href="${WA_LINK}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a><a class="tg" href="${TG_LINK}" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></div>`, true, 800);
+  await showCats(false);
+}
+async function showCats(again, intro){
+  repState = "boot"; lock();
+  await botSay(intro || (again ? T("¡Claro! 😊 ¿De qué trata esta nueva novedad?", "Sure! 😊 What is this new matter about?")
+                              : T("Empecemos. ¿De qué trata tu mensaje?", "Let's begin. What is your message about?")), false, 650);
+  repState = "cat";
+  setChips([
+    { label:T("Reporte", "Report"), icon:FA.bug, fn:() => pickCat("reporte") },
+    { label:T("Sugerencia", "Suggestion"), icon:FA.bulb, fn:() => pickCat("sugerencia") },
+    { label:T("Otra novedad", "Other news"), icon:FA.chat, fn:() => pickCat("otro") }
+  ]);
+  setComposer(false, T("Elige una opción…", "Choose an option…"));
+}
+async function pickCat(c){
+  if(repState !== "cat") return;
+  repCat = c; repState = "boot"; lock();
+  const lab = { reporte:T("Reporte", "Report"), sugerencia:T("Sugerencia", "Suggestion"), otro:T("Otra novedad", "Other news") };
+  repAdd("me", esc(lab[c]));
+  if(repPending){ const t = repPending; repPending = ""; repState = "msg"; $("repText").disabled = false; $("repText").value = t; $("repForm").requestSubmit(); return; }
+  const say = {
+    reporte:    T("Entendido. Haznos saber tu <b>reporte</b>: cuéntame qué ocurrió, dónde y, si puedes, cómo reproducirlo.", "Got it. Let us know your <b>report</b>: tell me what happened, where and, if you can, how to reproduce it."),
+    sugerencia: T("¡Genial! 💡 Sugiérenos: ¿qué te gustaría que <b>añadamos o mejoremos</b> en la web o en alguno de nuestros servicios?", "Great! 💡 Suggest away: what would you like us to <b>add or improve</b> on the site or in any of our services?"),
+    otro:       T("Claro, cuéntame tu <b>novedad</b>. ¿Qué quieres decirnos?", "Sure, tell me your <b>news</b>. What would you like to tell us?")
+  };
+  await botSay(say[c], false, 650);
+  repState = "msg"; setComposer(true, T("Escribe tu mensaje…", "Type your message…"));
 }
 /* el teclado móvil no tapa el cuadro de texto */
 if(window.visualViewport){
@@ -2384,17 +2475,16 @@ function openReports(){
   document.body.classList.add("panel-open");
   if(!repInit) repWelcome();
   if(lang === "en") translateNode($("reportPanel"));
-  setTimeout(() => { try{ $("repText").focus({ preventScroll: true }); }catch(e){} }, 400);
 }
 function closeReports(){
   $("reportPanel").classList.remove("active"); $("reportPanel").setAttribute("aria-hidden", "true");
   document.body.classList.remove("panel-open");
   try{ $("repText").blur(); }catch(e){}
 }
-function pickCat(c){
-  repCat = repCat === c ? null : c;
-  document.querySelectorAll("#repChips button").forEach((b) => b.classList.toggle("on", b.dataset.c === repCat));
-  $("repText").focus();
+function repResetChat(){
+  repLog().innerHTML = ""; setChips([]); takeText(); setComposer(false);
+  repInit = false; repState = "idle"; repCat = null; repId = null; repPending = ""; repMethod = ""; repBusy = false;
+  repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false, rateDone:false };
 }
 /* textarea que crece + Enter envía (Shift+Enter = salto) */
 (function(){
@@ -2411,126 +2501,344 @@ function repQuota(){
 }
 const repQuotaAdd = () => store.set("sxRepQ", JSON.stringify({ d: repDay(), n: repQuota() + 1 }));
 
+/* datos completos de la visita (IP, ubicación, dispositivo, fecha…) que acompañan cada reporte */
+async function repVisitSnap(){
+  if(visitSnap) return visitSnap;
+  try{ const s = sessionStorage.getItem("sx_visit_snap"); if(s){ visitSnap = JSON.parse(s); return visitSnap; } }catch(e){}
+  try{
+    const ua = navigator.userAgent;
+    const [geo, dev, br] = await Promise.all([getGeo(), getDeviceInfo(), detectBrowser(ua)]);
+    visitSnap = JSON.parse(JSON.stringify(buildVisitDoc(geo, dev, br, detectOrigin(ua), store.get("sx_vid") || "", false, parseInt(store.get("sx_n", "0")) || 0)));
+  }catch(e){ visitSnap = {}; }
+  return visitSnap;
+}
+
 async function sendReport(ev){
   ev.preventDefault();
   if(repBusy) return;
-  const ta = $("repText"), text = ta.value.trim();
+  const raw = $("repText").value.trim();
+  if(!raw) return;
+  if($("repHp").value){ takeText(); return; }                       // honeypot anti-bots
+  if(repState === "msg") return submitMessage(raw);
+  if(repState === "name") return stepName(raw);
+  if(repState === "contact") return stepContact(raw);
+  if(repState === "more") return stepMore(raw);
+}
+async function submitMessage(text){
+  if(repThanks(text)){ takeText(); repAdd("me", esc(text)); return farewell(); }
   if(text.length < 5){ repAdd("bot err", T("Cuéntame un poco más (mínimo 5 caracteres) 🙂", "Tell me a bit more (at least 5 characters) 🙂")); return; }
-  if($("repHp").value){ ta.value = ""; return; }                       // honeypot anti-bots
   if(Date.now() - repLast < REP_COOLDOWN){ repAdd("bot err", T("Espera unos segundos antes de enviar otro mensaje.", "Please wait a few seconds before sending another message.")); return; }
   if(repQuota() >= REP_DAILY){ repAdd("bot err", T("Alcanzaste el límite de mensajes de hoy. Puedes escribirnos por WhatsApp o Telegram.", "You've reached today's message limit. You can write to us on WhatsApp or Telegram.")); return; }
 
-  repBusy = true; $("repSend").disabled = true;
-  repAdd("me", esc(text));
-  const cat = repCat || "general";
-  ta.value = ""; ta._fit && ta._fit();
+  repBusy = true; setComposer(false, T("Enviando…", "Sending…"));
+  repAdd("me", esc(text)); takeText();
   const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
   try{
-    let geo = {}; try{ geo = await getGeo(); }catch(e){}
+    const v = await repVisitSnap();
     const ref = await addDoc(collection(db, "reportes"), {
-      mensaje: text.slice(0, 1000), categoria: cat, estado: "nuevo", contacto: "", calificacion: 0,
-      creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "",
-      pais: countryName(geo.cc, geo.pais) || "", codigoPais: (geo.cc || "").toUpperCase(),
-      dispositivo: (navigator.userAgentData && navigator.userAgentData.mobile) ? "Móvil" : (/Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Móvil" : "PC"),
-      pantalla: screen.width + "x" + screen.height
+      mensaje: text.slice(0, 1000), categoria: repCat || "otro", estado: "nuevo",
+      nombre: repProf.nombre, contactoTipo: repProf.contactoTipo, contacto: repProf.contacto, calificacion: repProf.calificacion || 0,
+      creado: serverTimestamp(), idioma: lang, visitaId: myVisitId || "", visitanteId: store.get("sx_vid") || "", sesionId: sessionId,
+      pais: v.pais || "", codigoPais: v.codigoPais || "", ciudad: v.ciudad || "", ip: v.ip || "",
+      dispositivo: v.dispositivo || "", pantalla: v.resolucion || (screen.width + "x" + screen.height),
+      datosVisita: v
     });
     repId = ref.id; repLast = Date.now(); repQuotaAdd();
-    await wait(500);
+    await wait(450);
     typing.className = "rep-msg bot";
     typing.innerHTML = T("¡Gracias! 💙 Tu solicitud ha sido <b>recibida</b> y será atendida por nuestro supervisor.", "Thank you! 💙 Your request has been <b>received</b> and will be handled by our supervisor.");
-    repScroll();
-    await repFollowUp();
+    repScroll(); repBusy = false;
+    await repNext();
   }catch(e){
     console.log("Reporte no enviado:", e);
     typing.className = "rep-msg bot err";
     typing.innerHTML = T("No pude enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp o Telegram.", "I couldn't send your message. Check your connection and try again, or write to us on WhatsApp or Telegram.");
-    ta.value = text; ta._fit && ta._fit();
-  }finally{
-    repBusy = false; $("repSend").disabled = false; repScroll();
+    $("repText").value = text; $("repText")._fit && $("repText")._fit();
+    repBusy = false; setComposer(true, T("Escribe tu mensaje…", "Type your message…"));
   }
 }
 async function repSave(patch){
   if(!repId) return false;
   try{ await setDoc(doc(db, "reportes", repId), patch, { merge: true }); return true; }catch(e){ return false; }
 }
-async function repFollowUp(){
-  const id = repId;
-  const m = await botSay(T("¿Quieres que te respondamos? Déjanos un medio de contacto <b>(opcional)</b>: WhatsApp, Telegram o correo.", "Want us to get back to you? Leave a contact method <b>(optional)</b>: WhatsApp, Telegram or email.") +
-    `<form class="rep-form2" id="repCF"><input type="text" id="repCI" maxlength="80" placeholder="${esc(T("+57 300… / @usuario / correo", "+1 555… / @user / email"))}" autocomplete="off"><button class="rep-btn" type="submit">${T("Guardar", "Save")}</button><button class="rep-btn ghost" type="button" id="repCS">${T("Omitir", "Skip")}</button></form>`, true, 900);
-  const form = m.querySelector("#repCF"), inp = m.querySelector("#repCI");
-  const next = async () => { form.remove(); await repRate(id); };
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const v = inp.value.trim().slice(0, 80);
-    if(v.length < 3){ inp.focus(); return; }
-    form.querySelector(".rep-btn").disabled = true;
-    const ok = await repSave({ contacto: v });
-    repAdd("me", esc(v));
-    await botSay(ok ? T("Listo, te contactaremos por ahí. ✅", "Done, we'll contact you there. ✅") : T("No pude guardar tu contacto, pero tu mensaje sí llegó.", "I couldn't save your contact, but your message did arrive."), false, 500);
-    await next();
-  });
-  m.querySelector("#repCS").addEventListener("click", next);
+const repNext = () => !repProf.contactDone ? askName() : !repProf.rateDone ? askRate() : askMore();
+
+/* 1) nombre */
+async function askName(){
+  repState = "boot"; lock();
+  await botSay(T("Para atenderte mejor, ¿cómo te llamas? <i>(opcional)</i>", "To help you better, what's your name? <i>(optional)</i>"), false, 800);
+  repState = "name"; setComposer(true, T("Escribe tu nombre…", "Type your name…"));
+  setChips([{ label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:async () => { repAdd("me", esc(T("Omitir", "Skip"))); await askMethod(); } }]);
 }
-async function repRate(id){
+async function stepName(text){
+  const v = text.replace(/\s+/g, " ").trim().slice(0, 60);
+  if(v.length < 2){ repAdd("bot err", T("Escribe un nombre válido, por favor.", "Please type a valid name.")); return; }
+  takeText(); repAdd("me", esc(v)); repProf.nombre = v; repState = "boot"; lock();
+  await repSave({ nombre: v });
+  await botSay(T(`Mucho gusto, <b>${esc(v)}</b> 😊`, `Nice to meet you, <b>${esc(v)}</b> 😊`), false, 500);
+  await askMethod();
+}
+/* 2) medio de contacto */
+async function askMethod(again){
+  repState = "boot"; lock();
+  await botSay(again ? T("Sin problema. Elige otro medio:", "No problem. Pick another channel:")
+                     : T("¿Por qué medio prefieres que te contactemos?", "Which channel do you prefer for us to contact you?"), false, 700);
+  repState = "method";
+  setChips([
+    { label:"WhatsApp", icon:FA.wa, fn:() => pickMethod("whatsapp") },
+    { label:"Telegram", icon:FA.tg, fn:() => pickMethod("telegram") },
+    { label:T("Correo", "Email"), icon:FA.mail, fn:() => pickMethod("correo") },
+    { label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:skipContact }
+  ]);
+  setComposer(false);
+}
+async function pickMethod(m){
+  if(repState !== "method") return;
+  repMethod = m; repState = "boot"; lock();
+  repAdd("me", esc(m === "whatsapp" ? "WhatsApp" : m === "telegram" ? "Telegram" : T("Correo", "Email")));
+  const say = {
+    whatsapp: T("Escribe tu número de WhatsApp con código de país (ej. <b>+57 300 123 4567</b>).", "Type your WhatsApp number with country code (e.g. <b>+1 555 123 4567</b>)."),
+    telegram: T("Escribe tu usuario de Telegram (ej. <b>@usuario</b>).", "Type your Telegram username (e.g. <b>@username</b>)."),
+    correo:   T("Escribe tu correo electrónico.", "Type your email address.")
+  };
+  const ph = { whatsapp:"+57 300 123 4567", telegram:"@usuario", correo:"correo@ejemplo.com" };
+  await botSay(say[m], false, 600);
+  repState = "contact"; setComposer(true, ph[m]);
+  setChips([
+    { label:T("Cambiar medio", "Change channel"), icon:FA.back, cls:"soft", fn:() => askMethod(true) },
+    { label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:skipContact }
+  ]);
+}
+function repCheckContact(m, t){
+  if(m === "whatsapp"){ const d = t.replace(/\D/g, ""); return (/^[+\d\s().-]+$/.test(t) && d.length >= 7 && d.length <= 15) ? (t.startsWith("+") ? "+" + d : d) : null; }
+  if(m === "telegram"){ const u = t.replace(/^@/, "").replace(/^https?:\/\/t\.me\//i, ""); return /^[A-Za-z0-9_]{4,32}$/.test(u) ? "@" + u : null; }
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t) ? t.toLowerCase() : null;
+}
+async function stepContact(text){
+  const v = repCheckContact(repMethod, text.trim());
+  if(!v){
+    repAdd("bot err", repMethod === "whatsapp" ? T("Ese número no parece válido. Inclúyelo con código de país, por ejemplo +57 300 123 4567.", "That number doesn't look valid. Include the country code, e.g. +1 555 123 4567.")
+      : repMethod === "telegram" ? T("Ese usuario no parece válido. Usa el formato @usuario (mínimo 4 caracteres).", "That username doesn't look valid. Use the format @username (at least 4 characters).")
+      : T("Ese correo no parece válido. Revisa que esté bien escrito.", "That email doesn't look valid. Please check it."));
+    return;
+  }
+  takeText(); repAdd("me", esc(v)); repState = "boot"; lock();
+  repProf.contactoTipo = repMethod; repProf.contacto = v; repProf.contactDone = true;
+  const ok = await repSave({ contactoTipo: repMethod, contacto: v });
+  await botSay(ok ? T("Listo, te contactaremos por ahí. ✅", "Done, we'll contact you there. ✅") : T("No pude guardar tu contacto, pero tu mensaje sí llegó.", "I couldn't save your contact, but your message did arrive."), false, 500);
+  await repNext();
+}
+async function skipContact(){
+  repAdd("me", esc(T("Omitir", "Skip")));
+  repProf.contactDone = true; repState = "boot"; lock();
+  await botSay(T("Sin problema 👍", "No problem 👍"), false, 400);
+  await repNext();
+}
+/* 3) calificación */
+async function askRate(){
+  repState = "boot"; lock();
   const m = await botSay(T("Por último, ¿cómo calificarías tu experiencia con la web?", "Lastly, how would you rate your experience with the site?") +
-    `<div class="rep-stars" id="repSt">${[1,2,3,4,5].map((n) => `<button type="button" data-n="${n}" aria-label="${n}">★</button>`).join("")}</div>`, true, 700);
+    `<div class="rep-stars" id="repSt">${[1,2,3,4,5].map((n) => `<button type="button" data-n="${n}" aria-label="${n}"><i class="fa-solid fa-star"></i></button>`).join("")}</div>`, true, 700);
+  repState = "rate";
+  setChips([{ label:T("Omitir", "Skip"), icon:FA.skip, cls:"soft", fn:async () => { repAdd("me", esc(T("Omitir", "Skip"))); repProf.rateDone = true; await askMore(); } }]);
   const stars = [...m.querySelectorAll("#repSt button")];
   stars.forEach((b) => {
-    b.addEventListener("mouseenter", () => stars.forEach((s) => s.classList.toggle("on", +s.dataset.n <= +b.dataset.n)));
+    b.addEventListener("mouseenter", () => { if(repState === "rate") stars.forEach((s) => s.classList.toggle("on", +s.dataset.n <= +b.dataset.n)); });
     b.addEventListener("click", async () => {
-      const n = +b.dataset.n;
+      if(repState !== "rate") return;
+      const n = +b.dataset.n; repState = "boot"; lock();
       stars.forEach((s) => { s.classList.toggle("on", +s.dataset.n <= n); s.disabled = true; });
+      repProf.calificacion = n; repProf.rateDone = true;
       await repSave({ calificacion: n });
-      await botSay(T("¡Gracias por tu calificación! Si necesitas algo más, escríbeme cuando quieras. 💙", "Thanks for your rating! If you need anything else, message me anytime. 💙"), false, 500);
-      repId = null;
+      await botSay(T("¡Gracias por tu calificación! 💙", "Thanks for your rating! 💙"), false, 500);
+      await askMore();
     });
   });
 }
+/* 4) despedida / otra novedad / cerrar */
+async function askMore(){
+  repState = "boot"; lock();
+  await botSay(T("¿Tienes alguna otra novedad?", "Do you have any other news?"), false, 600);
+  repState = "more";
+  setChips([
+    { label:T("Otra novedad", "Another matter"), icon:FA.plus, fn:() => { repAdd("me", esc(T("Otra novedad", "Another matter"))); showCats(true); } },
+    { label:T("Cerrar chat", "Close chat"), icon:FA.x, cls:"danger", fn:repClose }
+  ]);
+  setComposer(true, T("Escribe aquí…", "Type here…"));
+}
+async function farewell(){
+  repState = "boot"; lock();
+  await botSay(T("¡Fue un gusto haberte ayudado! 💙", "It was a pleasure helping you! 💙"), false, 600);
+  await askMore();
+}
+async function stepMore(text){
+  takeText(); repAdd("me", esc(text));
+  const n = rnorm(text);
+  if(repIsYes(n)) return showCats(true);
+  if(repIsNo(n) || repThanks(text)) return farewell();
+  repPending = text.slice(0, 1000);
+  return showCats(true, T("Con gusto. Para registrarlo bien, ¿de qué se trata?", "Happy to. To log it properly, what is it about?"));
+}
+async function repClose(){
+  if(repState === "closed") return;
+  repAdd("me", esc(T("Cerrar chat", "Close chat")));
+  repState = "closed"; lock();
+  await botSay(T("¡Gracias por escribirnos! 👋 Cierro el chat. Cuando quieras, inicia uno nuevo.", "Thanks for writing to us! 👋 Closing the chat. Start a new one anytime."), false, 600);
+  const m = document.createElement("div"); m.className = "rep-meta"; m.textContent = T("Chat cerrado", "Chat closed");
+  repLog().appendChild(m); repScroll();
+  await wait(1400);
+  closeReports();
+  setTimeout(repResetChat, 500);
+}
 
-/* ================= REPORTES (admin) — requiere Firebase Auth ================= */
+/* ================= REPORTES (admin) — Firebase Auth + verificación en 2 pasos ================= */
 let authMod = null, fbAuth = null, authUnsub = null, repUnsub = null, repData = [], repFilter = "nuevo";
-const CAT_LABEL = { problema: "Problema", sugerencia: "Sugerencia", otro: "Otro", general: "General" };
+let mfaResolver = null, mfaHint = null, mfaSecret = null;
+const CAT_LABEL = { reporte:"Reporte", problema:"Reporte", sugerencia:"Sugerencia", otro:"Otra novedad", general:"General" };
+const TIPO_ICO = { whatsapp:"fa-brands fa-whatsapp", telegram:"fa-brands fa-telegram", correo:"fa-solid fa-envelope" };
+const TIPO_LABEL = { whatsapp:"WhatsApp", telegram:"Telegram", correo:"Correo" };
+const estOf = (r) => r.estado === "resuelto" ? "listo" : (r.estado || "nuevo");
+const gBusy = (id, on) => { const b = $(id); if(b) b.disabled = on; };
+
+function showAdminUI(){
+  $("admGate").innerHTML = ""; $("admList").style.display = ""; $("repLogout").style.display = "";
+  repWatch();
+}
 async function repAuthInit(){
-  if(authUnsub){ if(fbAuth && fbAuth.currentUser) repWatch(); return; }
+  if(authUnsub){ if(fbAuth && fbAuth.currentUser && !$("admGate").innerHTML.trim()) repWatch(); return; }
   try{
     authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
     fbAuth = authMod.getAuth(fbApp);
     authUnsub = authMod.onAuthStateChanged(fbAuth, (u) => {
       if(u){
-        $("admGate").innerHTML = ""; $("admList").style.display = ""; $("repLogout").style.display = "";
-        repWatch();
+        let n = 0; try{ n = authMod.multiFactor(u).enrolledFactors.length; }catch(e){}
+        if(!n){ repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none"; backToAdminMenu(); gateEnroll(); return; }
+        showAdminUI();
       } else {
         repUnwatch(); $("admList").style.display = "none"; $("repLogout").style.display = "none";
-        backToAdminMenu(); repGateForm();
+        backToAdminMenu(); if(!mfaResolver) gateForm();
       }
     });
   }catch(e){
-    $("admGate").innerHTML = '<div class="rep-gate"><h3>No se pudo cargar</h3><p>No fue posible cargar la autenticación de Firebase. Revisa tu conexión y vuelve a abrir el panel.</p></div>';
+    $("admGate").innerHTML = '<div class="rep-gate"><b>No se pudo cargar</b><br>No fue posible cargar la autenticación de Firebase. Revisa tu conexión y vuelve a abrir el panel.</div>';
   }
 }
-function repGateForm(msg){
-  $("admGate").innerHTML = `<div class="rep-gate"><h3>Inicia sesión</h3>
-    <p>Por seguridad, el panel usa tu cuenta de Firebase (Authentication). Inicia sesión una vez y el navegador la recordará.</p>
-    <input id="repEm" type="email" placeholder="Correo del administrador" autocomplete="username">
-    <input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password">
-    <button class="rep-btn" onclick="repSignIn()">Iniciar sesión</button>
-    <div class="gerr" id="repGerr">${esc(msg || "")}</div></div>`;
+function gateForm(msg){
+  $("admGate").innerHTML = `<div class="ios-gate">
+    <div class="g-ico"><i class="fa-solid fa-lock"></i></div>
+    <h3>Acceso seguro</h3>
+    <p class="g-sub">Inicia sesión con tu usuario y contraseña. Después confirmarás tu identidad con un código de verificación.</p>
+    <div class="g-group">
+      <label><i class="fa-solid fa-envelope"></i><input id="repEm" type="email" placeholder="Correo" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+      <label><i class="fa-solid fa-key"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password"></label>
+    </div>
+    <div class="g-err" id="repGerr">${esc(msg || "")}</div>
+    <button class="g-btn" id="repGo" onclick="repSignIn()">Continuar</button>
+    <div class="g-secure"><i class="fa-solid fa-shield-halved"></i> Protegido con verificación en 2 pasos</div></div>`;
+  $("repPw").addEventListener("keydown", (e) => { if(e.key === "Enter") repSignIn(); });
+}
+function gateCode(msg){
+  $("admGate").innerHTML = `<div class="ios-gate">
+    <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
+    <h3>Verificación en 2 pasos</h3>
+    <p class="g-sub">Abre tu app autenticadora y escribe el código de 6 dígitos de <b>Sxgura</b>.</p>
+    <input class="g-otp" id="repOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······" aria-label="Código de 6 dígitos">
+    <div class="g-err" id="repGerr">${esc(msg || "")}</div>
+    <button class="g-btn" id="repGo" onclick="repVerifyCode()">Verificar</button>
+    <button class="g-link" onclick="repGateCancel()">Volver</button></div>`;
+  const o = $("repOtp");
+  o.addEventListener("input", () => { o.value = o.value.replace(/\D/g, "").slice(0, 6); if(o.value.length === 6) repVerifyCode(); });
+  setTimeout(() => { try{ o.focus(); }catch(e){} }, 150);
+}
+async function gateEnroll(){
+  const u = fbAuth.currentUser;
+  $("admGate").innerHTML = `<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div><h3>Activa tu 2FA</h3><p class="g-sub">Preparando tu clave segura…</p></div>`;
+  try{
+    const session = await authMod.multiFactor(u).getSession();
+    mfaSecret = await authMod.TotpMultiFactorGenerator.generateSecret(session);
+    const uri = mfaSecret.generateQrCodeUrl(u.email || "admin", "Sxgura");
+    $("admGate").innerHTML = `<div class="ios-gate">
+      <div class="g-ico"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3>Activa tu 2FA</h3>
+      <p class="g-sub">Es obligatorio para entrar. Solo se hace una vez.</p>
+      <div class="g-steps"><b>1.</b> Escanea el código con Google Authenticator, Authy o similar.<br><b>2.</b> Escribe aquí el código de 6 dígitos que te muestre.</div>
+      <div class="g-qr" id="repQR"></div>
+      <div class="g-key">${esc(mfaSecret.secretKey)}</div>
+      <a class="g-link" style="display:block;text-decoration:none;line-height:42px" href="${esc(uri)}">Abrir en mi app autenticadora</a>
+      <input class="g-otp" id="repOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······" aria-label="Código de 6 dígitos">
+      <div class="g-err" id="repGerr"></div>
+      <button class="g-btn" id="repGo" onclick="repEnrollConfirm()">Activar y entrar</button>
+      <button class="g-link" onclick="repGateCancel()">Cancelar</button></div>`;
+    const o = $("repOtp");
+    o.addEventListener("input", () => { o.value = o.value.replace(/\D/g, "").slice(0, 6); if(o.value.length === 6) repEnrollConfirm(); });
+    try{
+      if(!window.QRCode) await new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+      new QRCode($("repQR"), { text: uri, width: 170, height: 170, colorDark: "#000000", colorLight: "#ffffff" });
+    }catch(e){ $("repQR").style.display = "none"; }
+  }catch(e){
+    const c = (e && e.code) || "";
+    $("admGate").innerHTML = `<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-triangle-exclamation"></i></div><h3>No se pudo activar</h3>
+      <p class="g-sub">${c.includes("operation-not-allowed") || c.includes("unsupported") ? "Activa la verificación en 2 pasos (TOTP) en Firebase → Authentication → Método de acceso → Autenticación multifactor (requiere Identity Platform)." : c.includes("unverified-email") ? "Verifica primero el correo de esta cuenta de Firebase y vuelve a intentarlo." : c.includes("requires-recent-login") ? "Por seguridad, inicia sesión de nuevo." : "Inténtalo de nuevo en unos segundos."}</p>
+      <button class="g-btn" onclick="repGateCancel()">Entendido</button></div>`;
+  }
 }
 async function repSignIn(){
-  const em = $("repEm").value.trim(), pw = $("repPw").value;
-  if(!em || !pw){ $("repGerr").textContent = "Escribe correo y contraseña."; return; }
+  const em = $("repEm").value.trim(), pw = $("repPw").value, err = $("repGerr");
+  if(!em || !pw){ err.textContent = "Escribe tu correo y contraseña."; return; }
+  gBusy("repGo", true); err.textContent = "";
   try{ await authMod.signInWithEmailAndPassword(fbAuth, em, pw); }
   catch(e){
-    const c = e && e.code || "";
-    $("repGerr").textContent = c.includes("operation-not-allowed") ? "Activa 'Correo/contraseña' en Firebase → Authentication → Método de acceso."
-      : c.includes("network") ? "Sin conexión." : "Correo o contraseña incorrectos.";
+    const c = (e && e.code) || "";
+    if(c === "auth/multi-factor-auth-required"){
+      mfaResolver = authMod.getMultiFactorResolver(fbAuth, e);
+      mfaHint = mfaResolver.hints.find((h) => h.factorId === authMod.TotpMultiFactorGenerator.FACTOR_ID) || null;
+      if(mfaHint){ gateCode(); return; }
+      mfaResolver = null; err.textContent = "Tu cuenta usa un segundo factor no compatible. Usa una app autenticadora (TOTP).";
+    } else {
+      err.textContent = c.includes("operation-not-allowed") ? "Activa 'Correo/contraseña' en Firebase → Authentication → Método de acceso."
+        : c.includes("network") ? "Sin conexión." : c.includes("too-many") ? "Demasiados intentos. Espera un momento." : "Correo o contraseña incorrectos.";
+    }
+    gBusy("repGo", false);
   }
+}
+async function repVerifyCode(){
+  const code = ($("repOtp").value || "").replace(/\D/g, ""), err = $("repGerr");
+  if(code.length !== 6){ err.textContent = "Escribe los 6 dígitos."; return; }
+  if($("repGo").disabled) return;
+  gBusy("repGo", true); err.textContent = "";
+  try{
+    await mfaResolver.resolveSignIn(authMod.TotpMultiFactorGenerator.assertionForSignIn(mfaHint.uid, code));
+    mfaResolver = null; mfaHint = null;
+  }catch(e){
+    const c = (e && e.code) || "";
+    err.textContent = c.includes("invalid-verification-code") ? "Código incorrecto o vencido." : c.includes("too-many") ? "Demasiados intentos. Espera un momento." : "No se pudo verificar. Inténtalo de nuevo.";
+    $("repOtp").value = ""; gBusy("repGo", false);
+  }
+}
+async function repEnrollConfirm(){
+  const code = ($("repOtp").value || "").replace(/\D/g, ""), err = $("repGerr");
+  if(code.length !== 6){ err.textContent = "Escribe los 6 dígitos."; return; }
+  if($("repGo").disabled) return;
+  gBusy("repGo", true); err.textContent = "";
+  try{
+    await authMod.multiFactor(fbAuth.currentUser).enroll(authMod.TotpMultiFactorGenerator.assertionForEnrollment(mfaSecret, code), "Sxgura Admin");
+    mfaSecret = null; showAdminUI();
+  }catch(e){
+    const c = (e && e.code) || "";
+    err.textContent = c.includes("invalid-verification-code") ? "Código incorrecto. Revisa la hora de tu teléfono e inténtalo otra vez."
+      : c.includes("requires-recent-login") ? "Por seguridad, cierra sesión e inicia de nuevo." : "No se pudo activar. Inténtalo de nuevo.";
+    $("repOtp").value = ""; gBusy("repGo", false);
+  }
+}
+function repGateCancel(){
+  mfaResolver = null; mfaHint = null; mfaSecret = null;
+  if(fbAuth && fbAuth.currentUser) repSignOut(); else gateForm();
 }
 async function repSignOut(){ try{ await authMod.signOut(fbAuth); }catch(e){} }
 function repUnwatch(){ if(repUnsub){ repUnsub(); repUnsub = null; } repData = []; setRepBadge(0); }
 function repWatch(){
   if(repUnsub) return;
-  repUnsub = onSnapshot(query(collection(db, "reportes"), orderBy("creado", "desc"), limit(200)),
+  repUnsub = onSnapshot(query(collection(db, "reportes"), orderBy("creado", "desc"), limit(300)),
     (snap) => { repData = snap.docs.map((d) => ({ id: d.id, ...d.data() })); renderReports(); },
     (err) => {
       repUnsub = null;
@@ -2544,41 +2852,100 @@ function setRepFilter(f){
   document.querySelectorAll("#repFilter button").forEach((b) => b.classList.toggle("active", b.dataset.f === f));
   renderReports();
 }
-function contactLink(c){
-  const t = c.trim();
+function contactLink(c, tipo){
+  const t = (c || "").trim(); if(!t) return "";
+  if(tipo === "correo") return `mailto:${t}`;
+  if(tipo === "telegram") return `https://t.me/${t.replace(/^@/, "")}`;
+  if(tipo === "whatsapp"){ const d = t.replace(/\D/g, ""); return d ? `https://wa.me/${d}` : ""; }
   if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return `mailto:${t}`;
   if(/^@?[A-Za-z0-9_]{4,32}$/.test(t) && /[A-Za-z]/.test(t)) return `https://t.me/${t.replace(/^@/, "")}`;
   const d = t.replace(/[^\d]/g, "");
-  if(d.length >= 7 && d.length <= 15) return `https://wa.me/${d}`;
-  return "";
+  return (d.length >= 7 && d.length <= 15) ? `https://wa.me/${d}` : "";
 }
+const starsHTML = (n) => [1,2,3,4,5].map((i) => `<i class="${i <= n ? "fa-solid" : "fa-regular"} fa-star"></i>`).join("");
+const tsMs = (t) => (t && t.toMillis) ? t.toMillis() : 0;
+const fmtFull = (ms) => new Date(ms).toLocaleString(LANG_LOCALE(), { dateStyle:"full", timeStyle:"medium" });
+
 function renderReports(){
   const list = $("repList"); if(!list) return;
-  const nw = repData.filter((r) => (r.estado || "nuevo") === "nuevo").length;
-  const dn = repData.filter((r) => r.estado === "resuelto").length;
-  $("rcNew").textContent = nw; $("rcAll").textContent = repData.length; $("rcDone").textContent = dn;
-  setRepBadge(nw);
-  const rows = repData.filter((r) => repFilter === "todos" ? true : repFilter === "resuelto" ? r.estado === "resuelto" : (r.estado || "nuevo") === "nuevo");
+  const cnt = { nuevo:0, leido:0, listo:0 };
+  repData.forEach((r) => { cnt[estOf(r)]++; });
+  $("rcNew").textContent = cnt.nuevo; $("rcRead").textContent = cnt.leido; $("rcDone").textContent = cnt.listo; $("rcAll").textContent = repData.length;
+  setRepBadge(cnt.nuevo);
+  const rows = repData.filter((r) => repFilter === "todos" ? true : estOf(r) === repFilter);
   if(!rows.length){ list.innerHTML = `<div class="rempty">${repFilter === "nuevo" ? "No hay reportes nuevos 🎉" : "Sin reportes en esta lista."}</div>`; return; }
+  const open = new Set([...list.querySelectorAll(".rdet:not([hidden])")].map((e) => e.dataset.id));
   list.innerHTML = rows.map((r) => {
-    const est = r.estado || "nuevo", cat = CAT_LABEL[r.categoria] ? r.categoria : "general";
-    const ms = (r.creado && r.creado.toMillis) ? r.creado.toMillis() : 0;
-    const cl = r.contacto ? contactLink(r.contacto) : "";
-    const stars = r.calificacion > 0 ? `<div class="rstars" title="Calificación">${"★".repeat(r.calificacion)}${"☆".repeat(5 - r.calificacion)}</div>` : "";
-    return `<div class="rcard ${est === "nuevo" ? "is-new" : ""}" data-id="${esc(r.id)}">
-      <div class="rcard-h"><span class="rtag ${cat}">${CAT_LABEL[cat]}</span><span class="rst ${est}">${est === "nuevo" ? "● Nuevo" : est === "resuelto" ? "✓ Resuelto" : "Leído"}</span><span class="rago">${ms ? fmtAgo(ms) : "ahora"}</span></div>
+    const est = estOf(r), cat = CAT_LABEL[r.categoria] ? r.categoria : "general";
+    const ms = tsMs(r.creado), id = esc(r.id), tipo = r.contactoTipo || "";
+    const cl = r.contacto ? contactLink(r.contacto, tipo) : "";
+    const btns = est === "nuevo" ? `<button onclick="repSetState('${id}','leido')"><i class="fa-solid fa-eye"></i> Marcar leído</button><button class="ok" onclick="repSetState('${id}','listo')"><i class="fa-solid fa-check"></i> Listo</button>`
+      : est === "leido" ? `<button class="ok" onclick="repSetState('${id}','listo')"><i class="fa-solid fa-check"></i> Listo</button><button onclick="repSetState('${id}','nuevo')">Volver a nuevo</button>`
+      : `<button onclick="repSetState('${id}','nuevo')"><i class="fa-solid fa-rotate-left"></i> Reabrir</button>`;
+    return `<div class="rcard ${est === "nuevo" ? "is-new" : ""}" data-id="${id}">
+      <div class="rcard-h"><span class="rtag ${cat}">${CAT_LABEL[cat]}</span><span class="rst ${est}">${est === "nuevo" ? "Nuevo" : est === "listo" ? "Listo" : "Leído"}</span><span class="rago">${ms ? fmtAgo(ms) : "ahora"}</span></div>
+      ${r.nombre ? `<div class="rwho"><i class="fa-solid fa-user"></i>${esc(r.nombre)}</div>` : ""}
       <div class="rmsg">${esc(r.mensaje)}</div>
-      ${r.contacto ? `<div class="rcontact"><i class="fas fa-address-book"></i><span>${esc(r.contacto)}</span>${cl ? `<a href="${esc(cl)}" target="_blank" rel="noopener">Contactar</a>` : ""}</div>` : ""}
-      ${stars}
+      ${r.contacto ? `<div class="rcontact"><i class="${TIPO_ICO[tipo] || "fa-solid fa-address-book"}"></i><span>${tipo ? TIPO_LABEL[tipo] + ": " : ""}${esc(r.contacto)}</span>${cl ? `<a href="${esc(cl)}" target="_blank" rel="noopener">Contactar</a>` : ""}</div>` : ""}
+      ${r.calificacion > 0 ? `<div class="rstars" title="Calificación">${starsHTML(r.calificacion)}<small>${r.calificacion}/5</small></div>` : ""}
       <div class="rmeta"><span>${flagOf(r.codigoPais)} ${esc(r.pais || "País desconocido")}</span><span>${esc(r.dispositivo || "")} ${esc(r.pantalla || "")}</span><span>${r.idioma === "en" ? "EN" : "ES"}</span></div>
-      <div class="ract">${est !== "resuelto" ? `<button class="ok" onclick="repSetState('${esc(r.id)}','resuelto')">✓ Resuelto</button>` : `<button onclick="repSetState('${esc(r.id)}','nuevo')">Reabrir</button>`}
-        ${est === "nuevo" ? `<button onclick="repSetState('${esc(r.id)}','leido')">Marcar leído</button>` : ""}
-        <button class="del" onclick="repDelete('${esc(r.id)}')">Eliminar</button></div>
+      <div class="ract">${btns}<button class="info" onclick="repToggle('${id}')"><i class="fa-solid fa-circle-info"></i> Ver datos completos</button></div>
+      <div class="rdet" id="rdet-${id}" data-id="${id}" hidden></div>
     </div>`;
   }).join("");
+  open.forEach((id) => { if(repData.some((r) => r.id === id)) repToggle(id, true); });
 }
-async function repSetState(id, estado){ try{ await setDoc(doc(db, "reportes", id), { estado }, { merge: true }); }catch(e){ alert("No se pudo actualizar (revisa las reglas)."); } }
-async function repDelete(id){ if(!confirm("¿Eliminar este reporte definitivamente?")) return; try{ await deleteDoc(doc(db, "reportes", id)); }catch(e){ alert("No se pudo eliminar (revisa las reglas)."); } }
+async function repSetState(id, estado){
+  const patch = { estado };
+  if(estado === "leido") patch.leidoEn = serverTimestamp();
+  if(estado === "listo") patch.listoEn = serverTimestamp();
+  try{ if(fbAuth && fbAuth.currentUser && fbAuth.currentUser.email) patch.revisadoPor = fbAuth.currentUser.email; }catch(e){}
+  try{ await setDoc(doc(db, "reportes", id), patch, { merge: true }); }catch(e){ alert("No se pudo actualizar (revisa las reglas)."); }
+}
+/* ficha completa: datos del reporte + datos de la visita (IP, ubicación, dispositivo, fecha…) */
+const V_ROWS = [
+  ["ip","IP"],["pais","País"],["ciudad","Ciudad"],["region","Región"],["continente","Continente"],["codigoPostal","Código postal"],["_coords","Coordenadas"],
+  ["isp","Proveedor (ISP)"],["asn","ASN"],["zonaHoraria","Zona horaria"],["_utc","Desfase UTC"],
+  ["dispositivo","Dispositivo"],["modelo","Modelo"],["modeloCodigo","Código de modelo"],["so","Sistema operativo"],["soVersion","Versión del SO"],["navegador","Navegador"],["navegadorVersion","Versión del navegador"],
+  ["resolucion","Pantalla"],["viewport","Ventana"],["dpr","Densidad (DPR)"],["memoriaGB","Memoria (GB)"],["nucleos","Núcleos CPU"],["tactil","Puntos táctiles"],["conexion","Conexión"],["esquema","Tema del sistema"],
+  ["idioma","Idioma"],["idiomas","Idiomas"],["origen","Llegó desde"],["referrer","Referrer"],["tipoNavegacion","Tipo de navegación"],["pagina","Página"],
+  ["fecha","Fecha (visita)"],["hora","Hora (visita)"],["_tipoVisitante","Visitante"],["nVisita","N.º de visita"],["visitante","ID de visitante"],["_dur","Duración de la visita"]
+];
+const V_SKIP = new Set(["codigoPais","lat","lon","offsetMin","visitanteNuevo","duracionSeg","timestamp","ultimaActividad","admin"]);
+async function repToggle(id, keep){
+  const box = $("rdet-" + id); if(!box) return;
+  if(!keep && !box.hidden){ box.hidden = true; return; }
+  const r = repData.find((x) => x.id === id); if(!r) return;
+  box.hidden = false; box.innerHTML = '<div class="rst">Cargando datos…</div>';
+  let v = { ...(r.datosVisita || {}) };
+  if(r.visitaId){ try{ const s = await getDoc(doc(db, "visitas", r.visitaId)); if(s.exists()) v = { ...v, ...s.data() }; }catch(e){} }
+  const row = (l, val) => (val === "" || val == null) ? "" : `<p><b>${esc(l)}:</b> ${esc(val)}</p>`;
+  const ms = tsMs(r.creado), est = estOf(r);
+  const rep = [
+    row("ID del reporte", r.id), row("Fecha y hora del reporte", ms ? fmtFull(ms) : ""), row("Tipo", CAT_LABEL[r.categoria] || "General"),
+    row("Estado", est === "nuevo" ? "Nuevo" : est === "leido" ? "Leído" : "Listo"),
+    row("Leído el", tsMs(r.leidoEn) ? fmtFull(tsMs(r.leidoEn)) : ""), row("Listo el", tsMs(r.listoEn) ? fmtFull(tsMs(r.listoEn)) : ""), row("Revisado por", r.revisadoPor),
+    row("Nombre", r.nombre), row("Medio de contacto", TIPO_LABEL[r.contactoTipo] || r.contactoTipo), row("Contacto", r.contacto),
+    row("Calificación", r.calificacion > 0 ? r.calificacion + " / 5" : "Sin calificar"), row("Idioma del chat", r.idioma === "en" ? "Inglés" : "Español"),
+    row("ID de visita", r.visitaId), row("ID de sesión", r.sesionId)
+  ].join("");
+  const derived = {
+    _coords: (v.lat != null && v.lon != null) ? `${v.lat}, ${v.lon}` : "",
+    _utc: v.offsetMin != null ? "UTC" + (v.offsetMin >= 0 ? "+" : "-") + (Math.abs(v.offsetMin) / 60) : "",
+    _tipoVisitante: v.visitanteNuevo === true ? "Nuevo (primera visita)" : v.visitanteNuevo === false ? "Recurrente" : "",
+    _dur: v.duracionSeg ? fmtDur(v.duracionSeg) : ""
+  };
+  const known = new Set(V_ROWS.map((x) => x[0]));
+  const vis = V_ROWS.map(([k, l]) => row(l, k.startsWith("_") ? derived[k] : (v[k] == null ? "" : String(v[k])))).join("") +
+    Object.keys(v).filter((k) => !known.has(k) && !V_SKIP.has(k) && v[k] !== "" && v[k] != null && typeof v[k] !== "object").map((k) => row(k, String(v[k]))).join("");
+  const vms = tsMs(v.timestamp);
+  const tags = [v.visitanteNuevo === true ? "Visitante nuevo" : v.visitanteNuevo === false ? "Visitante recurrente" : "", v.nVisita ? "Visita n.º " + v.nVisita : ""].filter(Boolean);
+  const map = (v.lat != null && v.lon != null) ? `<a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps?q=${encodeURIComponent(v.lat + "," + v.lon)}"><i class="fa-solid fa-location-dot"></i> Ver en el mapa</a>` : "";
+  box.innerHTML = `<h5>Datos del reporte</h5><div class="vgrid">${rep}</div>
+    <h5>Datos de la visita${vms ? " · " + esc(fmtFull(vms)) : ""}</h5>
+    ${tags.length ? `<div class="tags">${tags.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>` : ""}
+    ${vis ? `<div class="vgrid">${vis}</div>${map}` : '<div class="rst">Este reporte no incluye datos de visita.</div>'}`;
+}
 
 /* ================= EXPORTAR PARA onclick="" ================= */
 Object.assign(window, {
@@ -2586,7 +2953,7 @@ Object.assign(window, {
   openProduct, closeProduct, changeQty, addToCart, openCart, closeCart, changeCartQty, removeFromCart,
   goToPayment, closePay, selectPayment, closeConfirm, sendOrderToWhatsApp,
   openCodePanel, closeCodePanel, addNum, removeNum, checkCode,
-  openReports, closeReports, pickCat, sendReport, setRepFilter, repSignOut, repSignIn, repSetState, repDelete,
+  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, repVerifyCode, repEnrollConfirm, repGateCancel, repSetState, repToggle,
   closeAdmin, openAdminTab, backToAdminMenu, setRange, moreVisits, setVMode, setStatRange, loadStats, changeStatus, changeActiveCount,
   setNotification, loadNotificationStatus, openNotification, toggleLang, updateProductStatus, loadAdminProducts, updateCatalogStatuses
 });
