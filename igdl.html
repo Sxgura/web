@@ -184,7 +184,7 @@ function esLinkInstagram(texto){
 function mostrarAviso(mensaje){
   clearTimeout(avisoTimer);
   resDiv.innerHTML = `<div class="aviso">${mensaje}</div>`;
-  avisoTimer = setTimeout(() => { resDiv.innerHTML=""; }, 3000);
+  avisoTimer = setTimeout(() => { resDiv.innerHTML=""; }, 6000);
 }
 
 // Muestra el estado (buscando/listo) y lo vuelve a la normalidad a los 3 segundos
@@ -237,40 +237,92 @@ input.addEventListener("keydown", (e) => {
   }
 });
 
-async function descargar(){
-  const link=document.getElementById("link").value;
+/* ===== APIs (se prueban en orden; si una falla pasa a la siguiente) =====
+   Para añadir otra API: agrega una línea con su URL y la palabra URL donde va el enlace. */
+const APIS = [
+  "https://api.deline.web.id/downloader/ig?url=",
+  // "https://OTRA-API.com/ig?url=",
+];
 
-  if(!link){
-    mostrarAviso("Pega el enlace y listo");
-    return;
+// Busca recursivamente enlaces de video/imagen en cualquier formato de respuesta
+function extraerMedia(obj){
+  const videos=new Set(), imgs=new Set();
+  (function rec(o,k){
+    if(!o) return;
+    if(typeof o==="string"){
+      if(!/^https?:\/\//i.test(o)) return;
+      if(/\.(mp4|mov|webm)(\?|$)|video/i.test(o+" "+(k||""))) videos.add(o);
+      else if(/\.(jpe?g|png|webp)(\?|$)|image|thumb|photo|img/i.test(o+" "+(k||""))) imgs.add(o);
+      return;
+    }
+    if(Array.isArray(o)){ o.forEach(v=>rec(v,k)); return; }
+    if(typeof o==="object"){ for(const key in o) rec(o[key],key); }
+  })(obj,"");
+  return {videos:[...videos], imgs:[...imgs]};
+}
+
+async function pedir(base,link){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(),20000);
+  try{
+    const res=await fetch(base+encodeURIComponent(link),{signal:ctrl.signal});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    return await res.json();
+  }finally{ clearTimeout(t); }
+}
+
+// Descarga real: baja el archivo y lo guarda (el atributo download no funciona con enlaces de otro dominio)
+async function guardar(url,nombre,btn){
+  const txt=btn.textContent; btn.textContent="Descargando...";
+  try{
+    const r=await fetch(url); if(!r.ok) throw 0;
+    const b=await r.blob();
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(b); a.download=nombre; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+    btn.textContent="Guardado ✔";
+  }catch{
+    window.open(url,"_blank"); btn.textContent=txt; // respaldo: abrir y guardar manualmente
   }
+}
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+
+async function descargar(){
+  const link=document.getElementById("link").value.trim();
+  if(!link){ mostrarAviso("Pega el enlace y listo"); return; }
 
   clearTimeout(avisoTimer);
   statusEl.textContent = "Buscando...";
   resDiv.innerHTML=`<div class="spinner"></div>`;
 
-  try{
-    const api="https://api.deline.web.id/downloader/ig?url="+encodeURIComponent(link);
-    const res=await fetch(api);
-    const data=await res.json();
-
-    let video=data?.result?.media?.videos?.[0];
-
-    if(video){
-      resDiv.innerHTML=`
-        <video controls src="${video}"></video>
-        <a href="${video}" download>Guardar</a>
-      `;
-      mostrarEstado("Listo ✔");
-    }else{
-      mostrarAviso("Enlace incorrecto o sin resultados");
-      statusEl.textContent="";
+  let ultimoError="";
+  for(const base of APIS){
+    try{
+      const data=await pedir(base,link);
+      const m=extraerMedia(data);
+      if(m.videos.length || m.imgs.length){
+        let html="";
+        m.videos.slice(0,5).forEach((v,i)=>{
+          html+=`<video controls playsinline src="${esc(v)}"></video><a href="#" data-u="${esc(v)}" data-n="instagram_${Date.now()}_${i+1}.mp4">Guardar video</a>`;
+        });
+        if(!m.videos.length) m.imgs.slice(0,5).forEach((v,i)=>{
+          html+=`<img src="${esc(v)}" style="width:180px;margin-top:15px;border-radius:12px"><a href="#" data-u="${esc(v)}" data-n="instagram_${Date.now()}_${i+1}.jpg">Guardar imagen</a>`;
+        });
+        resDiv.innerHTML=html;
+        resDiv.querySelectorAll("a[data-u]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();guardar(a.dataset.u,a.dataset.n,a);}));
+        mostrarEstado("Listo ✔");
+        return;
+      }
+      ultimoError="sin resultados";
+    }catch(e){
+      ultimoError=(e&&e.name==="AbortError")?"tiempo agotado":(e&&e.message)||"sin conexión";
     }
-
-  }catch{
-    mostrarAviso("No se pudo conectar. Intenta de nuevo");
-    statusEl.textContent="";
   }
+  const detalle = ultimoError==="sin resultados" ? "Enlace incorrecto, privado o sin resultados"
+                : "El servicio de descarga no responde ("+ultimoError+"). Intenta más tarde";
+  mostrarAviso(detalle);
+  statusEl.textContent="";
 }
 </script>
 
