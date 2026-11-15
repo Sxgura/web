@@ -263,14 +263,6 @@
   .cta{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:12px;background:#0866ff;color:#fff;font-weight:700;font-size:14.5px;transition:transform .15s,opacity .15s}
   .cta:active{transform:scale(.97);opacity:.9}
   .cta svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .cta.wa{background:#25D366;color:#06210f}
-  .cta.wa svg{stroke:#06210f}
-  .services{list-style:none;margin-top:12px}
-  .services li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dotted #3f4042;font-size:14.5px;color:#e4e6eb}
-  .services li:last-child{border-bottom:none}
-  .services .ic{width:34px;height:34px;border-radius:50%;border:1px solid #6b5a2e;background:rgba(214,170,80,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .services .ic svg{width:18px;height:18px;stroke:#d9b45f;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-  .contact-name{margin-top:14px;font-size:13px;color:#b0b3b8;text-align:center}
 
   .footer{padding:22px 14px 28px;text-align:center;font-size:12.5px;color:#7d8085;letter-spacing:.3px}
   .footer b{color:#b0b3b8}
@@ -295,27 +287,11 @@
   .link-line{display:inline-flex;margin-top:12px;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.06);border:none;font-size:12px;color:#8ab8ff}
   .cta{display:inline-flex;width:auto;margin-top:10px;margin-left:8px;padding:7px 16px;border-radius:999px;background:transparent;border:1.3px solid var(--ios-blue);color:var(--ios-blue);font-size:13px;font-weight:600}
   .cta:active{background:rgba(10,132,255,.14)}
-  .services{margin-top:8px}
-  .services li{padding:9px 0;font-size:14px;border-bottom:.5px solid var(--ios-sep)}
-  .services .ic{width:30px;height:30px}
-  .services .ic svg{width:16px;height:16px}
-  .contact-name{text-align:left;margin-top:12px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#8e8e93}
-  .contacts{margin-top:6px;background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden}
-  .contact{display:flex;align-items:center;gap:10px;padding:9px 12px;font-size:14px;color:#e4e6eb}
-  .contact+.contact{border-top:.5px solid var(--ios-sep)}
-  .contact:active{background:rgba(255,255,255,.08)}
-  .contact .wa{width:20px;height:20px}
-  .contact::after{content:"›";margin-left:auto;color:#636366;font-size:18px;line-height:1}
   .footer{margin-top:auto;padding:26px 14px 22px;font-size:12px;font-weight:400;color:#7d8085;letter-spacing:0}
   .link-line{margin-right:0}
 
   /* ajustes finales */
   .cta{margin-left:0;margin-top:12px}
-  .contacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:none;border-radius:0;overflow:visible}
-  .contact{justify-content:center;gap:8px;padding:10px 8px;border-radius:14px;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);font-weight:600;font-size:13.5px;transition:background .15s,transform .15s}
-  .contact+.contact{border-top:.5px solid rgba(255,255,255,.1)}
-  .contact::after{content:none}
-  .contact:active{transform:scale(.97);background:rgba(255,255,255,.1)}
   .like-count{font-size:12.5px;margin-top:2px}
 </style>
 </head>
@@ -382,7 +358,6 @@ Y Dame Fuerzas Por El Dia. 🙌🏼
     <div class="tabs">
       <div class="tab active" data-tab="principal" role="tab" tabindex="0">Principal</div>
       <div class="tab" data-tab="proyecto" role="tab" tabindex="0">Proyecto</div>
-      <div class="tab" data-tab="medicina" role="tab" tabindex="0">Medicina</div>
     </div>
   </div>
 
@@ -452,33 +427,6 @@ Y Dame Fuerzas Por El Dia. 🙌🏼
       <div class="card-title">Visita mi sitio web</div>
       <div class="card-text">Herramientas, utilidades, juegos y más.</div>
             <a class="cta snd" href="https://sxgura.github.io/web/" target="_blank" rel="noopener noreferrer">Visitar web</a>
-    </div>
-  </div>
-
-  <div class="panel" id="p-medicina">
-    <div class="post">
-      <div class="post-head">
-        <div class="post-av" style="background-image:url('https://i.ibb.co/BK2hbsr9/IMG-20260801-115053.jpg');"></div>
-        <div class="post-meta">
-          <div class="post-name-line"><div class="post-name">S'xgura B'rrokal</div>
-          <img class="verify" src="https://i.ibb.co/Y7mFPHCG/1788579887095.png" alt="Verificado" style="width:14px;height:14px;flex-basis:14px"></div>
-          <div class="post-sub"><span>Medicina y salud</span></div>
-        </div>
-      </div>
-      <div class="card-title">Médicos de medicina ancestral y tratamiento espiritual</div>
-      <ul class="services">
-        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14zM5 19l7-7"/></svg></span>Lecturas</li>
-        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg></span>Baños y despojos</li>
-        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4l7 12H5zM12 20L5 8h14z"/></svg></span>Trabajos espirituales</li>
-        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6zM12 9v6M9 12h6"/></svg></span>Aseguranzas y protección</li>
-        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg></span>Medicina natural y espiritual</li>
-        <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>Cadenas de liberación y limpias</li>
-      </ul>
-      <div class="contact-name">Contacto</div>
-      <div class="contacts">
-        <a class="contact snd" href="https://wa.me/573150160607" target="_blank" rel="noopener noreferrer"><img class="wa" src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" width="20" height="20"><span>Contacto 1</span></a>
-        <a class="contact snd" href="https://wa.me/573043345038" target="_blank" rel="noopener noreferrer"><img class="wa" src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" width="20" height="20"><span>Contacto 2</span></a>
-      </div>
     </div>
   </div>
 
