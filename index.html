@@ -203,6 +203,18 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .visit-box.admin-visit{border-color:#a56bff;box-shadow:0 0 16px rgba(165,107,255,.18)}
 .tag.adm{background:rgba(165,107,255,.16);border-color:#a56bff;color:#d8bcff;font-weight:600}
 .visit-badge{padding:4px 9px;border-radius:8px;background:#00cc66;color:#fff;font-size:10px;font-weight:bold;white-space:nowrap}
+.vact{margin-top:10px;border:1px solid #1c1c22;border-radius:12px;background:rgba(255,255,255,.03);padding:8px 10px}
+.vact summary{font-size:12px;color:#cfd2ff;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;line-height:1.35}
+.vact summary::-webkit-details-marker{display:none}
+.vact summary::after{content:"▾";margin-left:auto;color:#8e8e93}
+.vact[open] summary::after{content:"▴"}
+.pulse{width:8px;height:8px;border-radius:50%;background:#00ff88;box-shadow:0 0 0 0 rgba(0,255,136,.6);animation:pulseDot 1.6s infinite;flex:0 0 auto}
+@keyframes pulseDot{70%{box-shadow:0 0 0 7px rgba(0,255,136,0)}100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}}
+.vchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.vchips .chip{font-size:11px;padding:3px 8px;border-radius:999px;background:#15151a;border:1px solid #2a2a33;color:#ddd}
+.vchips .chip b{color:#00ff88;margin-left:3px}
+.vhist{margin-top:8px;max-height:170px;overflow:auto;font-size:11.5px;color:#bbb;line-height:1.5}
+.vhist time{color:#8e8e93;margin-right:8px;font-variant-numeric:tabular-nums}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .tag{font-size:11.5px;padding:4px 9px;border-radius:999px;background:#15151a;border:1px solid #23232a;color:#ddd}
 .vgrid{display:grid;grid-template-columns:1fr;gap:3px 14px}
@@ -1227,7 +1239,7 @@ CATÁLOGO
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, limit, where,
-  serverTimestamp, setDoc, getDoc, Timestamp, onSnapshot, getCountFromServer
+  serverTimestamp, setDoc, getDoc, Timestamp, onSnapshot, getCountFromServer, increment, arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1313,7 +1325,7 @@ const EN = {
   "Navegador": "Browser", "Pantalla": "Screen", "Idioma": "Language", "Zona horaria": "Time zone", "Proveedor (ISP)": "Provider (ISP)",
   "Llegó desde": "Came from", "Fecha": "Date", "Hora": "Time", "Conexión": "Connection", "Memoria / CPU": "Memory / CPU",
   "Visitante": "Visitor", "Página": "Page", "Tipo de acceso": "Access type",
-  "Enlace directo": "Direct link", "Visitante nuevo": "New visitor", "Visitante recurrente": "Returning visitor",
+  "Enlace directo": "Direct link", "Visitante nuevo": "New visitor", "Actividad": "Activity", "acciones": "actions", "Última": "Last", "Botones y secciones más tocados": "Most tapped buttons & sections", "Productos más vistos": "Most viewed products", "Entradas": "Entries", "Visitante recurrente": "Returning visitor",
   /* estados */
   "Disponible": "Available", "Agotado": "Sold out", "Pocas unidades": "Low stock", "Fuera de servicio": "Out of service",
   "En mantenimiento": "Under maintenance", "AGOTADO": "SOLD OUT", "FUERA DE SERVICIO": "OUT OF SERVICE", "EN MANTENIMIENTO": "UNDER MAINTENANCE",
@@ -1647,19 +1659,51 @@ function tickActive(){
   if(!document.hidden) activeSec += Math.min(5, (now - lastTick) / 1000);   // solo tiempo con la pestaña visible
   lastTick = now;
 }
+/* ---- Actividad del visitante: cada botón/sección que toca se registra en su visita ---- */
+const ACT_MAX_HIST = 80;
+let actQ = []; try{ actQ = JSON.parse(sessionStorage.getItem("sx_act_q") || "[]"); if(!Array.isArray(actQ)) actQ = []; }catch(e){ actQ = []; }
+let actHist = 0; try{ actHist = parseInt(sessionStorage.getItem("sx_act_h") || "0") || 0; }catch(e){}
+let actFails = 0, actFlushT = null;
+const actSave = () => { try{ sessionStorage.setItem("sx_act_q", JSON.stringify(actQ.slice(-60))); }catch(e){} };
+const actKey = (t) => String(t || "").replace(/[.\/\[\]*`~\\]/g, "_").replace(/\s+/g, " ").trim().slice(0, 48);
+function track(label){
+  label = actKey(label); if(!label) return;
+  actQ.push({ k: label, t: Date.now() }); actSave();
+  clearTimeout(actFlushT); actFlushT = setTimeout(() => sendDuration(true), 1200);   // casi al instante
+}
 async function sendDuration(force){
   tickActive();
   const sec = Math.round(activeSec);
   try{ sessionStorage.setItem("sx_active_sec", sec); }catch(e){}
-  if(!myVisitId || (!force && sec === lastSent) || sec < 1) return;
+  if(!myVisitId) return;
+  const q = actQ.splice(0); actSave();
+  if(!force && sec === lastSent && !q.length) return;
+  if(sec < 1 && !q.length) return;
   lastSent = sec;
-  try{ await setDoc(doc(db, "visitas", myVisitId), { duracionSeg: sec, ultimaActividad: serverTimestamp() }, { merge: true }); }catch(e){}
+  const upd = { ultimaActividad: serverTimestamp() };
+  if(sec >= 1) upd.duracionSeg = sec;
+  let room = 0;
+  if(q.length){
+    const cnt = {}; q.forEach((e) => { cnt[e.k] = (cnt[e.k] || 0) + 1; });
+    const acc = {}; Object.keys(cnt).forEach((k) => { acc[k] = increment(cnt[k]); });
+    upd.acciones = acc; upd.nAcciones = increment(q.length);
+    upd.ultimaAccion = q[q.length - 1].k; upd.ultimaAccionAt = serverTimestamp();
+    room = Math.max(0, Math.min(q.length, ACT_MAX_HIST - actHist));
+    if(room > 0) upd.historial = arrayUnion(...q.slice(0, room).map((e) => ({ a: e.k, t: e.t })));
+  }
+  try{
+    await setDoc(doc(db, "visitas", myVisitId), upd, { merge: true });
+    actFails = 0;
+    if(room){ actHist += room; try{ sessionStorage.setItem("sx_act_h", actHist); }catch(e){} }
+  }catch(e){
+    if(q.length && ++actFails < 4){ actQ.unshift(...q); actSave(); }       // reintenta; si falla varias veces se descarta
+  }
 }
 function startDuration(){
   if(durTimer) return;
   lastTick = Date.now();
-  const loop = () => { sendDuration(false); const s = activeSec; durTimer = setTimeout(loop, s < 60 ? 15000 : 45000); };
-  durTimer = setTimeout(loop, 15000);
+  const loop = () => { sendDuration(false); durTimer = setTimeout(loop, 5000); };    // el tiempo se actualiza cada 5 s
+  durTimer = setTimeout(loop, 2500);
   setInterval(tickActive, 1000);
 }
 document.addEventListener("visibilitychange", () => { if(document.hidden) sendDuration(true); else lastTick = Date.now(); });
@@ -1671,6 +1715,50 @@ const fmtDur = (sec) => {
   if(m < 60) return m + " min" + (r ? " " + r + " s" : "");
   const h = Math.floor(m / 60); return h + " h" + (m % 60 ? " " + (m % 60) + " min" : "");
 };
+
+
+/* ---- Qué botón/sección tocó el visitante ---- */
+const ACT_FN = {
+  openStore:"Tienda", openMenu:"Menú", openNotification:"Notificaciones", openReports:"Reportes (chat)", openCart:"Carrito",
+  addToCart:"Agregar al carrito", removeFromCart:"Quitar del carrito", goToPayment:"Ir a pagar", sendOrderToWhatsApp:"Enviar pedido por WhatsApp",
+  toggleLang:"Cambiar idioma", openProduct:(a) => "Producto: " + ((PRODUCT_LIST.find((x) => x[0] === a) || [])[1] || a),
+  selectPayment:(a) => "Método de pago: " + a, setNotification:(a) => "Notificaciones: " + a
+};
+function actLabel(el){
+  const dt = el.getAttribute("data-track"); if(dt) return dt;
+  const oc = el.getAttribute("onclick") || "";
+  const m = oc.match(/^\s*([A-Za-z_]\w*)\(\s*(?:'([^']*)')?/);
+  if(m){
+    if(Object.prototype.hasOwnProperty.call(ACT_FN, m[1])){ const f = ACT_FN[m[1]]; return typeof f === "function" ? f(m[2]) : f; }
+    if(/^(close|back|change|set|rep|move|more|load|open(Admin|Code|Login)|toggle|check|add(Num)|remove(Num))/.test(m[1])) return "";
+  }
+  if(el.tagName === "A"){
+    const h = el.getAttribute("href") || "";
+    if(/^https?:/i.test(h)){ try{ return "Enlace: " + new URL(h).hostname.replace(/^www\./, ""); }catch(_){} }
+    if(/^(tel|mailto):/i.test(h)) return "Enlace: " + h.split(":")[0];
+  }
+  const txt = (el.getAttribute("aria-label") || el.textContent || "").replace(/\s+/g, " ").trim();
+  return txt && txt.length <= 36 ? "Botón: " + txt : "";
+}
+document.addEventListener("click", (e) => {
+  try{
+    const t = e.target; if(!t || !t.closest) return;
+    if(t.closest("#adminPanel,#gatePanel,#codePanel,#loginPanel")) return;     // el panel admin no se cuenta
+    const item = t.closest(".menu-item");
+    if(item){
+      const grp = item.closest(".menu-group"), st = grp && grp.querySelector(".menu-section-title"), nm = item.querySelector(".menu-text b");
+      track((st ? st.textContent.trim() : "Menú") + " · " + (nm ? nm.textContent.trim() : (item.getAttribute("href") || "")));
+      const href = item.getAttribute("href");
+      if(href && href !== "#" && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0 && item.target !== "_blank"){
+        e.preventDefault();                                                    // da tiempo a guardar antes de cambiar de página
+        Promise.race([sendDuration(true), new Promise((r) => setTimeout(r, 700))]).finally(() => { location.href = href; });
+      }
+      return;
+    }
+    const el = t.closest("[onclick],button,a[href]"); if(!el || el.disabled) return;
+    const lb = actLabel(el); if(lb) track(lb);
+  }catch(_){}
+}, true);
 
 let visitSnap = null;
 function buildVisitDoc(geo, dev, br, org, vid, nuevo, n){
@@ -1720,6 +1808,7 @@ async function registerVisit(){
     const ref = await addDoc(collection(db, "visitas"), doc_);
     myVisitId = ref.id;
     try{ sessionStorage.setItem("sx_visit_id", ref.id); }catch(e){}
+    track(nuevo ? "Entró · dispositivo nuevo" : "Entró · dispositivo conocido");
     startDuration();
   }catch(e){
     console.log("Visita no registrada:", e);
@@ -1837,6 +1926,7 @@ function setKeypadDisabled(d){ const k = document.querySelector("#codePanel .key
 function shakeCode(){ const b = document.querySelector("#codePanel .code-container"); if(!b) return; b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); }
 function showCodeMessage(text, type, lockMs){
   const d = $("codeDisplay"); if(!d) return;
+  clearTimeout(revealTimeout);
   d.innerHTML = `<span class="code-msg-box ${type === "success" ? "success" : ""}">${esc(text)}</span>`;
   if(type === "error") shakeCode();
   if(lockMs){
@@ -1885,7 +1975,7 @@ function addNum(num){
   if(codeLocked || pinBlocked() || inputCode.length >= CODE_MAX_LENGTH) return;
   inputCode += num; clearTimeout(revealTimeout);
   updateCodeDisplay(true);
-  revealTimeout = setTimeout(() => updateCodeDisplay(false), 450);
+  revealTimeout = setTimeout(() => { if(!codeLocked) updateCodeDisplay(false); }, 450);
 }
 function removeNum(){
   if(codeLocked || pinBlocked()) return;
@@ -1894,19 +1984,21 @@ function removeNum(){
 async function checkCode(){
   if(codeLocked || pinBlocked()) return;
   if(inputCode.trim() === ""){ showCodeMessage("Este campo es obligatorio", "error", 2200); return; }
-  codeLocked = true; setKeypadDisabled(true);
-  const ok = (await hashText(inputCode)) === CODE_HASH;
+  codeLocked = true; setKeypadDisabled(true); clearTimeout(revealTimeout);
+  const typed = inputCode;
+  inputCode = ""; updateCodeDisplay();                      // los dígitos se borran al confirmar
+  const ok = (await hashText(typed)) === CODE_HASH;
   if(ok){
     pinAttempts = 0; store.set("pinAttempts", "0");
-    showCodeMessage("Acceso autorizado", "success", null);
+    showCodeMessage("✓ Acceso autorizado", "success", null);
     setTimeout(() => { closeCodePanel(); startAdminAccess(); }, 900);
     return;
   }
-  inputCode = ""; pinAttempts++; store.set("pinAttempts", pinAttempts);
-  if(pinAttempts === 1){ showCodeMessage("Código incorrecto. Te queda 1 intento.", "error", 2200); return; }
+  pinAttempts++; store.set("pinAttempts", pinAttempts);
+  if(pinAttempts === 1){ showCodeMessage("✕ Código incorrecto. Te queda 1 intento.", "error", 2200); return; }
   pinBlockedUntil = Date.now() + 10 * 60 * 1000; store.set("pinBlockedUntil", pinBlockedUntil);
   pinAttempts = 0; store.set("pinAttempts", "0");
-  showCodeMessage("Código incorrecto. Bloqueado durante 10 minutos.", "error", 2200);
+  showCodeMessage("✕ Código incorrecto. Bloqueado durante 10 minutos.", "error", 2200);
 }
 
 /* ================= ADMIN ================= */
@@ -1928,6 +2020,7 @@ function showAdmin(){
 }
 function closeAdmin(){
   adminOpen = false;
+  unwatchVisits();
   try{ if(authMod && fbAuth && fbAuth.currentUser) authMod.signOut(fbAuth); }catch(e){}   // cada acceso exige verificar de nuevo
   $("admList").style.display = "none";
   $("adminPanel").style.display = "none";
@@ -1945,6 +2038,7 @@ function openAdminTab(tab){
   if(tab === "config") loadNotificationStatus();
 }
 function backToAdminMenu(){
+  unwatchVisits();
   document.querySelectorAll(".admin-tab").forEach((t) => t.classList.remove("active"));
   $("adminMainMenu").style.display = "block";
 }
@@ -2005,20 +2099,38 @@ function setRange(r){
   document.querySelectorAll("#rangeTabs button").forEach((b) => b.classList.toggle("active", b.dataset.range === r));
   loadList();
 }
+let visUnsub = null, visFirst = true, liveLV = null, visCntT = null, visStatT = null;
+function unwatchVisits(){ if(visUnsub){ visUnsub(); visUnsub = null; } clearTimeout(visCntT); clearTimeout(visStatT); }
+function watchVisits(){
+  unwatchVisits(); visFirst = true;
+  const isList = vMode === "list";
+  const b = isList ? { from: rangeStart(listRange), to: null } : statBounds();
+  const cl = [];
+  if(b.from) cl.push(where("timestamp", ">=", Timestamp.fromMillis(b.from)));
+  if(b.to) cl.push(where("timestamp", "<=", Timestamp.fromMillis(b.to)));
+  try{
+    visUnsub = onSnapshot(query(collection(db, "visitas"), ...cl, orderBy("timestamp", "desc"), limit(isList ? 500 : STAT_LIMIT)), (snap) => {
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      if(isList){ listData = data; renderList(true, !visFirst); }
+      else{ clearTimeout(visStatT); visStatT = setTimeout(() => renderStats(data, b.from, b.to), visFirst ? 0 : 1500); }
+      if(!visFirst){ clearTimeout(visCntT); visCntT = setTimeout(loadCounts, 4000); }
+      visFirst = false;
+    }, (err) => {
+      console.log("Visitas (tiempo real):", err);
+      const msg = '<div class="admin-empty">No se pudieron cargar las visitas.</div>';
+      if(isList) $("visits").innerHTML = msg; else $("visitStats").innerHTML = '<div class="admin-empty" style="grid-column:1/-1">No se pudieron cargar las estadísticas.</div>';
+    });
+  }catch(e){ console.log("Visitas:", e); }
+}
 async function loadList(){
   const box = $("visits");
   box.innerHTML = '<div class="admin-empty">Cargando...</div>';
   $("moreVisitsBtn").style.display = "none";
-  try{
-    listData = await fetchVisits(rangeStart(listRange), null, 500);
-    renderList(true);
-  }catch(e){
-    console.log("Visitas:", e);
-    box.innerHTML = '<div class="admin-empty">No se pudieron cargar las visitas.</div>';
-  }
+  watchVisits();
 }
-function renderList(reset){
+function renderList(reset, live){
   const box = $("visits");
+  const keep = live ? Math.max(shown, PAGE) : PAGE;
   if(reset){
     shown = 0; box.innerHTML = "";
     if(!listData.length){
@@ -2027,18 +2139,19 @@ function renderList(reset){
     }
   }
   const lastView = parseInt(store.get("sx_last_visit_view", "0")) || 0;
-  if(reset && store.get("sx_last_visit_view") === null){
+  if(reset && !live && store.get("sx_last_visit_view") === null){
     try{ const old = JSON.parse(store.get("viewedVisits", "[]")); const seen = listData.filter((v) => old.includes(v.id)).map(vTime); if(seen.length) store.set("sx_last_visit_view", Math.max(...seen)); }catch(e){}
   }
-  const lv = parseInt(store.get("sx_last_visit_view", "0")) || lastView;
-  const slice = listData.slice(shown, shown + PAGE);
+  const lv = (live && liveLV != null) ? liveLV : (parseInt(store.get("sx_last_visit_view", "0")) || lastView);
+  if(!live) liveLV = lv;
+  const slice = listData.slice(shown, shown + keep);
   box.insertAdjacentHTML("beforeend", slice.map((v) => visitCard(v, vTime(v) > lv)).join(""));
   shown += slice.length;
   const rest = listData.length - shown, more = $("moreVisitsBtn");
   more.style.display = rest > 0 ? "block" : "none";
   more.textContent = `Ver más (${rest})`;
   if(lang === "en") translateNode($("tab-visitas"));
-  if(reset){ const newest = vTime(listData[0]); if(newest > lv) store.set("sx_last_visit_view", newest); }
+  if(reset && !live){ const newest = vTime(listData[0]); if(newest > lv) store.set("sx_last_visit_view", newest); }
 }
 function moreVisits(){ renderList(false); }
 
@@ -2066,14 +2179,7 @@ function statBounds(){
 async function loadStats(){
   $("visitStats").innerHTML = '<div class="admin-empty" style="grid-column:1/-1;padding:30px">Cargando...</div>';
   $("chartDays").innerHTML = $("chartHours").innerHTML = $("visitBreakdown").innerHTML = "";
-  try{
-    const { from, to } = statBounds();
-    const data = await fetchVisits(from, to, STAT_LIMIT);
-    renderStats(data, from, to);
-  }catch(e){
-    console.log("Estadísticas:", e);
-    $("visitStats").innerHTML = '<div class="admin-empty" style="grid-column:1/-1">No se pudieron cargar las estadísticas.</div>';
-  }
+  watchVisits();
 }
 function topList(arr, key, max = 6){
   const m = new Map();
@@ -2121,6 +2227,11 @@ function renderStats(list, from, to){
   times.forEach((ms) => hours[new Date(ms).getHours()].n++);
   let ph = -1, phN = 0; hours.forEach((b, i) => { if(b.n > phN){ phN = b.n; ph = i; } });
   const h12 = (h) => `${h % 12 || 12}${h < 12 ? " a. m." : " p. m."}`;
+  const accTot = new Map(), prodTot = new Map(), entTot = new Map();
+  list.forEach((v) => { if(v.acciones && typeof v.acciones === "object") Object.entries(v.acciones).forEach(([k, c]) => {
+    const n = +c || 0; if(!n) return;
+    const m = k.startsWith("Producto: ") ? prodTot : k.startsWith("Entró") ? entTot : accTot; m.set(k, (m.get(k) || 0) + n); }); });
+  const topMap = (m, max) => [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, max);
   const durs = list.map((v) => v.duracionSeg || 0).filter((x) => x > 0);
   const avgDur = durs.length ? durs.reduce((a, b) => a + b, 0) / durs.length : 0, maxDur = durs.length ? Math.max(...durs) : 0;
   const avg = buckets.length ? Math.round(list.length / buckets.length * 10) / 10 : 0;
@@ -2151,7 +2262,10 @@ function renderStats(list, from, to){
     bdCard("Dispositivos", topList(list, (v) => v.dispositivo)) +
     bdCard("Sistemas operativos", topList(list, (v) => v.so ? `${v.so}${v.soVersion ? " " + v.soVersion : ""}` : "")) +
     bdCard("Origen del tráfico", topList(list, (v) => v.origen || (v.referrer && v.referrer !== "Directo / Desconocido" ? v.referrer : "Enlace directo"))) +
-    bdCard("Ciudades", topList(list, (v) => v.ciudad && v.ciudad !== "Desconocida" ? `${v.ciudad}${v.region ? ", " + v.region : ""}` : ""));
+    bdCard("Ciudades", topList(list, (v) => v.ciudad && v.ciudad !== "Desconocida" ? `${v.ciudad}${v.region ? ", " + v.region : ""}` : "")) +
+    bdCard("Botones y secciones más tocados", topMap(accTot, 10)) +
+    bdCard("Productos más vistos", topMap(prodTot, 8)) +
+    bdCard("Entradas", topMap(entTot, 4));
   if(lang === "en") translateNode($("vStats"));
 }
 const fmtAgo = (ms) => {
@@ -2180,7 +2294,8 @@ function visitCard(v, isNew){
   const origin = v.origen || (v.referrer && v.referrer !== "Directo / Desconocido" ? v.referrer : "Enlace directo");
   const tr = (s) => (lang === "en" && EN[s]) ? EN[s] : s;
   const rowT = (l, val) => val ? `<p><b>${tr(l)}:</b> ${esc(val)}</p>` : "";
-  const live = v.ultimaActividad && v.ultimaActividad.toMillis && (Date.now() - v.ultimaActividad.toMillis() < 70000);
+  const laMs = (v.ultimaActividad && v.ultimaActividad.toMillis) ? v.ultimaActividad.toMillis() : 0;
+  const live = laMs && (Date.now() - laMs < 25000);
   const durTxt = v.duracionSeg ? fmtDur(v.duracionSeg) + (live ? " · " + tr("En curso") : "") : "";
   const tags = [
     `${ico} ${v.dispositivo || "Desconocido"}`, nav, sys,
@@ -2190,20 +2305,38 @@ function visitCard(v, isNew){
   ].filter(Boolean);
   const model = (v.so === "Android" && v.modeloCodigo && v.modelo && !v.modelo.includes(v.modeloCodigo)) ? `${v.modelo} (${v.modeloCodigo})` : (v.modelo || "");
   const map = (v.lat != null && v.lon != null) ? `<a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps?q=${encodeURIComponent(v.lat + "," + v.lon)}">📍 ${tr("Ver en el mapa")}</a>` : "";
+  const acc = (v.acciones && typeof v.acciones === "object") ? Object.entries(v.acciones).filter((x) => +x[1] > 0).sort((a, b) => b[1] - a[1]) : [];
+  const hist = Array.isArray(v.historial) ? [...v.historial].sort((a, b) => (b.t || 0) - (a.t || 0)) : [];
+  const nAct = v.nAcciones || acc.reduce((s2, x) => s2 + (+x[1] || 0), 0);
+  const laAct = (v.ultimaAccionAt && v.ultimaAccionAt.toMillis) ? v.ultimaAccionAt.toMillis() : 0;
+  const hhmmss = (ms) => new Date(ms).toLocaleTimeString(loc, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const actBlock = nAct ? `<details class="vact" data-id="${esc(v.id)}" ${openActs.has(v.id) ? "open" : ""}><summary>${(laAct && Date.now() - laAct < 30000) ? '<i class="pulse"></i>' : ""}${tr("Actividad")} · ${nAct} ${tr("acciones")}${v.ultimaAccion ? ` · ${tr("Última")}: ${esc(v.ultimaAccion)}` : ""}</summary>
+      <div class="vchips">${acc.map(([k, c]) => `<span class="chip">${esc(k)} <b>×${c}</b></span>`).join("")}</div>
+      ${hist.length ? `<div class="vhist">${hist.slice(0, 20).map((h) => `<div><time>${h.t ? hhmmss(h.t) : ""}</time>${esc(h.a)}</div>`).join("")}</div>` : ""}</details>` : "";
   return `<div class="visit-box ${isNew ? "new-visit" : ""} ${v.admin ? "admin-visit" : ""}">
     <div class="visit-top"><span class="fl">${flagFor(v)}</span>
       <div class="ttl"><h3>${esc(v.pais || "Desconocido")}</h3><small>${esc(loc2)}${ms ? (loc2 ? " · " : "") + esc(fmtAgoT(ms)) : ""}</small></div>
       ${isNew ? `<span class="visit-badge">${tr("NUEVA VISITA")}</span>` : ""}</div>
-    <div class="tags">${v.admin ? `<span class="tag adm">🔑 ${tr("Acceso al panel admin")}</span>` : ""}${tags.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+    <div class="tags">${v.admin ? `<span class="tag adm">🔑 ${tr("Acceso al panel admin")}</span>` : ""}${tags.map((t) => t.startsWith("⏱ ") ? `<span class="tag tdur" data-d="${v.duracionSeg || 0}" data-la="${laMs}">${esc(t)}</span>` : `<span class="tag">${esc(t)}</span>`).join("")}</div>
     <div class="vgrid">
       ${rowT("Ciudad", v.ciudad !== "Desconocida" ? v.ciudad : "")}${rowT("Región", v.region)}${rowT("IP", v.ip)}
       ${rowT("Modelo", model)}${rowT("Pantalla", [v.resolucion, v.viewport && v.viewport !== v.resolucion ? "(" + v.viewport + ")" : ""].filter(Boolean).join(" "))}
       ${rowT("Idioma", v.idiomas || v.idioma)}${rowT("Zona horaria", v.zonaHoraria)}${rowT("Proveedor (ISP)", v.isp)}
       ${rowT("Llegó desde", origin === "Enlace directo" ? tr("Enlace directo") : origin + (v.referrer && v.referrer !== "Directo / Desconocido" && v.referrer !== origin ? " (" + safeHost(v.referrer) + ")" : ""))}
       ${rowT("Conexión", v.conexion)}${rowT("Memoria / CPU", [v.memoriaGB ? v.memoriaGB + " GB" : "", v.nucleos ? v.nucleos + " cores" : ""].filter(Boolean).join(" / "))}
-      ${rowT("Duración de la visita", durTxt)}${rowT("Página", v.pagina)}${rowT("Fecha", fecha)}${rowT("Hora", hora)}
-    </div>${map}</div>`;
+      ${durTxt ? `<p><b>${tr("Duración de la visita")}:</b> <span class="tdur" data-d="${v.duracionSeg || 0}" data-la="${laMs}">${esc(durTxt)}</span></p>` : ""}${rowT("Página", v.pagina)}${rowT("Fecha", fecha)}${rowT("Hora", hora)}
+    </div>${actBlock}${map}</div>`;
 }
+const openActs = new Set();
+$("visits").addEventListener("toggle", (e) => { const d = e.target; if(d && d.classList && d.classList.contains("vact")){ d.open ? openActs.add(d.dataset.id) : openActs.delete(d.dataset.id); } }, true);
+setInterval(() => {                       // el tiempo de las sesiones en curso avanza cada segundo
+  if(!adminOpen) return;
+  document.querySelectorAll(".tdur").forEach((el) => {
+    const la = +el.dataset.la, d = +el.dataset.d; if(!la || !d) return;
+    const age = Date.now() - la, live = age < 25000, sec = d + (live ? Math.max(0, age) / 1000 : 0);
+    el.textContent = (el.classList.contains("tag") ? "⏱ " : "") + fmtDur(sec) + (live ? " · " + ((lang === "en" && EN["En curso"]) ? EN["En curso"] : "En curso") : "");
+  });
+}, 1000);
 const safeHost = (u) => { try{ return new URL(u).hostname.replace(/^www\./, ""); }catch(e){ return u; } };
 const fmtAgoT = (ms) => { const s = fmtAgo(ms); return lang === "en" ? (toEN(s) || s) : s; };
 
@@ -2844,7 +2977,7 @@ function cancelGate(){ gateWanted = false; hideGate(); try{ if(fbAuth && fbAuth.
 async function startAdminAccess(){
   const g = $("gatePanel"); g.classList.add("active"); g.setAttribute("aria-hidden", "false"); document.body.classList.add("panel-open");
   gateWanted = false;
-  $("gateBox").innerHTML = '<div class="ios-gate"><div class="g-ico"><i class="fa-solid fa-user-shield"></i></div><h3>Verificando…</h3></div>';
+  $("gateBox").innerHTML = '<div class="ios-gate"><h3>Verificando…</h3></div>';
   try{
     await ensureAuth();
     if(fbAuth.currentUser) await authMod.signOut(fbAuth);           // nunca se reutiliza una sesión anterior
@@ -2855,17 +2988,14 @@ async function startAdminAccess(){
 }
 function gateForm(msg){
   $("gateBox").innerHTML = `<div class="ios-gate">
-    <div class="g-stepper"><span class="done"><i class="fa-solid fa-check"></i>Inicio de sesión</span><span class="ln"></span><span class="now"><b>2</b>Verificación</span></div>
-    <div class="g-ico"><i class="fa-solid fa-user-shield"></i></div>
-    <h3>Iniciar sesión con usuario y contraseña</h3>
-    <div class="g-pill"><i class="fa-solid fa-shield-halved"></i>Verificación de 2 factores</div>
+    <h3>Inicie sesión con su cuenta</h3>
     <div class="g-group">
-      <label><i class="fa-solid fa-user"></i><input id="repEm" type="email" placeholder="Usuario (correo)" autocomplete="username" autocapitalize="none" spellcheck="false" enterkeyhint="next"></label>
+      <label><i class="fa-solid fa-user"></i><input id="repEm" type="email" placeholder="Usuario" autocomplete="username" autocapitalize="none" spellcheck="false" enterkeyhint="next"></label>
       <label><i class="fa-solid fa-lock"></i><input id="repPw" type="password" placeholder="Contraseña" autocomplete="current-password" enterkeyhint="go"><button type="button" class="g-eye" id="repEye" aria-label="Mostrar contraseña"><i class="fa-solid fa-eye"></i></button></label>
     </div>
     <div class="g-err" id="repGerr">${esc(msg || "")}</div>
-    <button class="g-btn" id="repGo" onclick="repSignIn()">Verificar y entrar</button>
-    <div class="g-secure"><i class="fa-solid fa-lock"></i> Acceso protegido</div></div>`;
+    <button class="g-btn" id="repGo" onclick="repSignIn()">Iniciar</button>
+    <div class="g-secure"><i class="fa-solid fa-shield-halved"></i> Verificación de seguridad</div></div>`;
   $("repEm").addEventListener("keydown", (e) => { if(e.key === "Enter"){ e.preventDefault(); $("repPw").focus(); } });
   $("repPw").addEventListener("keydown", (e) => { if(e.key === "Enter") repSignIn(); });
   $("repEye").addEventListener("click", () => { const p = $("repPw"), show = p.type === "password"; p.type = show ? "text" : "password"; $("repEye").innerHTML = `<i class="fa-solid ${show ? "fa-eye-slash" : "fa-eye"}"></i>`; });
