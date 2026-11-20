@@ -2589,7 +2589,9 @@ const REP_AREAS = {
   animacion:   { es:"Animación", en:"Animation", icon:"fa-solid fa-wand-magic-sparkles", ask:["¿De qué animación se trata?", "Which animation is it about?"], items:["Flor","Galaxia","Estrella"] },
   otra:        { es:"Otra", en:"Other", icon:"fa-solid fa-ellipsis" }
 };
-let repImgs = [];
+let repImgs = [], repEpoch = 0;
+const REP_ABORT = { abort:true };
+window.addEventListener("unhandledrejection", (e) => { if(e.reason === REP_ABORT) e.preventDefault(); });
 let repState = "idle", repCat = null, repArea = "", repItem = "", repBusy = false, repInit = false, repId = null, repIds = [], repLast = 0, repPending = "", repMethod = "";
 let repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
 let repCaso = "";   // número de caso del chat (6 dígitos, solo números)
@@ -2604,8 +2606,10 @@ function repAdd(cls, html, wide){
 }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function botSay(html, wide, ms = 650){
+  const ep = repEpoch;
   const t = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
   await wait(ms);
+  if(ep !== repEpoch){ t.remove(); throw REP_ABORT; }   // el chat se reinició mientras Endo escribía
   t.className = "rep-msg bot" + (wide ? " wide" : "");
   t.innerHTML = html; repScroll(); return t;
 }
@@ -2664,8 +2668,10 @@ async function repWelcome(){
   const boot = document.createElement("div"); boot.className = "rep-boot";
   boot.innerHTML = "<i></i><span>" + T("Iniciando chat…", "Starting chat…") + "</span>";
   repLog().appendChild(boot); repScroll();
+  const ep0 = repEpoch;
   await wait(1300);
   boot.remove();
+  if(ep0 !== repEpoch) throw REP_ABORT;
   await botSay(T("¡Hola! 👋 Soy <b>Endo</b>, el asistente de soporte de Sxgura Inc.", "Hi! 👋 I'm <b>Endo</b>, the Sxgura Inc support assistant."), false, 500);
   await botSay(T("Aquí puedes enviar un <b>reporte</b>, una <b>sugerencia</b> o cualquier otra novedad. Todo llega directo a nuestro equipo.",
                  "Here you can send a <b>report</b>, a <b>suggestion</b> or any other news. Everything goes straight to our team."), false, 800);
@@ -2754,7 +2760,7 @@ function closeReports(){
   $("reportPanel").classList.remove("active"); $("reportPanel").setAttribute("aria-hidden", "true");
   document.body.classList.remove("panel-open");
   try{ $("repText").blur(); }catch(e){}
-  if(repState === "closed") setTimeout(repResetChat, 500);   // chat finalizado: el próximo abre uno nuevo
+  repResetChat();   // al salir, en cualquier momento, el chat se reinicia: el próximo abre uno nuevo
 }
 /* ===== capturas de pantalla: se comprimen en el navegador (JPEG ~1200 px; también elimina datos EXIF) ===== */
 const REP_MAX_IMG = 3, REP_IMG_CHARS = 280000;
@@ -2830,6 +2836,7 @@ async function repSaveImgs(reporteId){
   return bad;
 }
 function repResetChat(){
+  repEpoch++;
   repLog().innerHTML = ""; setChips([]); takeText(); setComposer(false);
   repInit = false; repCaso = ""; repState = "idle"; repCat = null; repArea = ""; repItem = ""; repId = null; repIds = []; repPending = ""; repMethod = ""; repBusy = false; repImgs = []; repPrevRender();
   repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
@@ -2884,7 +2891,7 @@ async function submitMessage(text){
   }
 
   repBusy = true; setComposer(false, T("Enviando…", "Sending…"));
-  const sentImgs = repImgs.slice();
+  const sentImgs = repImgs.slice(), ep = repEpoch;
   { const m = youSay(text); if(sentImgs.length){ const ph = document.createElement("div"); ph.className = "rep-ph"; sentImgs.forEach((d) => { const im = document.createElement("img"); im.src = d; im.alt = ""; ph.appendChild(im); }); m.appendChild(ph); repScroll(); } }
   takeText(); $("repPrev").hidden = true;
   const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
@@ -2914,7 +2921,9 @@ async function submitMessage(text){
     repId = ref.id; repIds.push(ref.id); repLast = Date.now(); repQuotaAdd();
     let badImgs = 0;
     if(sentImgs.length){ badImgs = await repSaveImgs(ref.id); repImgs = []; repPrevRender(); }
+    if(ep !== repEpoch) return;   // el usuario salió del chat: el mensaje ya quedó guardado
     await wait(450);
+    if(ep !== repEpoch) return;
     typing.className = "rep-msg bot";
     typing.innerHTML = T("¡Listo! 💙 Tu mensaje ha sido <b>recibido</b> y será atendido por nuestro supervisor.", "Done! 💙 Your message has been <b>received</b> and will be handled by our supervisor.") +
       (badImgs ? "<br><small>" + T("⚠️ Tu mensaje llegó, pero " + (badImgs === 1 ? "una captura no se pudo" : badImgs + " capturas no se pudieron") + " guardar. Puedes enviarla por WhatsApp o Telegram.", "⚠️ Your message arrived, but " + badImgs + " screenshot(s) couldn't be saved. You can send them on WhatsApp or Telegram.") + "</small>" : "");
@@ -2922,6 +2931,7 @@ async function submitMessage(text){
     await (repProf.contactDone ? askMore() : askName());
   }catch(e){
     console.log("Reporte no enviado:", e);
+    if(ep !== repEpoch) return;
     typing.className = "rep-msg bot err";
     typing.innerHTML = T("No pude enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp o Telegram.", "I couldn't send your message. Check your connection and try again, or write to us on WhatsApp or Telegram.") + ` <small>(${esc((e && e.code) || "error")})</small>`;
     $("repText").value = text; $("repText")._fit && $("repText")._fit(); repPrevRender();
