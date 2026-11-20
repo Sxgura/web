@@ -448,6 +448,32 @@ footer{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:0;width:
 .rep-composer textarea:disabled{opacity:.45}
 .rep-send{width:40px;height:40px;border-radius:50%;border:0;background:#0a84ff;color:#fff;font-size:16px;display:grid;place-items:center;flex:none;transition:.2s}
 .rep-send:disabled{background:#3a3a3c;color:#8e8e93}
+.rep-attach{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3c;background:#1c1c1e;color:#c7c7cc;font-size:16px;display:grid;place-items:center;flex:none;transition:.2s;cursor:pointer}
+.rep-attach:active{transform:scale(.94)}
+.rep-attach:disabled{opacity:.4;cursor:default}
+.rep-attach[hidden]{display:none}
+.rep-prev{flex:none;display:flex;gap:10px;align-items:center;width:100%;max-width:680px;margin:0 auto;padding:8px var(--pad) 0;overflow-x:auto}
+.rep-prev[hidden]{display:none}
+.rep-thumb{position:relative;flex:none;width:62px;height:62px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3c;animation:repIn .25s}
+.rep-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.rep-thumb button{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;border:0;background:rgba(0,0,0,.75);color:#fff;font-size:11px;line-height:1;display:grid;place-items:center;padding:0}
+.rep-prev small{color:#8e8e93;font-size:12px;line-height:1.3;flex:1;min-width:120px}
+.rep-boot{align-self:center;display:flex;align-items:center;gap:9px;color:#8e8e93;font-size:13.5px;padding:6px 14px;border-radius:999px;background:#111114;border:1px solid #1f1f25;animation:repIn .28s}
+.rep-boot i{width:14px;height:14px;border-radius:50%;border:2px solid #3a3a3c;border-top-color:#0a84ff;animation:repSpin .8s linear infinite}
+@keyframes repSpin{to{transform:rotate(360deg)}}
+.rep-msg .rep-ph{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.rep-msg .rep-ph img{width:64px;height:64px;object-fit:cover;border-radius:10px;display:block}
+.rimg-btn{display:inline-flex;align-items:center;gap:6px}
+.limg{position:fixed;inset:0;z-index:10100;background:#000;display:none;flex-direction:column}
+.limg.on{display:flex}
+.limg-top{flex:none;display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 14px 10px;color:#e5e5ea;font-size:14px}
+.limg-top b{flex:1}
+.limg-top button{height:38px;min-width:38px;padding:0 12px;border-radius:19px;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.limg-stage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;padding:8px}
+.limg-stage img{margin:auto;max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;cursor:zoom-in;display:block}
+.limg-stage.z img{max-width:none;max-height:none;width:240%;cursor:zoom-out}
+.limg-msg{margin:auto;color:#8e8e93;font-size:14px;text-align:center;padding:20px}
+
 @media(prefers-reduced-motion:reduce){.rep-panel,.rep-msg,.rep-chips button{transition:none;animation:none}}
 
 /* ===== ACCESO ADMIN (estilo iOS + 2FA) ===== */
@@ -834,11 +860,19 @@ Ingrese su código de acceso
   </div>
   <div class="rep-log" id="repLog" data-no-i18n aria-live="polite"></div>
   <div class="rep-chips" id="repChips" style="display:none"></div>
+  <div class="rep-prev" id="repPrev" hidden></div>
   <form class="rep-composer" id="repForm" onsubmit="sendReport(event)" autocomplete="off">
+    <input type="file" id="repFile" accept="image/*" multiple hidden>
+    <button type="button" class="rep-attach" id="repAttach" onclick="repPick()" aria-label="Adjuntar captura" title="Adjuntar captura" hidden disabled><i class="fa-solid fa-paperclip"></i></button>
     <input type="text" id="repHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
     <textarea id="repText" rows="1" maxlength="1000" placeholder="Elige una opción…" enterkeyhint="send" disabled></textarea>
     <button type="submit" class="rep-send" id="repSend" aria-label="Enviar" disabled><i class="fas fa-arrow-up"></i></button>
   </form>
+</div>
+
+<div class="limg" id="limg" role="dialog" aria-modal="true" aria-label="Capturas del reporte">
+  <div class="limg-top"><b id="limgTitle">Capturas</b><button type="button" onclick="limgStep(-1)" id="limgPrev" aria-label="Anterior">‹</button><button type="button" onclick="limgStep(1)" id="limgNext" aria-label="Siguiente">›</button><button type="button" onclick="limgZoom()" id="limgZ">🔍 Zoom</button><button type="button" onclick="limgClose()" aria-label="Cerrar">✕</button></div>
+  <div class="limg-stage" id="limgStage"></div>
 </div>
 
 <!-- ADMIN -->
@@ -2555,6 +2589,7 @@ const REP_AREAS = {
   animacion:   { es:"Animación", en:"Animation", icon:"fa-solid fa-wand-magic-sparkles", ask:["¿De qué animación se trata?", "Which animation is it about?"], items:["Flor","Galaxia","Estrella"] },
   otra:        { es:"Otra", en:"Other", icon:"fa-solid fa-ellipsis" }
 };
+let repImgs = [];
 let repState = "idle", repCat = null, repArea = "", repItem = "", repBusy = false, repInit = false, repId = null, repIds = [], repLast = 0, repPending = "", repMethod = "";
 let repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
 let repCaso = "";   // número de caso del chat (6 dígitos, solo números)
@@ -2588,7 +2623,9 @@ function setChips(items){
 }
 function setComposer(on, ph){
   const ta = $("repText"), s = $("repSend");
-  ta.disabled = !on; s.disabled = !on; ta.placeholder = ph || T("Elige una opción…", "Choose an option…");
+  ta.disabled = !on; s.disabled = !on;
+  const at = $("repAttach"); if(at){ at.hidden = repState !== "msg"; at.disabled = !(on && repState === "msg") || repImgs.length >= REP_MAX_IMG; }
+  ta.placeholder = ph || T("Elige una opción…", "Choose an option…");
   if(on && !matchMedia("(pointer:coarse)").matches){ try{ ta.focus({ preventScroll:true }); }catch(e){} }
 }
 const lock = () => { setChips([]); setComposer(false); };
@@ -2624,11 +2661,16 @@ async function repDayPart(){
 /* 1) bienvenida + información de contacto + tipo de mensaje */
 async function repWelcome(){
   repInit = true; repState = "boot"; lock();
+  const boot = document.createElement("div"); boot.className = "rep-boot";
+  boot.innerHTML = "<i></i><span>" + T("Iniciando chat…", "Starting chat…") + "</span>";
+  repLog().appendChild(boot); repScroll();
+  await wait(1300);
+  boot.remove();
   await botSay(T("¡Hola! 👋 Soy <b>Endo</b>, el asistente de soporte de Sxgura Inc.", "Hi! 👋 I'm <b>Endo</b>, the Sxgura Inc support assistant."), false, 500);
   await botSay(T("Aquí puedes enviar un <b>reporte</b>, una <b>sugerencia</b> o cualquier otra novedad. Todo llega directo a nuestro equipo.",
                  "Here you can send a <b>report</b>, a <b>suggestion</b> or any other news. Everything goes straight to our team."), false, 800);
-  await botSay(T("También puedes escribirnos por nuestros medios oficiales y enviar <b>capturas de pantalla</b>:",
-                 "You can also reach us through our official channels and send <b>screenshots</b>:") +
+  await botSay(T("¿Prefieres hablar con una persona? 🙋 Puedes recibir <b>asistencia y soporte técnico</b> hablando con un agente por nuestros <b>medios autorizados</b>:",
+                 "Prefer to talk to a person? 🙋 You can get <b>assistance and technical support</b> by talking to an agent through our <b>authorized channels</b>:") +
     `<div class="rep-links"><a class="wa" href="${WA_LINK}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a><a class="tg" href="${TG_LINK}" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></div>`, true, 800);
   await showCats(false);
 }
@@ -2714,9 +2756,82 @@ function closeReports(){
   try{ $("repText").blur(); }catch(e){}
   if(repState === "closed") setTimeout(repResetChat, 500);   // chat finalizado: el próximo abre uno nuevo
 }
+/* ===== capturas de pantalla: se comprimen en el navegador (JPEG ~1200 px; también elimina datos EXIF) ===== */
+const REP_MAX_IMG = 3, REP_IMG_CHARS = 280000;
+function repPick(){ if(repState !== "msg" || repBusy) return; if(repImgs.length >= REP_MAX_IMG){ repAdd("bot err", T("Máximo 3 capturas por mensaje.", "Maximum 3 screenshots per message.")); return; } $("repFile").click(); }
+function repPrevRender(){
+  const box = $("repPrev"); if(!box) return;
+  box.innerHTML = "";
+  if(!repImgs.length){ box.hidden = true; }
+  else{
+    repImgs.forEach((d, i) => {
+      const w = document.createElement("div"); w.className = "rep-thumb";
+      const im = document.createElement("img"); im.src = d; im.alt = "Captura " + (i + 1);
+      const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", "Quitar captura"); b.textContent = "✕";
+      b.addEventListener("click", () => { if(repBusy) return; repImgs.splice(i, 1); repPrevRender(); });
+      w.append(im, b); box.appendChild(w);
+    });
+    const n = document.createElement("small");
+    n.textContent = T("No incluyas datos personales ni contraseñas en tus capturas.", "Don't include personal data or passwords in your screenshots.");
+    box.appendChild(n); box.hidden = false;
+  }
+  const at = $("repAttach"); if(at && repState === "msg") at.disabled = repBusy || repImgs.length >= REP_MAX_IMG;
+}
+function repCompress(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onload = () => {
+      try{
+        let w = im.naturalWidth, h = im.naturalHeight; if(!w || !h) throw new Error("size");
+        const k = Math.min(1, 1200 / Math.max(w, h)); w = Math.round(w * k); h = Math.round(h * k);
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(im, 0, 0, w, h);
+        let q = 0.8, out = c.toDataURL("image/jpeg", q);
+        while(out.length > REP_IMG_CHARS && q > 0.35){ q -= 0.1; out = c.toDataURL("image/jpeg", q); }
+        if(out.length > REP_IMG_CHARS){ const c2 = document.createElement("canvas"); c2.width = Math.round(w * .7); c2.height = Math.round(h * .7); c2.getContext("2d").drawImage(c, 0, 0, c2.width, c2.height); out = c2.toDataURL("image/jpeg", 0.6); }
+        if(out.length > REP_IMG_CHARS || out.indexOf("data:image/jpeg") !== 0) throw new Error("big");
+        res(out);
+      }catch(e){ rej(e); }finally{ URL.revokeObjectURL(url); }
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error("decode")); };
+    im.src = url;
+  });
+}
+async function repAddFiles(files){
+  if(repState !== "msg" || repBusy) return;
+  const list = [...files].filter((f) => f && /^image\//.test(f.type));
+  if(!list.length){ repAdd("bot err", T("Solo se pueden adjuntar imágenes.", "Only images can be attached.")); return; }
+  let skipped = 0, failed = 0;
+  for(const f of list){
+    if(repImgs.length >= REP_MAX_IMG){ skipped++; continue; }
+    if(f.size > 20 * 1024 * 1024){ failed++; continue; }
+    try{ repImgs.push(await repCompress(f)); }catch(e){ console.log("Captura no válida:", e); failed++; }
+  }
+  repPrevRender();
+  if(skipped) repAdd("bot err", T("Máximo 3 capturas por mensaje.", "Maximum 3 screenshots per message."));
+  if(failed) repAdd("bot err", T("No pude leer " + (failed === 1 ? "una imagen" : failed + " imágenes") + ". Prueba con otra captura (JPG o PNG).", "I couldn't read " + failed + " image(s). Try another screenshot (JPG or PNG)."));
+}
+(function(){
+  const fi = $("repFile"), ta = $("repText"); if(!fi || !ta) return;
+  fi.addEventListener("change", () => { const f = [...fi.files]; fi.value = ""; repAddFiles(f); });
+  ta.addEventListener("paste", (e) => {
+    const items = (e.clipboardData && e.clipboardData.items) ? [...e.clipboardData.items] : [];
+    const files = items.filter((i) => i.kind === "file" && /^image\//.test(i.type)).map((i) => i.getAsFile()).filter(Boolean);
+    if(files.length && repState === "msg"){ e.preventDefault(); repAddFiles(files); }
+  });
+})();
+/* guarda las capturas (colección aparte, solo lectura para el admin) */
+async function repSaveImgs(reporteId){
+  const imgs = repImgs.slice(); let bad = 0;
+  for(let i = 0; i < imgs.length; i++){
+    try{ await addDoc(collection(db, "reporte_imagenes"), { reporteId, caso: repCaso, data: imgs[i], n: i + 1, creado: serverTimestamp() }); }
+    catch(e){ bad++; console.log("Captura no guardada:", e); }
+  }
+  return bad;
+}
 function repResetChat(){
   repLog().innerHTML = ""; setChips([]); takeText(); setComposer(false);
-  repInit = false; repCaso = ""; repState = "idle"; repCat = null; repArea = ""; repItem = ""; repId = null; repIds = []; repPending = ""; repMethod = ""; repBusy = false;
+  repInit = false; repCaso = ""; repState = "idle"; repCat = null; repArea = ""; repItem = ""; repId = null; repIds = []; repPending = ""; repMethod = ""; repBusy = false; repImgs = []; repPrevRender();
   repProf = { nombre:"", contactoTipo:"", contacto:"", calificacion:0, contactDone:false };
 }
 /* textarea que crece + Enter envía (Shift+Enter = salto) */
@@ -2769,7 +2884,9 @@ async function submitMessage(text){
   }
 
   repBusy = true; setComposer(false, T("Enviando…", "Sending…"));
-  youSay(text); takeText();
+  const sentImgs = repImgs.slice();
+  { const m = youSay(text); if(sentImgs.length){ const ph = document.createElement("div"); ph.className = "rep-ph"; sentImgs.forEach((d) => { const im = document.createElement("img"); im.src = d; im.alt = ""; ph.appendChild(im); }); m.appendChild(ph); repScroll(); } }
+  takeText(); $("repPrev").hidden = true;
   const typing = repAdd("bot", '<span class="rep-typing"><i></i><i></i><i></i></span>');
   try{
     const v = await repVisitSnap();
@@ -2782,7 +2899,7 @@ async function submitMessage(text){
       horaLocal: new Date().toString(),
       pais: v.pais || "", codigoPais: v.codigoPais || "", ciudad: v.ciudad || "", ip: v.ip || "",
       dispositivo: v.dispositivo || "", pantalla: v.resolucion || (screen.width + "x" + screen.height),
-      datosVisita: v
+      datosVisita: v, capturas: sentImgs.length
     };
     const tag = [REP_AREAS[repArea] ? REP_AREAS[repArea].es : "", repItem].filter(Boolean).join(" · ");
     const basic = {   /* mismo formato de siempre: lo aceptan las reglas originales */
@@ -2795,16 +2912,19 @@ async function submitMessage(text){
     catch(e1){ console.log("Formato completo rechazado, uso el básico:", e1); basicMode = true; ref = await addDoc(collection(db, "reportes"), basic); }
     if(basicMode && (repProf.nombre || repProf.contacto)) repPatchDoc(ref.id, { contacto: repLegacyContact() }, { contacto: repLegacyContact() });
     repId = ref.id; repIds.push(ref.id); repLast = Date.now(); repQuotaAdd();
+    let badImgs = 0;
+    if(sentImgs.length){ badImgs = await repSaveImgs(ref.id); repImgs = []; repPrevRender(); }
     await wait(450);
     typing.className = "rep-msg bot";
-    typing.innerHTML = T("¡Listo! 💙 Tu mensaje ha sido <b>recibido</b> y será atendido por nuestro supervisor.", "Done! 💙 Your message has been <b>received</b> and will be handled by our supervisor.");
+    typing.innerHTML = T("¡Listo! 💙 Tu mensaje ha sido <b>recibido</b> y será atendido por nuestro supervisor.", "Done! 💙 Your message has been <b>received</b> and will be handled by our supervisor.") +
+      (badImgs ? "<br><small>" + T("⚠️ Tu mensaje llegó, pero " + (badImgs === 1 ? "una captura no se pudo" : badImgs + " capturas no se pudieron") + " guardar. Puedes enviarla por WhatsApp o Telegram.", "⚠️ Your message arrived, but " + badImgs + " screenshot(s) couldn't be saved. You can send them on WhatsApp or Telegram.") + "</small>" : "");
     repScroll(); repBusy = false;
     await (repProf.contactDone ? askMore() : askName());
   }catch(e){
     console.log("Reporte no enviado:", e);
     typing.className = "rep-msg bot err";
     typing.innerHTML = T("No pude enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp o Telegram.", "I couldn't send your message. Check your connection and try again, or write to us on WhatsApp or Telegram.") + ` <small>(${esc((e && e.code) || "error")})</small>`;
-    $("repText").value = text; $("repText")._fit && $("repText")._fit();
+    $("repText").value = text; $("repText")._fit && $("repText")._fit(); repPrevRender();
     repBusy = false; setComposer(true, T("Escribe tu mensaje…", "Type your message…"));
   }
 }
@@ -3094,12 +3214,44 @@ function renderReports(){
       ${r.contacto ? `<div class="rcontact"><i class="${TIPO_ICO[tipo] || "fa-solid fa-address-book"}"></i><span>${tipo ? TIPO_LABEL[tipo] + ": " : ""}${esc(r.contacto)}</span>${cl ? `<a href="${esc(cl)}" target="_blank" rel="noopener">Contactar</a>` : ""}</div>` : ""}
       ${r.calificacion > 0 ? `<div class="rstars" title="Calificación">${starsHTML(r.calificacion)}<small>${r.calificacion}/5</small></div>` : ""}
       ${visSummary(r)}
-      <div class="ract">${btns}<button class="info" onclick="repToggle('${id}')"><i class="fa-solid fa-circle-info"></i> Ver datos completos</button></div>
+      <div class="ract">${btns}${r.capturas > 0 ? `<button class="info" onclick="repOpenImgs('${id}')">📷 ${r.capturas} ${r.capturas === 1 ? "captura" : "capturas"}</button>` : ""}<button class="info" onclick="repToggle('${id}')"><i class="fa-solid fa-circle-info"></i> Ver datos completos</button></div>
       <div class="rdet" id="rdet-${id}" data-id="${id}" hidden></div>
     </div>`;
   }).join("");
   open.forEach((id) => { if(repData.some((r) => r.id === id)) repToggle(id, true); });
 }
+/* visor de capturas (solo admin) con zoom */
+const imgCache = new Map(); let limgList = [], limgI = 0;
+async function repOpenImgs(id){
+  const r = repData.find((x) => x.id === id);
+  const box = $("limg"), st = $("limgStage");
+  box.classList.add("on"); st.classList.remove("z"); $("limgZ").textContent = "🔍 Zoom";
+  $("limgTitle").textContent = "Caso " + (r ? casoOf(r) || "" : "");
+  st.innerHTML = '<div class="limg-msg">Cargando capturas…</div>';
+  try{
+    if(!imgCache.has(id)){
+      const snap = await getDocs(query(collection(db, "reporte_imagenes"), where("reporteId", "==", id)));
+      imgCache.set(id, snap.docs.map((d) => d.data()).sort((a, b) => (a.n || 0) - (b.n || 0)).map((d) => d.data).filter(Boolean));
+    }
+    limgList = imgCache.get(id); limgI = 0;
+    if(!limgList.length){ st.innerHTML = '<div class="limg-msg">No se encontraron capturas para este reporte.<br>Revisa que las reglas de Firestore (v14) estén publicadas.</div>'; limgNav(); return; }
+    limgShow();
+  }catch(e){
+    console.log("Capturas:", e);
+    st.innerHTML = '<div class="limg-msg">Sin permiso para leer las capturas.<br>Publica las reglas de Firestore v14 e inicia sesión como administrador.</div>'; limgList = []; limgNav();
+  }
+}
+function limgNav(){ const m = limgList.length > 1; $("limgPrev").style.display = m ? "" : "none"; $("limgNext").style.display = m ? "" : "none"; $("limgZ").style.display = limgList.length ? "" : "none"; }
+function limgShow(){
+  const st = $("limgStage"); st.classList.remove("z"); $("limgZ").textContent = "🔍 Zoom"; st.scrollTo(0, 0);
+  const im = document.createElement("img"); im.src = limgList[limgI]; im.alt = "Captura " + (limgI + 1); im.addEventListener("click", limgZoom);
+  st.innerHTML = ""; st.appendChild(im);
+  $("limgTitle").textContent = $("limgTitle").textContent.replace(/ · .*$/, "") + " · " + (limgI + 1) + "/" + limgList.length; limgNav();
+}
+function limgStep(d){ if(!limgList.length) return; limgI = (limgI + d + limgList.length) % limgList.length; limgShow(); }
+function limgZoom(){ const st = $("limgStage"); if(!limgList.length) return; const z = st.classList.toggle("z"); $("limgZ").textContent = z ? "🔍 Ajustar" : "🔍 Zoom"; }
+function limgClose(){ $("limg").classList.remove("on"); $("limgStage").innerHTML = ""; }
+document.addEventListener("keydown", (e) => { if(!$("limg").classList.contains("on")) return; if(e.key === "Escape") limgClose(); else if(e.key === "ArrowRight") limgStep(1); else if(e.key === "ArrowLeft") limgStep(-1); });
 async function repSetState(id, estado){
   const db_ = estado === "listo" ? "resuelto" : estado;          // en la base se guarda como siempre: nuevo / leido / resuelto
   const full = { estado: db_ };
@@ -3161,7 +3313,7 @@ Object.assign(window, {
   openProduct, closeProduct, changeQty, addToCart, openCart, closeCart, changeCartQty, removeFromCart,
   goToPayment, closePay, selectPayment, closeConfirm, sendOrderToWhatsApp,
   openCodePanel, closeCodePanel, addNum, removeNum, checkCode,
-  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, startAdminAccess, cancelGate, repSetState, repToggle,
+  openReports, closeReports, sendReport, setRepFilter, repSignOut, repSignIn, startAdminAccess, cancelGate, repSetState, repToggle, repOpenImgs, limgStep, limgZoom, limgClose, repPick,
   closeAdmin, openAdminTab, backToAdminMenu, setRange, moreVisits, setVMode, setStatRange, loadStats, changeStatus, changeActiveCount,
   setNotification, loadNotificationStatus, openNotification, toggleLang, updateProductStatus, loadAdminProducts, updateCatalogStatuses
 });
