@@ -8,7 +8,6 @@
   <meta property="og:title" content="Galaxia para ti">
   <meta property="og:description" content="Una galaxia interactiva con palabras de cariño 💖">
   <meta property="og:image" content="og-cover.png">
-  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
     html,body{margin:0;height:100%;background:#000;overflow:hidden}
@@ -16,72 +15,19 @@
     .pill{position:fixed;top:10px;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:999px;
           background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font:12px -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial}
     .error{position:fixed;inset:auto 10px 70px 10px;background:#260015;color:#ffd9f7;border:1px solid #ff8ae5;border-radius:10px;padding:10px;font:12px system-ui;display:none;}
-
-    /* ===== PANTALLA DE CÓDIGO ===== */
-    #gate{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;overflow:hidden;
-      background:linear-gradient(170deg,#06030f 0%,#150b2e 55%,#0a0615 100%);color:#f1e8f6;font-family:"Lora",Georgia,serif;transition:opacity .7s ease,transform .7s ease}
-    #gate.leaving{opacity:0;transform:scale(1.06);pointer-events:none}
-    #gate::before{content:"";position:absolute;left:50%;bottom:-30vh;width:130vw;height:130vw;max-width:1000px;max-height:1000px;transform:translateX(-50%);border-radius:50%;
-      background:radial-gradient(circle,rgba(150,70,230,.38),rgba(255,70,150,.16) 42%,transparent 68%);animation:aur 11s ease-in-out infinite alternate;pointer-events:none}
-    @keyframes aur{from{opacity:.55;transform:translateX(-58%) scale(.92) rotate(0)}to{opacity:1;transform:translateX(-42%) scale(1.08) rotate(14deg)}}
-    #gate .stars{position:absolute;inset:0;pointer-events:none}
-    #gate .stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,230,200,.8);animation:tw 3s ease-in-out infinite}
-    @keyframes tw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.2)}}
-    .g-in{position:relative;z-index:1;width:100%;max-width:420px}
-    .g-orb{position:relative;width:128px;height:128px;margin:0 auto 18px;display:grid;place-items:center}
-    .g-orb::before{content:"";position:absolute;inset:-34px;border-radius:50%;background:radial-gradient(circle,rgba(255,110,170,.45),rgba(150,80,255,.25) 50%,transparent 70%);filter:blur(8px);animation:glow 3s ease-in-out infinite alternate}
-    @keyframes glow{from{opacity:.55;transform:scale(.9)}to{opacity:1;transform:scale(1.08)}}
-    .g-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(242,207,138,.55);animation:ringOut 3s ease-out infinite}.g-ring.r2{animation-delay:1.5s}
-    @keyframes ringOut{from{transform:scale(.7);opacity:.9}to{transform:scale(1.7);opacity:0}}
-    .g-lock{position:relative;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font-size:42px;background:radial-gradient(circle at 35% 28%,#3a2763,#1b1236);
-      box-shadow:0 0 0 2px rgba(242,207,138,.8),0 14px 30px rgba(0,0,0,.6),0 0 30px rgba(255,90,150,.4);animation:fl 4s ease-in-out infinite}
-    @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-    .g-lock.open{animation:none;transform:scale(1.15) rotate(-8deg);transition:.4s}
-    .g-title{font-family:"Parisienne",cursive;font-size:clamp(38px,11vw,46px);line-height:1.1;margin-bottom:12px;background:linear-gradient(90deg,#f2cf8a,#ff9fc4 45%,#c9a8ff 70%,#f2cf8a);background-size:220% 100%;
-      -webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
-    @keyframes sh{to{background-position:-220% 0}}
-    .lock-msg{display:block;font-size:16px;color:#efe3f8;margin-bottom:12px;font-style:italic}
-      border:1px solid rgba(242,207,138,.35);border-radius:11px;outline:none;transition:.2s;padding:0;-moz-appearance:textfield}
-    @keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
-    .lock-err{min-height:20px;font-size:14px;color:#ff9fb5;margin-bottom:8px}
-    .g-btn{border:none;cursor:pointer;font-family:inherit;font-size:18px;font-weight:700;color:#2a1330;padding:14px 38px;border-radius:999px;position:relative;overflow:hidden;
-      background:linear-gradient(135deg,#f6dc9c,#e0b25e);box-shadow:0 10px 28px rgba(242,190,100,.35);animation:pb 2.4s ease-in-out infinite}
-    .g-btn:disabled{opacity:.5;animation:none}.g-btn:active{transform:scale(.96)}
-    @keyframes pb{0%,100%{box-shadow:0 10px 28px rgba(242,190,100,.3),0 0 0 0 rgba(242,207,138,.5)}50%{box-shadow:0 10px 34px rgba(242,190,100,.55),0 0 0 10px rgba(242,207,138,0)}}
-  .code{position:relative;display:flex;justify-content:center;gap:6px;margin-bottom:8px}
-    .code .cell{width:min(36px,9.6vw);height:48px;display:grid;place-items:center;font-family:"Lora",serif;font-size:22px;font-weight:700;color:#f2cf8a;background:rgba(255,255,255,.07);border:1px solid rgba(242,207,138,.35);border-radius:11px;transition:.2s}
-    .code .cell.f{background:rgba(242,207,138,.14)}
-    .code .cell.cur{border-color:#ff5f9a;box-shadow:0 0 0 3px rgba(255,95,154,.25),0 0 16px rgba(255,95,154,.35);transform:translateY(-2px)}
-    .code .real{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;background:transparent;color:transparent;caret-color:transparent;font-size:16px;z-index:2;cursor:text;outline:none;padding:0}
-    .code.bad{animation:shk .45s}.code.bad .cell{border-color:#ff5a7a;color:#ff8fa8}
-    .code.ok .cell{border-color:#8ff0b8;color:#bfffd8;box-shadow:0 0 14px rgba(120,255,180,.5)}
-    @media (prefers-reduced-motion:reduce){#gate *,#gate::before{animation:none!important;transition:none!important}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-<div id="gate">
-  <div class="stars" id="gStars"></div>
-  <div class="g-in">
-    <div class="g-orb"><div class="g-ring"></div><div class="g-ring r2"></div><div class="g-lock" id="gLock">🔒</div></div>
-    <div class="g-title">Antes de empezar</div>
-    <form id="lock" autocomplete="off" novalidate>
-      <label class="lock-msg" for="codeIn">Para abrir la galaxia, escriba el código</label>
-      <div class="code" id="code" role="group" aria-label="Código de 8 dígitos"></div>
-      <div class="lock-err" id="lockErr" role="alert" aria-live="polite"></div>
-      <button class="g-btn" id="gBtn" type="submit">Desbloquear</button>
-    </form>
-  </div>
-</div>
 <canvas id="galaxy-canvas"></canvas>
-<div class="pill" id="pill" style="display:none">Te Amo Muchote Carmen 🩶</div>
+<div class="pill">Mi Amorcito</div>
 <div id="err" class="error"></div>
 
 <canvas id="fx" style="position:fixed;inset:0;pointer-events:none;"></canvas>
 
 <script>
-function startGalaxy(){
+(function(){
 const err = document.getElementById('err');
 function showError(msg){ err.textContent = msg; err.style.display='block'; }
 
@@ -146,7 +92,7 @@ const bg = new THREE.Mesh(bgGeo, new THREE.MeshBasicMaterial({ map: starTex, sid
 scene.add(bg);
 
 const galaxy = new THREE.Group(); scene.add(galaxy);
-const phrases = ["Pinchecha ✨", " Hermosa 🩶", "Mi Bebe", "Mi Cielito 🌌", "Hermosota ✨", "Mi Infinita ♾️", "Mi Todo", "Me Encantas 🥰", " love 💫", "Te Amo🩶", "Mi Canción Favorita 🎶", "Unica 😊", "Mi Reina 👑", "Mi Amor", "Mi Mundo", "Mi Luz 🌠", "Mi Niña", "Mi Tesoro🩶", "Mi Paz", "Mi Eterna", "Mi Sueño", "Mi Pensamiento Favorito", "Mi Bombom", "Mi Diosa", "Te Amo Infinitamente ♾️"];
+const phrases = ["Pinchecha ✨", " Hermosa 🤍", "Mi Bebe", "Mi Cielito 🌌", "Hermosota ✨", "Mi Infinita ♾️", "Mi Todo", "Me Encantas 🥰", " love 💫", "Te Amo 🤍", "Mi Canción Favorita 🎶", "Unica 😊", "Mi Reina 👑", "Mi Amor", "Mi Mundo", "Mi Luz 🌠", "Mi Niña", "Mi Tesoro 🤍", "Mi Paz", "Mi Eterna", "Mi Sueño", "Mi Pensamiento Favorito", "Mi Bombom", "Mi Diosa", "Te Amo Infinitamente ♾️"];
 const phraseCount = Math.max(phrases.length * 6, 180);
 const arms = 5, radius = 82, maxH = 22;
 
@@ -255,100 +201,6 @@ function loopFx(){
 } loopFx();
 
 } catch(e) { showError('Error cargando la galaxia: '+e.message); console.error(e); }
-}
-</script>
-<script>
-const CODE_HASH = "05d8c68251eb93e938dbbfcc2564b59efa97b6a8d1e75774d0c3861fd3e60f41";
-function sha256js(str){
-  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
-  const b=new TextEncoder().encode(str),l=b.length,n=((l+9+63)>>6)<<6,m=new Uint8Array(n);m.set(b);m[l]=0x80;
-  const dv=new DataView(m.buffer);dv.setUint32(n-4,(l*8)>>>0);dv.setUint32(n-8,Math.floor(l*8/4294967296));
-  let h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
-  const r=(x,k)=>(x>>>k)|(x<<(32-k));
-  for(let o=0;o<n;o+=64){
-    const w=new Array(64);
-    for(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4);
-    for(let i=16;i<64;i++){const s0=r(w[i-15],7)^r(w[i-15],18)^(w[i-15]>>>3),s1=r(w[i-2],17)^r(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;}
-    let [a,bb,c,d,e,f,g,hh]=h;
-    for(let i=0;i<64;i++){
-      const S1=r(e,6)^r(e,11)^r(e,25),ch=(e&f)^(~e&g),t1=(hh+S1+ch+K[i]+w[i])>>>0,S0=r(a,2)^r(a,13)^r(a,22),mj=(a&bb)^(a&c)^(bb&c),t2=(S0+mj)>>>0;
-      hh=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=bb;bb=a;a=(t1+t2)>>>0;
-    }
-    h=[(h[0]+a)>>>0,(h[1]+bb)>>>0,(h[2]+c)>>>0,(h[3]+d)>>>0,(h[4]+e)>>>0,(h[5]+f)>>>0,(h[6]+g)>>>0,(h[7]+hh)>>>0];
-  }
-  return h.map(x=>x.toString(16).padStart(8,"0")).join("");
-}
-async function hashText(text){
-  try{
-    if(window.crypto && crypto.subtle){
-      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-    }
-  }catch(e){}
-  return sha256js(text);
-}
-
-/* Campo de código: un único input real sobre 8 casillas (se puede corregir, borrar y pegar sin salir) */
-function initGate(o){
-  const box = o.box, errEl = o.err, btn = o.btn, form = o.form, cells = [];
-  const real = document.createElement("input");
-  real.className = "real"; real.id = "codeIn"; real.type = "tel"; real.inputMode = "numeric";
-  real.autocomplete = "off"; real.autocapitalize = "off"; real.spellcheck = false; real.setAttribute("aria-label", "Código de 8 dígitos");
-  for(let i = 0; i < 8; i++){ const c = document.createElement("div"); c.className = "cell"; box.appendChild(c); cells.push(c); }
-  box.appendChild(real);
-  let fails = 0, until = 0, busy = false, timer = null;
-  function paint(){
-    const v = real.value, on = document.activeElement === real && !real.disabled;
-    cells.forEach((c, i) => { c.textContent = v[i] || ""; c.classList.toggle("f", !!v[i]); c.classList.toggle("cur", on && i === Math.min(v.length, 7)); });
-  }
-  const shake = () => { box.classList.remove("bad"); void box.offsetWidth; box.classList.add("bad"); };
-  async function submit(){
-    if(busy) return;
-    const wait = until - Date.now();
-    if(wait > 0){ errEl.textContent = "Demasiados intentos. Espere " + Math.ceil(wait / 1000) + " s."; return; }
-    const v = real.value;
-    if(v.length < 8){ errEl.textContent = "Escriba los 8 dígitos del código."; shake(); return; }
-    busy = true; let ok = false;
-    try{ ok = (await hashText(v)) === CODE_HASH; }catch(e){ ok = false; }
-    busy = false;
-    if(ok){
-      fails = 0; errEl.textContent = ""; box.classList.remove("bad"); box.classList.add("ok"); real.readOnly = true; btn.disabled = true; real.blur(); paint(); o.onOk();
-      return;
-    }
-    fails++; shake(); real.value = ""; paint();
-    if(navigator.vibrate) try{ navigator.vibrate([60, 40, 60]); }catch(_){}
-    if(fails >= 5){
-      until = Date.now() + 30000; fails = 0; real.disabled = true; btn.disabled = true; clearInterval(timer);
-      const tick = () => { const w = Math.ceil((until - Date.now()) / 1000);
-        if(w <= 0){ clearInterval(timer); real.disabled = false; btn.disabled = false; errEl.textContent = ""; box.classList.remove("bad"); real.focus(); paint(); }
-        else errEl.textContent = "Demasiados intentos. Espere " + w + " s."; };
-      tick(); timer = setInterval(tick, 500);
-    } else { errEl.textContent = "Código incorrecto. Inténtelo de nuevo."; real.focus(); }
-  }
-  real.addEventListener("input", () => {
-    real.value = real.value.replace(/\D/g, "").slice(0, 8); errEl.textContent = ""; box.classList.remove("bad"); paint();
-    if(real.value.length === 8) submit();
-  });
-  real.addEventListener("focus", paint); real.addEventListener("blur", paint);
-  form.addEventListener("submit", (e) => { e.preventDefault(); submit(); });
-  return { focus(){ try{ real.focus({ preventScroll: true }); }catch(_){} } };
-}
-
-(function(){
-  const $ = (id) => document.getElementById(id);
-  const RM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const st = $("gStars"); for(let i = 0; i < 40; i++){ const d = document.createElement("i"); d.style.left = Math.random() * 100 + "%"; d.style.top = Math.random() * 100 + "%"; d.style.animationDelay = (Math.random() * 3).toFixed(2) + "s"; d.style.animationDuration = (2 + Math.random() * 3).toFixed(2) + "s"; st.appendChild(d); }
-  let started = false;
-  function unlock(){
-    if(started) return; started = true;
-    const gt = $("gate"); gt.classList.add("leaving");
-    $("pill").style.display = "";
-    startGalaxy();
-    setTimeout(() => gt.remove(), RM ? 0 : 800);
-  }
-  const api = initGate({ form: $("lock"), box: $("code"), err: $("lockErr"), btn: $("gBtn"),
-    onOk(){ $("gLock").textContent = "🔓"; $("gLock").classList.add("open"); setTimeout(unlock, RM ? 0 : 700); } });
-  api.focus();
 })();
 </script>
 </body>
